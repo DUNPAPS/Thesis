@@ -1,5 +1,8 @@
-\documentclass[12pt]{article}
-\usepackage[pdftex]{graphicx}  
+\documentclass[12pt]{report}
+\usepackage[pdftex]{graphicx}
+\usepackage[nottoc]{tocbibind}
+\graphicspath{ {figures/} }
+\usepackage{array}
 \begin{document}
 
 \begin{titlepage}
@@ -45,7 +48,7 @@
 %-------------------------------------------------------------------------------------------
 \textsc{\Large Duncan Muema Muasya}\\[1.5cm]
 \textsc{\Large Supervisors:}\\[\baselineskip] % Major heading such as course
-\textsc{M.C.Sc. Erick Kass, IBM}\\[0.5cm]
+\textsc{M.C.Sc. Eric Kass, IBM}\\[0.5cm]
 \textsc{Prof. Dr. - Ing. Thomas Benz}\\[1.5cm]
 
 \vfill % Whitespace between editor names and publisher logo
@@ -68,6 +71,76 @@
 \vfill % Fill the rest of the page with whitespace
 \newpage
 
-
 \end{titlepage}
+
+
+
+%% ----------------------------------------------------------------
+% The "Funny Quote Page"
+\pagestyle{empty}  % No headers or footers for the following pages
+% Now comes the "Funny Quote", written in italics
+\textit{``Write a funny quote here.''}
+
+\begin{flushright}
+If the quote is taken from someone, their name goes here
+\end{flushright}
+
+\vfill\vfill\vfill\vfill\vfill\vfill\null
+\clearpage  % Funny Quote page ended, start a new page
+%% ----------------------------------------------------------------
+
+
+
+% The Abstract Page
+\section*{Abstract}\addcontentsline{toc}{section}{Abstract}% This section
+% is not numbered
+
+The Thesis Abstract is written here (and usually kept to just this page). The page is kept centered vertically so can expand into the blank space above the title too\ldots
+
+
+\clearpage  % Abstract ended, start a new page
+%% ----------------------------------------------------------------
+
+
+
+% The Acknowledgements page, for thanking everyone
+\section*{Acknowledgement}\addcontentsline{toc}{section}{Acknowledgement}% This section is not numbered
+
+The acknowledgements and the people to thank go here, don't forget to include your project advisor\ldots
+
+\clearpage  % End of the Acknowledgements
+%% ----------------------------------------------------------------
+
+\tableofcontents*
+\listoftables
+\listoffigures
+
+\chapter{Introduction}
+\begin{figure}
+\centering
+Some fake content
+\caption{A first fake figure}%
+\end{figure}
+
+\begin{figure}
+\centering
+Some fake content
+\caption{A second fake figure}%
+\end{figure}
+
+\begin{table}
+\centering
+\begin{tabular}{lcr}
+More & fake & content
+\end{tabular}
+\caption{A first fake table}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{lcr}
+More & fake & content
+\end{tabular}
+\caption{A second fake table}
+\end{table}
 \end{document}

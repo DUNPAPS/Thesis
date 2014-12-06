@@ -14,4 +14,11 @@
 	<natures>
 		<nature>net.sourceforge.texlipse.builder.TexlipseNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>Bibliography.bib</name>
+			<type>1</type>
+			<location>C:/Users/dmuasya/AppData/Roaming/MiKTeX/2.9/bibtex/bib/arsclassica/Bibliography.bib</location>
+		</link>
+	</linkedResources>
 </projectDescription>
