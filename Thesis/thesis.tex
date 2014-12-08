@@ -3,6 +3,7 @@
 \usepackage[nottoc]{tocbibind}
 \graphicspath{ {figures/} }
 \usepackage{array}
+\usepackage[square, numbers, comma, sort&compress]{natbib}  % Use the "Natbib"
 \begin{document}
 
 \begin{titlepage}
@@ -48,7 +49,7 @@
 %-------------------------------------------------------------------------------------------
 \textsc{\Large Duncan Muema Muasya}\\[1.5cm]
 \textsc{\Large Supervisors:}\\[\baselineskip] % Major heading such as course
-\textsc{M.C.Sc. Eric Kass, IBM}\\[0.5cm]
+\textsc{MSc. Eric Kass, IBM}\\[0.5cm]
 \textsc{Prof. Dr. - Ing. Thomas Benz}\\[1.5cm]
 
 \vfill % Whitespace between editor names and publisher logo
@@ -106,7 +107,8 @@ The Thesis Abstract is written here (and usually kept to just this page). The pa
 % The Acknowledgements page, for thanking everyone
 \section*{Acknowledgement}\addcontentsline{toc}{section}{Acknowledgement}% This section is not numbered
 
-The acknowledgements and the people to thank go here, don't forget to include your project advisor\ldots
+The acknowledgements and the people to thank go here, don't forget to include
+your project advisor\ldots  \cite{Cluster}
 
 \clearpage  % End of the Acknowledgements
 %% ----------------------------------------------------------------
@@ -116,6 +118,7 @@ The acknowledgements and the people to thank go here, don't forget to include yo
 \listoffigures
 
 \chapter{Introduction}
+ This is the introduction \cite{AS/400}
 \begin{figure}
 \centering
 Some fake content
@@ -142,5 +145,12 @@ More & fake & content
 More & fake & content
 \end{tabular}
 \caption{A second fake table}
+\cite{bringhurst}
 \end{table}
-\end{document}
+%% ----------------------------------------------------------------
+
+\label{Bibliography}
+\bibliographystyle{unsrtnat}  % Use the "unsrtnat" BibTeX style for formatting the Bibliography
+\bibliography{Bibliography}  % The references (bibliography) information are stored in the file named "Bibliography.bib"
+
+ \end{document}
