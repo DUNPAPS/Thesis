@@ -1,7 +1,10 @@
-\documentclass[12pt]{report}
+\documentclass[a4paper, 12pt]{article}
+
 \usepackage[pdftex]{graphicx}
 \usepackage[nottoc]{tocbibind}
 \graphicspath{ {figures/} }
+\usepackage{endnotes}
+\usepackage{lipsum}% http://ctan.org/pkg/lipsum
 \usepackage{array}
 \usepackage[square, numbers, comma, sort&compress]{natbib}  % Use the "Natbib"
 \begin{document}
@@ -80,7 +83,7 @@
 % The "Funny Quote Page"
 \pagestyle{empty}  % No headers or footers for the following pages
 % Now comes the "Funny Quote", written in italics
-\textit{``Write a funny quote here.''}
+\textit{``Write a funny quote here.''}  \cite{Duncan}
 
 \begin{flushright}
 If the quote is taken from someone, their name goes here
@@ -119,35 +122,22 @@ your project advisor\ldots  \cite{Cluster}
 
 \chapter{Introduction}
  This is the introduction \cite{AS/400}
-\begin{figure}
-\centering
-Some fake content
-\caption{A first fake figure}%
-\end{figure}
 
-\begin{figure}
-\centering
-Some fake content
-\caption{A second fake figure}%
-\end{figure}
-
-\begin{table}
-\centering
-\begin{tabular}{lcr}
-More & fake & content
-\end{tabular}
-\caption{A first fake table}
-\end{table}
-
-\begin{table}
-\centering
-\begin{tabular}{lcr}
-More & fake & content
-\end{tabular}
-\caption{A second fake table}
-\cite{bringhurst}
-\end{table}
 %% ----------------------------------------------------------------
+\vfill % Fill the rest of the page with whitespace
+\newpage
+ 
+\renewcommand{\footnoterule}{%
+  \kern -3pt
+  \hrule width \textwidth height 1pt
+  \kern 2pt
+}
+
+An dieser Stelle\footnote[42]{Dies ist die Fuﬂnote.}
+erscheint eine Fuﬂnote.
+
+    \vfill % Fill the rest of the page with whitespace
+\newpage
 
 \label{Bibliography}
 \bibliographystyle{unsrtnat}  % Use the "unsrtnat" BibTeX style for formatting the Bibliography
