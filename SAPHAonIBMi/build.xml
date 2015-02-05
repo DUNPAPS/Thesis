@@ -1,0 +1,81 @@
+<project name="OutputTestEditor" default="main" basedir=".">
+	<description>
+			This script builds and creates a GUI jar File, to run processes like: Stop SAP,Apply Kernel, Start SAP
+		</description>
+
+
+
+
+	<!-- Java sources -->
+	<property name="src.dir" location="src" />
+
+	<!-- Java classes -->
+	<property name="build.dir" location="bin" />
+
+	<!-- Output, Jar -->
+	<property name="dist.dir" location="dist" />
+
+	<!--version number -->
+	<property name="version" value="1.0" />
+
+
+
+
+	<target name="init">
+		<echo>=== INIT ===</echo>
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build.dir}" />
+	</target>
+
+
+
+
+	<target name="compile" depends="init" description="compile the source ">
+
+		<echo>=== COMPILE ===</echo>
+		<echo>Compiling ${src.dir} files ...</echo>
+		<!-- Compile the java code from ${src.dir} into ${build.dir} -->
+
+		<javac includeantruntime="false" srcdir="${src.dir}" destdir="${build.dir}" classpathref="jar-project-classpath">
+		</javac>
+
+	</target>
+
+
+
+	<target name="build-jar-version">
+		<antcall target="compile-jar-classes" />
+		<mkdir dir="build-version" />
+		<antcall target="jar-version" />
+	</target>
+
+	<target name="dist" depends="compile" description="package, output to JAR ">
+		<echo>=== MANITFEST ===</echo>
+		<buildnumber file="build.num" />
+		<mkdir dir="${dist.dir}" />
+
+
+		<echo>=== ${ant.project.name} JAR ===</echo>
+		<jar jarfile="${dist.dir}/${ant.project.name}-${version}.${build.number}.jar" basedir="${build.dir}">
+			<manifest>
+				<attribute name="Title" value="${ant.project.name}" />
+				<attribute name="Built-By" value="Duncan, Muasya" />
+				<attribute name="Version" value="${version}.${build.number}" />
+				<attribute name="Main-Class" value="com.sap.on.ibm.i.editor.OutputTestEditor" />
+			</manifest>
+		</jar>
+ 
+	</target>
+
+	<target name="clean" description="clean up">
+		<echo>=== CLEAN ===</echo>
+		<delete dir="${dist}" />
+		<delete dir="${dist.dir}" />
+	</target>
+
+	<!-- Default, run this -->
+	<target name="main" depends="clean, compile, dist" />
+
+</project>
