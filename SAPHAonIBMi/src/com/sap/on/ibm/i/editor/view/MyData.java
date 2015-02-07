@@ -1,4 +1,4 @@
-package com.sap.on.ibm.i.editor;
+package com.sap.on.ibm.i.editor.view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

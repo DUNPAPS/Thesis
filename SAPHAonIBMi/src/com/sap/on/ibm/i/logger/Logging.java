@@ -11,6 +11,8 @@ import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -20,12 +22,12 @@ import java.util.Calendar;
  * @version 27.06.2010
  */
  
-public class Logger {
+public class Logging {
 
 // einzige Instanz der Klasse Logger
  
 /** Die instance. */
-private static Logger instance = null;
+private static Logging instance = null;
 
 // Datum Format
  
@@ -39,22 +41,31 @@ private SimpleDateFormat datumFormat = null;
  
 /** Die Log file. */
 private String LogFile = "LogDatei.txt";
+
+private Logger LOGGER;
      
     /**
 	 * Instanziiert eine neue logger.
 	 */
-    private Logger() {
+    private Logging() {
     // TO DO	
     }
- 
+    
+	public void log(Level level, String msg) {
+		LOGGER.log(level, msg);
+	}
+   
+	public void setLogger(String name){
+		LOGGER= Logger.getLogger(name);
+	}
     /**
      * Statische Methode, liefert die einzige Instanz dieser
      * Klasse zurück
      * @return instance
      */
-    public static Logger getInstance() {
+    public static Logging getInstance() {
         if (instance == null) {
-            instance = new Logger();
+            instance = new Logging();
         }
         return instance;
     }

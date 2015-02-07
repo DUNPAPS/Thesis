@@ -1,8 +1,8 @@
-package com.sap.on.ibm.i.main;
+package com.sap.on.ibm.i.tasks.main;
 
 import com.sap.on.ibm.i.tasks.ExecuteSAPControl;
 
-public class Main {
+public class RunTasks {
 
 	public static void main(String[] args) {
 

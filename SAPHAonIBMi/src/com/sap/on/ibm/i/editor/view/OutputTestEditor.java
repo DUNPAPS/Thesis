@@ -1,4 +1,4 @@
-package com.sap.on.ibm.i.editor;
+package com.sap.on.ibm.i.editor.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -6,16 +6,10 @@ import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -28,7 +22,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -36,62 +29,59 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-public class OutputTestEditor extends JFrame implements ActionListener,
-		PropertyChangeListener, ItemListener {
-	private static final long serialVersionUID = 1L;
+@SuppressWarnings("serial")
+public class OutputTestEditor extends JFrame {
 	private JTextField sid_field;
-	private JTextField user_field;
-	private JTextField downloadUrlField = new JTextField(10);
+	private JTextField password_field;
 	private JCheckBox stop_SAP_Checkbox;
+	private JCheckBox applyKernelCheckbox;
+	private JCheckBox startSAPCheckBox;
 	private JMenuBar menuBar;
-	private JMenu menu1;
-	private JMenuItem close;
-	private JMenu menu2;
-	private JMenuItem infor;
-	private JProgressBar progressBar;
+	private JMenu file;
+	private JMenuItem exitJMenuItem;
+	private JMenu info;
+	private JMenuItem inforJMenuItem;
+	private JButton copy;
+	private JButton clearLogViewButton;
+	private JButton playButton;
+	private JButton stopButton;
 
 	public OutputTestEditor() {
 		super("OutputTestEditor");
+		setBackground(Color.GRAY);
 		buildGUI();
-		setIconImage(null);
 	}
 
-	/**
-	 * Diese Methode setzt die Menue und die Untermenue
-	 */
 	private void setzeMenue() {
 		this.menuBar = new JMenuBar();
 		setJMenuBar(this.menuBar);
 
-		this.menu1 = new JMenu("File");
-		this.menuBar.add(this.menu1);
+		this.file = new JMenu("File");
+		this.menuBar.add(this.file);
 
 		ImageIcon iconClose = new ImageIcon("exit.jpg");
-		this.close = new JMenuItem("Exit", iconClose);
-		this.menu1.add(this.close);
-		this.close.addActionListener(this);
-		this.close.setActionCommand("Exit");
-		this.close.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E,
+		this.exitJMenuItem = new JMenuItem("Exit", iconClose);
+		this.file.add(this.exitJMenuItem);
+		this.exitJMenuItem.setActionCommand("Exit");
+		this.exitJMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E,
 				Event.CTRL_MASK));
 
 		ImageIcon help = new ImageIcon("icons/help.png");
-		this.menu2 = new JMenu("Help");
-		this.menuBar.add(this.menu2);
-		this.infor = new JMenuItem(null, help);
-		this.menu2.add(infor);
-		this.infor.addActionListener(this);
-		this.infor.setActionCommand("info");
+		this.info = new JMenu("Help");
+		this.menuBar.add(this.info);
+		this.inforJMenuItem = new JMenuItem(null, help);
+		this.info.add(inforJMenuItem);
+		this.inforJMenuItem.setActionCommand("info");
 
 	}
 
 	private void buildGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(900, 795);
+		setSize(1107, 713);
 
 		setzeMenue();
 
@@ -117,17 +107,17 @@ public class OutputTestEditor extends JFrame implements ActionListener,
 		// Checkbox:Tasks
 		stop_SAP_Checkbox = new JCheckBox("Stop SAP");
 		stop_SAP_Checkbox.setFont(new Font("Arial", Font.PLAIN, 12));
-		stop_SAP_Checkbox.addItemListener(this);
 		tasksPanel.add(stop_SAP_Checkbox);
 
-		JCheckBox checkboxPanel = new JCheckBox("Apply Kernel");
-		checkboxPanel.setFont(new Font("Arial", Font.PLAIN, 12));
-		tasksPanel.add(checkboxPanel);
+		applyKernelCheckbox = new JCheckBox("Apply Kernel");
+		applyKernelCheckbox.setFont(new Font("Arial", Font.PLAIN, 12));
+		tasksPanel.add(applyKernelCheckbox);
 
-		JCheckBox checkBox = new JCheckBox("Start SAP");
-		checkBox.setFont(new Font("Arial", Font.PLAIN, 12));
-		tasksPanel.add(checkBox);
+		startSAPCheckBox = new JCheckBox("Start SAP");
+		startSAPCheckBox.setFont(new Font("Arial", Font.PLAIN, 12));
+		tasksPanel.add(startSAPCheckBox);
 
+		// Settings
 		JPanel panUpper = new JPanel(new BorderLayout());
 		panUpper.add(settingsPanel, BorderLayout.NORTH);
 
@@ -140,10 +130,10 @@ public class OutputTestEditor extends JFrame implements ActionListener,
 		sid_field.setHorizontalAlignment(SwingConstants.CENTER);
 		sid_field.setColumns(10);
 
-		user_field = new JTextField();
-		user_field.setHorizontalAlignment(SwingConstants.CENTER);
-		user_field.setFont(new Font("Arial", Font.PLAIN, 12));
-		user_field.setColumns(10);
+		password_field = new JTextField();
+		password_field.setHorizontalAlignment(SwingConstants.CENTER);
+		password_field.setFont(new Font("Arial", Font.PLAIN, 12));
+		password_field.setColumns(10);
 
 		JLabel label = new JLabel("User");
 		label.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -197,7 +187,7 @@ public class OutputTestEditor extends JFrame implements ActionListener,
 																						.createParallelGroup(
 																								Alignment.LEADING)
 																						.addComponent(
-																								user_field,
+																								password_field,
 																								GroupLayout.PREFERRED_SIZE,
 																								177,
 																								GroupLayout.PREFERRED_SIZE)
@@ -208,8 +198,7 @@ public class OutputTestEditor extends JFrame implements ActionListener,
 																								GroupLayout.PREFERRED_SIZE))))
 										.addGap(178)));
 		gl_panInput.setVerticalGroup(gl_panInput.createParallelGroup(
-				Alignment.TRAILING).addGroup(
-				Alignment.LEADING,
+				Alignment.LEADING).addGroup(
 				gl_panInput
 						.createSequentialGroup()
 						.addGroup(
@@ -241,14 +230,14 @@ public class OutputTestEditor extends JFrame implements ActionListener,
 								gl_panInput
 										.createParallelGroup(Alignment.LEADING)
 										.addComponent(lblNewLabel,
-												GroupLayout.DEFAULT_SIZE, 26,
+												GroupLayout.DEFAULT_SIZE, 42,
 												Short.MAX_VALUE)
-										.addComponent(user_field,
+										.addComponent(password_field,
 												GroupLayout.DEFAULT_SIZE, 42,
 												Short.MAX_VALUE))
 						.addContainerGap()));
-		settingsPanel.setLayout(gl_panInput);
 
+		settingsPanel.setLayout(gl_panInput);
 		contentPane.add(panUpper, BorderLayout.NORTH);
 		panUpper.add(tasksPanel, BorderLayout.SOUTH);
 		contentPane.add(logViewerPanel(), BorderLayout.CENTER);
@@ -273,30 +262,36 @@ public class OutputTestEditor extends JFrame implements ActionListener,
 		toolBar.add(chckbxDebug);
 
 		ImageIcon copyicon = new ImageIcon("icons/page_copy.png");
-		JButton copy = new JButton();
+		 copy = new JButton();
 		copy.setIcon(copyicon);
 		copy.setPreferredSize(new Dimension(toolBar.getWidth(), 16));
 		toolBar.add(copy);
 
-		JButton clearLogViewButton = new JButton("Clear Log Viewer");
+		 clearLogViewButton = new JButton("Clear Log Viewer");
 		clearLogViewButton.setFont(new Font("Arial", Font.PLAIN, 12));
 		clearLogViewButton.setPreferredSize(new Dimension(toolBar.getWidth(),
 				16));
 		toolBar.add(clearLogViewButton);
 
-		JPanel northPanel = new JPanel();
-		main.add(toolBar, BorderLayout.PAGE_START);
-		main.add(northPanel.add(new JLabel("File to Download:")));
-		main.add(northPanel.add(downloadUrlField));
-		main.add(northPanel.add(Box.createHorizontalStrut(15)));
+		ImageIcon playicon = new ImageIcon("icons/control_play_blue.png");
+		playButton = new JButton("Play");
+		playButton.setIcon(playicon);
+		playButton.setFont(new Font("Arial", Font.PLAIN, 12));
+		playButton.setPreferredSize(new Dimension(toolBar.getWidth(), 16));
+		toolBar.add(playButton);
+
+		ImageIcon stopicon = new ImageIcon("icons/stop.png");
+		 stopButton = new JButton("Stop");
+		stopButton.setIcon(stopicon);
+		stopButton.setFont(new Font("Arial", Font.PLAIN, 12));
+		stopButton.setPreferredSize(new Dimension(toolBar.getWidth(), 16));
+		toolBar.add(stopButton);
 
 		Font myFont = new Font("Arial", Font.BOLD, 12);
 		Color myColor = Color.BLACK;
 		TitledBorder titledBorder = BorderFactory.createTitledBorder(null,
 				" Log Viewer", TitledBorder.DEFAULT_JUSTIFICATION,
 				TitledBorder.DEFAULT_POSITION, myFont, myColor);
-		JScrollPane eastSPane = new JScrollPane();
-		eastSPane.setPreferredSize(new Dimension(200, 100));
 
 		// create the status bar panel and shove it down the bottom of the panel
 		JPanel statusPanel = new JPanel();
@@ -308,94 +303,113 @@ public class OutputTestEditor extends JFrame implements ActionListener,
 		statusPanel.add(statusLabel);
 
 		main.setBorder(titledBorder);
-		main.add(new JScrollPane(new JTextArea(20, 30)), BorderLayout.CENTER);
-		main.add(eastSPane, BorderLayout.EAST);
+		main.add(toolBar, BorderLayout.PAGE_START);
+		JScrollPane scrollPane = new JScrollPane(new JTextArea(20, 30));
+		main.add(scrollPane, BorderLayout.CENTER);
+
+		// ProgressBar
+		JPanel barPanel = new JPanel();
+		scrollPane.setRowHeaderView(barPanel);
+		barPanel.setPreferredSize(new Dimension(toolBar.getWidth(), 16));
 		main.add(statusPanel, BorderLayout.SOUTH);
-
-		JPanel panel = new JPanel();
-		eastSPane.setViewportView(panel);
-		panel.setLayout(null);
-
-		JButton button = new JButton("Run Tasks");
-		button.setFont(new Font("Arial", Font.BOLD, 12));
-		button.setBounds(28, 30, 142, 65);
-		panel.add(button);
-
-		JButton btnStoptasks = new JButton("Stop");
-		btnStoptasks.setFont(new Font("Arial", Font.BOLD, 12));
-		btnStoptasks.setBounds(28, 106, 142, 65);
-		panel.add(btnStoptasks);
 
 		return main;
 
 	}
 
-	@SuppressWarnings("unused")
-	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
-		if ("progress".equals(evt.getPropertyName())) {
-			int progress = (Integer) evt.getNewValue();
-			// progressAll.setValue(progress);
-		}
-
+	public String getSID() {
+		return this.sid_field.getText().trim();
+	}
+	public String getPassword() {
+		return this.password_field.getText().trim();
 	}
 
-	// @Override
-	// public void actionPerformed(ActionEvent e) {
-	// if (this.btnStart == e.getSource()) {
-	// downloadAction();
-	// }
-	// if (this.newMenuItem == e.getSource()) {
-	// System.exit(0);
-	// }
-	// if (this.stop_SAP_Checkbox == e.getSource()) {
-	//
-	// }
-	// }
-	//
-	// @SuppressWarnings("unchecked")
-	// public void downloadAction() {
-	// String downloadUrl = downloadUrlField.getText();
-	// final MyData myData = new MyData(downloadUrl);
-	// myListModel.addElement(myData);
-	// myData.addPropertyChangeListener(new PropertyChangeListener() {
-	// public void propertyChange(PropertyChangeEvent evt) {
-	// if (evt.getPropertyName().equals(MyData.VALUE)) {
-	// myList.repaint();
-	// if (myData.getValue() >= 100) {
-	// myListModel.removeElement(myData);
-	// System.out.println("Done");
-	// }
-	// }
-	// }
-	//
-	// });
-	// }
-
-	@Override
-	public void itemStateChanged(ItemEvent event) {
-		boolean b = this.stop_SAP_Checkbox.isSelected();
-		System.out.println(b);
+	public void setclearLogViewButtonActionListener(ActionListener l){
+		   this.clearLogViewButton.addActionListener(l);
+	}
+	
+	public void setcopyActionListener(ActionListener l){
+		   this.copy.addActionListener(l);
+	}
+	public void setplayButtonActionListener(ActionListener l){
+		   this.playButton.addActionListener(l);
+	}
+	
+	public void setstopButtonActionListener(ActionListener l){
+		   this.stopButton.addActionListener(l);
+	}
+ 
+	public void setexitJMenuItemActionListener(ActionListener l){
+		   this.exitJMenuItem.addActionListener(l);
+	}
+	
+	public void setinforJMenuItemActionListener(ActionListener l){
+		   this.inforJMenuItem.addActionListener(l);
+	}
+	public void setstop_SAP_CheckboxActionListener(ActionListener l){
+		   this.stop_SAP_Checkbox.addActionListener(l);
+	}
+	
+	public void setapplyKernelCheckboxActionListener(ActionListener l){
+		   this.applyKernelCheckbox.addActionListener(l);
+	}
+	public void setstartSAPCheckBoxActionListener(ActionListener l){
+		   this.startSAPCheckBox.addActionListener(l);
 	}
 
-	/**
-	 * 
-	 * Main
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				new OutputTestEditor().setVisible(true);
-			}
-		});
+	public JTextField getSid_field() {
+		return sid_field;
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-
+	public JTextField getPassword_field() {
+		return password_field;
 	}
+
+	public JCheckBox getStop_SAP_Checkbox() {
+		return stop_SAP_Checkbox;
+	}
+
+	public JCheckBox getApplyKernelCheckbox() {
+		return applyKernelCheckbox;
+	}
+
+	public JCheckBox getStartSAPCheckBox() {
+		return startSAPCheckBox;
+	}
+
+
+	public JMenu getFile() {
+		return file;
+	}
+
+	public JMenuItem getExitJMenuItem() {
+		return exitJMenuItem;
+	}
+
+	public JMenu getInfo() {
+		return info;
+	}
+
+	public JMenuItem getInforJMenuItem() {
+		return inforJMenuItem;
+	}
+
+	public JButton getCopy() {
+		return copy;
+	}
+
+	public JButton getClearLogViewButton() {
+		return clearLogViewButton;
+	}
+
+	public JButton getPlayButton() {
+		return playButton;
+	}
+
+	public JButton getStopButton() {
+		return stopButton;
+	}
+ 
+	
+
 }
