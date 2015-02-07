@@ -1,0 +1,18 @@
+07/02/2015 20:47:49::AP_Checkbox().isSelected
+2015-02-07 21:49:24,195 INFO - ---------------------------------------------------------------------------
+2015-02-07 21:49:24,198 INFO -   ExecuteSAPControl 
+2015-02-07 21:49:24,199 INFO - ---------------------------------------------------------------------------
+2015-02-07 21:49:24,199 INFO - Start sap_ctrl command
+2015-02-07 21:49:24,199 INFO - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+2015-02-07 21:49:44,483 INFO - End sap_ctrl
+2015-02-07 21:51:02,671 INFO - ---------------------------------------------------------------------------
+2015-02-07 21:51:02,672 INFO -   ExecuteSAPControl 
+2015-02-07 21:51:02,672 INFO - ---------------------------------------------------------------------------
+2015-02-07 21:51:02,673 INFO - Start sap_ctrl command
+2015-02-07 21:51:02,673 INFO - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+2015-02-07 21:51:20,839 INFO - End sap_ctrl
+07/02/2015 23:31:09::AP_Checkbox().isSelected
+07/02/2015 23:35:17::AP_Checkbox().isSelected
+07/02/2015 23:35:19::AP_Checkbox().isSelected
+07/02/2015 23:35:19::AP_Checkbox().isSelected
+07/02/2015 23:35:20::AP_Checkbox().isSelected

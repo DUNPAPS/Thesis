@@ -1,153 +1,113 @@
-/*
- * EKG Projekt.
-
- * Elektrokardiogramm,EKG,: Das Elektrokardiogramm ist eine Aufzeichnung der elektrischen Aktivität des Herzens. Das EKG ermöglicht vielfältige Aussagen zu Eigenschaften und Erkrankungen des Herzens.
- */
 package com.sap.on.ibm.i.logger;
 
-import java.io.FileWriter;
-
-
 import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-// TODO: Auto-generated Javadoc
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
 /**
- * Logger Klasse nach Singleton-Entwurfsmuster
+ * Logger class Singleton.
  *
- * @author dmuasya,hkisakye
- * @version 27.06.2010
+ * @author Duncan
  */
- 
+
 public class Logging {
 
-// einzige Instanz der Klasse Logger
- 
-/** Die instance. */
-private static Logging instance = null;
+	private static final String DATUM_FORMAT_JETZT = "dd/MM/yyyy HH:mm:ss";
+	private String LogFile = "log/LogFile.txt";
+	static final String LOG_PROPERTIES_FILE = "log/log.properties";
+	private SimpleDateFormat datumFormat = null;
+	private static Logging instance = null;
 
-// Datum Format
- 
-/** Die Konstante DATUM_FORMAT_JETZT. */
-private static final String DATUM_FORMAT_JETZT = "dd/MM/yyyy HH:mm:ss";
+	private Logger logger;
 
- 
-/** Die datum format. */
-private SimpleDateFormat datumFormat = null;
+	private Logging() {
+		initializeLogger();
 
- 
-/** Die Log file. */
-private String LogFile = "LogDatei.txt";
+	}
 
-private Logger LOGGER;
-     
-    /**
-	 * Instanziiert eine neue logger.
+	private void initializeLogger() {
+		ClassLoader classLoader = Thread.currentThread()
+				.getContextClassLoader();
+		PropertyConfigurator.configure(classLoader
+				.getResource("log/log.properties"));
+
+	}
+
+	public void setLogger(String name) {
+		logger = Logger.getLogger("");
+	}
+
+	/**
+	 * @return instance
 	 */
-    private Logging() {
-    // TO DO	
-    }
-    
-	public void log(Level level, String msg) {
-		LOGGER.log(level, msg);
+	public static Logging getInstance() {
+		if (instance == null) {
+			instance = new Logging();
+		}
+		return instance;
 	}
-   
-	public void setLogger(String name){
-		LOGGER= Logger.getLogger(name);
+
+	private String actuallTime() {
+		if (datumFormat == null) {
+			datumFormat = new SimpleDateFormat(DATUM_FORMAT_JETZT);
+		}
+
+		Calendar cal = Calendar.getInstance(); // Calendar Singleton Objekt
+		return datumFormat.format(cal.getTime());
+
 	}
-    /**
-     * Statische Methode, liefert die einzige Instanz dieser
-     * Klasse zurück
-     * @return instance
-     */
-    public static Logging getInstance() {
-        if (instance == null) {
-            instance = new Logging();
-        }
-        return instance;
-    }
-    
-    /**
-     * Diese Methode liefert die aktuelle Zeit zurück.
-	 * 
-	 * 
-     */
-    private String aktuelleZeit()
-    	{   		
-    		if (datumFormat == null){
-    		     datumFormat = new SimpleDateFormat(DATUM_FORMAT_JETZT);
-    		}
-    		
-    	Calendar cal = Calendar.getInstance(); // Calendar Singleton Objekt
-        return datumFormat.format(cal.getTime());
-  	
-    	}
-    	
-    /**
-     *  Diese Methode schreibt in das Protokol Datei und danach das Datei schliessen
-     * @param text von type String
-     */   
-     public void printBenutzeraktion(String text)
-    	{  		
-    	try
-    		{   		
-        // Erstellt bzw. Öffnet und schreibt am Ende eines bereit existierenden Datei 
-           FileWriter fstream = new FileWriter(LogFile,true);
-           BufferedWriter out = new BufferedWriter(fstream);
-           
-           String zeit = aktuelleZeit(); // gibt die zeit zurück
-           zeit = zeit + "::"; // Trenn-String zwischen Zeit und Protokol
-           out.write(zeit+text);
-           out.newLine(); // geht zur nächsten Zeile
-           out.close();   // File schliessen
-           }
-           catch (Exception e){
-               System.err.println("Error: " + e.getMessage());
-    		
-    	}
-    }
-        
-       /**
-        *  Diese Methode schreibt in das Protokol Datei und danach das Datei schliessen
-        *
-        *  @param fehler
-        *            zu Schreibende Exception 
-        */ 
-        public void printException(Exception fehler)
-        {
-        	
-        	try
-    		{   		
-        // Erstellt bzw. Öffnet und schreibt am Ende eines bereit existierenden Datei 
-           FileWriter fstream = new FileWriter(LogFile,true);
-           BufferedWriter out = new BufferedWriter(fstream);
-           
-           String zeit = aktuelleZeit(); // gibt die zeit zurück
-           zeit = zeit + "::"; // Trenn-String zwischen Zeit und Protokol
-           out.write(zeit+"ExceptionTrace");
-           out.newLine(); // geht zur nächsten Zeile 
-           
-           out.write(fehler.getMessage()); //letzte Fehler Meldung
-           out.newLine(); //neue Zeile
-           
-       	   StackTraceElement[] elements = fehler.getStackTrace(); //gesamte StackTrace
-           int noOfElements = elements.length;
-       	   for (int i=0; i<noOfElements;i++)
-       	     {
-       	     out.write("@ "+ elements[i].toString());  //schreibt die StakTrace Error in LogDatei
-       	     out.newLine();       	   
-       	     }
-       	   
-       	   out.close();
-          }
-           catch (Exception e){
-               System.err.println("Error: " + e.getMessage());
-    		
-    	}
-     }  
-        
+
+	public void printUserAction(String text) {
+		try {
+			FileWriter fstream = new FileWriter(LogFile, true);
+			BufferedWriter out = new BufferedWriter(fstream);
+
+			String zeit = actuallTime();
+			zeit = zeit + "::";
+			out.write(zeit + text);
+			out.newLine();
+			out.close();
+		} catch (Exception e) {
+			System.err.println("Error: " + e.getMessage());
+
+		}
+	}
+
+	public void printException(Exception fehler) {
+
+		try {
+			FileWriter fstream = new FileWriter(LogFile, true);
+			BufferedWriter out = new BufferedWriter(fstream);
+
+			String zeit = actuallTime();
+			zeit = zeit + "::";
+			out.write(zeit + "ExceptionTrace");
+			out.newLine();
+
+			out.write(fehler.getMessage());
+			out.newLine();
+
+			StackTraceElement[] elements = fehler.getStackTrace();
+			int noOfElements = elements.length;
+			for (int i = 0; i < noOfElements; i++) {
+				out.write("@ " + elements[i].toString());
+				out.newLine();
+			}
+
+			out.close();
+		} catch (Exception e) {
+			System.err.println("Error: " + e.getMessage());
+
+		}
+	}
+
+	public Logger getLogger() {
+		return logger;
+	}
 
 }

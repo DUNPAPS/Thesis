@@ -1,0 +1,110 @@
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  -   ExecuteSAPControl 
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Start sap_ctrl command
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - End sap_ctrl
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  -   ExecuteSAPControl 
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Start sap_ctrl command
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - End sap_ctrl
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  -   ExecuteSAPControl 
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Start sap_ctrl command
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - End sap_ctrl
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  -   ExecuteSAPControl 
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Start sap_ctrl command
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - End sap_ctrl
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  -   ExecuteSAPControl 
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Start sap_ctrl command
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  -   ExecuteSAPControl 
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Start sap_ctrl command
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - End sap_ctrl
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - End sap_ctrl
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  -   ExecuteSAPControl 
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Start sap_ctrl command
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - End sap_ctrl
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  -   ExecuteSAPControl 
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Start sap_ctrl command
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - End sap_ctrl
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  -   ExecuteSAPControl 
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Start sap_ctrl command
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - End sap_ctrl
+[main] INFO  MyCommonsLogger  - ---------------------------------------------------------------------------
+[main] INFO  MyCommonsLogger  -   ExecuteSAPControl 
+[main] INFO  MyCommonsLogger  - ---------------------------------------------------------------------------
+[main] INFO  MyCommonsLogger  - Start sap_ctrl command
+[main] INFO  MyCommonsLogger  - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+[main] INFO  MyCommonsLogger  - End sap_ctrl
+[main] INFO  root  - ---------------------------------------------------------------------------
+[main] INFO  root  -   ExecuteSAPControl 
+[main] INFO  root  - ---------------------------------------------------------------------------
+[main] INFO  root  - Start sap_ctrl command
+[main] INFO  root  - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+[main] INFO  root  - End sap_ctrl
+[main] INFO  MyCommonsLogger  - ---------------------------------------------------------------------------
+[main] INFO  MyCommonsLogger  -   ExecuteSAPControl 
+[main] INFO  MyCommonsLogger  - ---------------------------------------------------------------------------
+[main] INFO  MyCommonsLogger  - Start sap_ctrl command
+[main] INFO  MyCommonsLogger  - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+[AWT-EventQueue-0] INFO  com.sap.on.ibm.i.editor.controller.Listener  - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO  com.sap.on.ibm.i.editor.controller.Listener  - user is: null
+[AWT-EventQueue-0] INFO  com.sap.on.ibm.i.editor.controller.Listener  - passeord is: null
+[AWT-EventQueue-0] INFO  com.sap.on.ibm.i.editor.controller.Listener  - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO  com.sap.on.ibm.i.editor.controller.Listener  - user is: null
+[AWT-EventQueue-0] INFO  com.sap.on.ibm.i.editor.controller.Listener  - passeord is: null
+[AWT-EventQueue-0] INFO  com.sap.on.ibm.i.editor.controller.Listener  - Stop_SAP_Checkbox: false
+[AWT-EventQueue-0] INFO  com.sap.on.ibm.i.editor.controller.Listener  - user is: null
+[AWT-EventQueue-0] INFO  com.sap.on.ibm.i.editor.controller.Listener  - passeord is: null
+[AWT-EventQueue-0] INFO  com.sap.on.ibm.i.editor.controller.Listener  - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO  com.sap.on.ibm.i.editor.controller.Listener  - user is: null
+[AWT-EventQueue-0] INFO  com.sap.on.ibm.i.editor.controller.Listener  - passeord is: null
+[AWT-EventQueue-0] INFO  com.sap.on.ibm.i.editor.controller.Listener  - Stop_SAP_Checkbox: false
+[AWT-EventQueue-0] INFO  com.sap.on.ibm.i.editor.controller.Listener  - user is: null
+[AWT-EventQueue-0] INFO  com.sap.on.ibm.i.editor.controller.Listener  - passeord is: null
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  -   ExecuteSAPControl 
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Start sap_ctrl command
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - End sap_ctrl
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  -   ExecuteSAPControl 
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Start sap_ctrl command
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - End sap_ctrl
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  -   ExecuteSAPControl 
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - ---------------------------------------------------------------------------
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Start sap_ctrl command
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+[main] INFO  com.sap.on.ibm.i.tasks.ExecuteSAPControl  - End sap_ctrl
+[main] INFO    - ---------------------------------------------------------------------------
+[main] INFO    -   ExecuteSAPControl 
+[main] INFO    - ---------------------------------------------------------------------------
+[main] INFO    - Start sap_ctrl command
+[main] INFO    - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+[main] INFO    - End sap_ctrl

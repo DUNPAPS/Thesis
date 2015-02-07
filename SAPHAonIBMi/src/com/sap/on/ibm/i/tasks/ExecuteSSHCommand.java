@@ -1,10 +1,8 @@
 package com.sap.on.ibm.i.tasks;
 
 import java.io.BufferedReader;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.logging.Level;
 
 import com.sap.on.ibm.i.logger.Logging;
 
@@ -12,11 +10,10 @@ public class ExecuteSSHCommand {
 	private String user;
 	private String password;
 	private Logging logging;
-	//Constructor
 	public ExecuteSSHCommand(){
 		logging=Logging.getInstance();
 		logging.setLogger(ExecuteSSHCommand.class.getName());
-		logging.log(Level.INFO,"---------------------------------------------------------------------------");
+		logging.getLogger().info("---------------------------------------------------------------------------");
 	}
 	
 	public void setUser(String user) {
@@ -47,8 +44,8 @@ public class ExecuteSSHCommand {
 			
 			
 		try {
-			logging.log(Level.INFO, "Start plink_exe command");
-			logging.log(Level.INFO, "Command: " + "  "
+			logging.getLogger().info("Start plink_exe command");
+			logging.getLogger().info("Command: " + "  "
 					+ plink_exe);
 			 
 			Process process = Runtime.getRuntime().exec(plink_exe + "qsecofr@as0013 ls /usr/sap/DCN/// SYS/exe/run");
@@ -57,9 +54,9 @@ public class ExecuteSSHCommand {
 			
 			String line = null;
 			while ((line = bufferedReader.readLine()) != null) {
-				logging.log(Level.INFO, line);
+				logging.getLogger().info( line);
 			}
-			logging.log(Level.INFO, "End plink_exe");
+			logging.getLogger().info("End plink_exe");
 		} catch (IOException e) {
 			// logger.log(Level.ERROR, e.getStackTrace().toString());
 		}

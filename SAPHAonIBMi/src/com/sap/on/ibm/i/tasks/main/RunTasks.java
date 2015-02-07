@@ -24,9 +24,6 @@ public class RunTasks {
 				sapControl.execute();
 			}
 			else {
-				
-				
-				
 				System.err.println("Error in Programm call.");
 				System.err.println("Parameter call missing: Instance host");
 				System.err.println("Exit Main.");

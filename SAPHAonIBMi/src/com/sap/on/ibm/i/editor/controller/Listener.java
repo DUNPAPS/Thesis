@@ -1,12 +1,12 @@
 package com.sap.on.ibm.i.editor.controller;
 
 import java.awt.event.ActionEvent;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.logging.Level;
 
 import com.sap.on.ibm.i.editor.model.User;
 import com.sap.on.ibm.i.editor.view.OutputTestEditor;
@@ -28,9 +28,10 @@ public class Listener implements ActionListener, PropertyChangeListener,
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		boolean b = this._outputTestEditor.getStop_SAP_Checkbox().isSelected();
-		logging.log(Level.INFO, "Stop_SAP_Checkbox: " + b);
-		logging.log(Level.INFO, "user is: " + this._user.getUser());
-		logging.log(Level.INFO, "passeord is: " + this._user.getPassword());
+		logging.printUserAction("AP_Checkbox().isSelected");
+		logging.getLogger().info( "Stop_SAP_Checkbox: " + b);
+		logging.getLogger().info( "user is: " + this._user.getUser());
+		logging.getLogger().info("passeord is: " + this._user.getPassword());
 
 	}
 

@@ -1,16 +1,14 @@
 package com.sap.on.ibm.i.tasks;
 
 import java.io.BufferedReader;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.logging.Level;
 
 import com.sap.on.ibm.i.logger.Logging;
 
 public class ExecuteSAPControl {
-	private Logging logging;
+	private Logging logging=Logging.getInstance();
 	private String param0;
 	private String param1;
 	private String instance;
@@ -18,11 +16,9 @@ public class ExecuteSAPControl {
 	private String host;
 	private String version;
 	private String format;
+
 	public ExecuteSAPControl() {
-		logging=Logging.getInstance();
-		logging.setLogger(ExecuteSAPControl.class.getName());
-		logging.log(Level.CONFIG,
-				"---------------------------------------------------------------------------");
+		logging.setLogger(this.getClass().getName());
 	}
 
 	public void setFunction(String function) {
@@ -57,11 +53,12 @@ public class ExecuteSAPControl {
 	}
 
 	public void execute() {
-
-		logging.log(Level.INFO, "start sap_ctrl");
+		logging.getLogger().info("---------------------------------------------------------------------------");
+		logging.getLogger().info("  ExecuteSAPControl ");
+		logging.getLogger().info("---------------------------------------------------------------------------");
 
 		String sap_ctrl = "sapcontrol.exe";
-		
+
 		if (instance != null) {
 			sap_ctrl += " -nr " + instance;
 		}
@@ -82,9 +79,9 @@ public class ExecuteSAPControl {
 			sap_ctrl += " -format " + format;
 		}
 
-//		if (debug) {
-//			sap_ctrl += " -debug";
-//		}
+		// if (debug) {
+		// sap_ctrl += " -debug";
+		// }
 
 		if (version != null) {
 			sap_ctrl += " " + version;
@@ -92,8 +89,9 @@ public class ExecuteSAPControl {
 
 		try {
 
-			logging.log(Level.INFO, "Start sap_ctrl command");
-			logging.log(Level.INFO, "Command: " + "  " + sap_ctrl);
+			
+			logging.getLogger().info("Start sap_ctrl command");
+			logging.getLogger().info( "Command: " + "  " + sap_ctrl);
 
 			Process process = Runtime.getRuntime().exec(sap_ctrl);
 			BufferedReader bufferedReader = new BufferedReader(
@@ -111,13 +109,13 @@ public class ExecuteSAPControl {
 
 			String error = null;
 			while ((error = errorbufferedReader.readLine()) != null) {
-				logging.log(Level.WARNING, error);
+				logging.getLogger().warn(error);
 			}
 
-			logging.log(Level.INFO, "End sap_ctrl");
+			logging.getLogger().info("End sap_ctrl");
 
 		} catch (IOException e) {
-			logging.log(Level.SEVERE, "\n" + e.getMessage());
+			logging.getLogger().error(e.getMessage());
 		}
 	}
 }
