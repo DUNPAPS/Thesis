@@ -108,3 +108,208 @@
 [main] INFO    - Start sap_ctrl command
 [main] INFO    - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
 [main] INFO    - End sap_ctrl
+[main] FATAL   - Error in Parameter call
+java.lang.IllegalArgumentException: Incorrect number of command line arguments: 0
+	at com.sap.on.ibm.i.tasks.main.RunTasks.main(RunTasks.java:28)
+[main] FATAL   - Error in Parameter call
+[main] FATAL   - Error in Parameter call
+java.lang.IllegalArgumentException: Incorrect number of command line arguments: 0
+	at com.sap.on.ibm.i.tasks.main.RunTasks.main(RunTasks.java:31)
+[main] FATAL   - Incorrect number of command line arguments: 0
+[main] FATAL   - Incorrect number of command line arguments: 0
+[main] FATAL   - Incorrect number of command line arguments: 0
+[main] FATAL   - Incorrect number of command line arguments: 0
+[main] FATAL   - Incorrect number of command line arguments: 0
+[main] FATAL   - Incorrect number of command line arguments: 0
+[main] FATAL   - Incorrect number of command line arguments: 0
+[main] INFO    - ---------------------------------------------------------------------------
+[main] INFO    -                           Main                                             
+[main] INFO    - ---------------------------------------------------------------------------
+[main] FATAL   - Incorrect number of command line arguments: 0
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: false
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: false
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: false
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: false
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO  root  - Another message.
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: false
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: false
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: false
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: false
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: false
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: false
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: false
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: false
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: true
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: false
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: false
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop_SAP_Checkbox: false
+[AWT-EventQueue-0] INFO    - user is: null
+[AWT-EventQueue-0] INFO    - passeord is: null
+[AWT-EventQueue-0] INFO    - Stop SAP First
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    -                           ExecuteSAPControl                                             
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    -   ExecuteSAPControl 
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    - Start sap_ctrl command
+[AWT-EventQueue-0] INFO    - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+[AWT-EventQueue-0] INFO    - End sap_ctrl
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    -                           ExecuteSAPControl                                             
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    -   ExecuteSAPControl 
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    - Start sap_ctrl command
+[AWT-EventQueue-0] INFO    - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+[AWT-EventQueue-0] INFO    - End sap_ctrl
+[AWT-EventQueue-0] WARN    - Please Enter User and Password
+[AWT-EventQueue-0] INFO    - Stop SAP First
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    -                           ExecuteSAPControl                                             
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    -   ExecuteSAPControl 
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    - Start sap_ctrl command
+[AWT-EventQueue-0] INFO    - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+[AWT-EventQueue-0] INFO    - End sap_ctrl
+[AWT-EventQueue-0] WARN    - Please Enter User and Password
+[AWT-EventQueue-0] WARN    - Please Enter User and Password
+[AWT-EventQueue-0] WARN    - Please Enter User and Password
+[AWT-EventQueue-0] WARN    - Please Enter User and Password
+[AWT-EventQueue-0] INFO    - Stop SAP First
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    -                           ExecuteSAPControl                                             
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    -   ExecuteSAPControl 
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    - Start sap_ctrl command
+[AWT-EventQueue-0] INFO    - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+[AWT-EventQueue-0] INFO    - End sap_ctrl
+[AWT-EventQueue-0] WARN    - Please Enter User and Password
+[AWT-EventQueue-0] WARN    - Please Enter User and Password
+[AWT-EventQueue-0] WARN    - Please Enter User and Password
+[AWT-EventQueue-0] WARN    - Please Enter User and Password
+[AWT-EventQueue-0] WARN    - Please Enter User and Password
+[AWT-EventQueue-0] WARN    - Please Enter User and Password
+[AWT-EventQueue-0] INFO    - Stop SAP First
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    -                           ExecuteSAPControl                                             
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    -   ExecuteSAPControl 
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    - Start sap_ctrl command
+[AWT-EventQueue-0] INFO    - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+[AWT-EventQueue-0] INFO    - End sap_ctrl
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    -                           ExecuteSAPControl                                             
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    -   ExecuteSAPControl 
+[AWT-EventQueue-0] INFO    - ---------------------------------------------------------------------------
+[AWT-EventQueue-0] INFO    - Start sap_ctrl command
+[AWT-EventQueue-0] INFO    - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
+[AWT-EventQueue-0] INFO    - End sap_ctrl

@@ -1,6 +1,7 @@
 package com.sap.on.ibm.i.editor.view;
 
 import java.awt.BorderLayout;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Event;
@@ -29,10 +30,11 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-
 @SuppressWarnings("serial")
 public class OutputTestEditor extends JFrame {
 	private JTextField sid_field;
@@ -49,11 +51,18 @@ public class OutputTestEditor extends JFrame {
 	private JButton clearLogViewButton;
 	private JButton playButton;
 	private JButton stopButton;
+	private JScrollPane scrollPane;
+	private JTextArea jtextArea;
 
 	public OutputTestEditor() {
 		super("OutputTestEditor");
-		setBackground(Color.GRAY);
 		buildGUI();
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void setzeMenue() {
@@ -262,12 +271,12 @@ public class OutputTestEditor extends JFrame {
 		toolBar.add(chckbxDebug);
 
 		ImageIcon copyicon = new ImageIcon("icons/page_copy.png");
-		 copy = new JButton();
+		copy = new JButton();
 		copy.setIcon(copyicon);
 		copy.setPreferredSize(new Dimension(toolBar.getWidth(), 16));
 		toolBar.add(copy);
 
-		 clearLogViewButton = new JButton("Clear Log Viewer");
+		clearLogViewButton = new JButton("Clear Log Viewer");
 		clearLogViewButton.setFont(new Font("Arial", Font.PLAIN, 12));
 		clearLogViewButton.setPreferredSize(new Dimension(toolBar.getWidth(),
 				16));
@@ -281,7 +290,7 @@ public class OutputTestEditor extends JFrame {
 		toolBar.add(playButton);
 
 		ImageIcon stopicon = new ImageIcon("icons/stop.png");
-		 stopButton = new JButton("Stop");
+		stopButton = new JButton("Stop");
 		stopButton.setIcon(stopicon);
 		stopButton.setFont(new Font("Arial", Font.PLAIN, 12));
 		stopButton.setPreferredSize(new Dimension(toolBar.getWidth(), 16));
@@ -304,7 +313,9 @@ public class OutputTestEditor extends JFrame {
 
 		main.setBorder(titledBorder);
 		main.add(toolBar, BorderLayout.PAGE_START);
-		JScrollPane scrollPane = new JScrollPane(new JTextArea(20, 30));
+		jtextArea = new JTextArea(20, 30);
+
+		scrollPane = new JScrollPane(jtextArea);
 		main.add(scrollPane, BorderLayout.CENTER);
 
 		// ProgressBar
@@ -320,41 +331,45 @@ public class OutputTestEditor extends JFrame {
 	public String getSID() {
 		return this.sid_field.getText().trim();
 	}
+
 	public String getPassword() {
 		return this.password_field.getText().trim();
 	}
 
-	public void setclearLogViewButtonActionListener(ActionListener l){
-		   this.clearLogViewButton.addActionListener(l);
+	public void setclearLogViewButtonActionListener(ActionListener l) {
+		this.clearLogViewButton.addActionListener(l);
 	}
-	
-	public void setcopyActionListener(ActionListener l){
-		   this.copy.addActionListener(l);
+
+	public void setcopyActionListener(ActionListener l) {
+		this.copy.addActionListener(l);
 	}
-	public void setplayButtonActionListener(ActionListener l){
-		   this.playButton.addActionListener(l);
+
+	public void setplayButtonActionListener(ActionListener l) {
+		this.playButton.addActionListener(l);
 	}
-	
-	public void setstopButtonActionListener(ActionListener l){
-		   this.stopButton.addActionListener(l);
+
+	public void setstopButtonActionListener(ActionListener l) {
+		this.stopButton.addActionListener(l);
 	}
- 
-	public void setexitJMenuItemActionListener(ActionListener l){
-		   this.exitJMenuItem.addActionListener(l);
+
+	public void setexitJMenuItemActionListener(ActionListener l) {
+		this.exitJMenuItem.addActionListener(l);
 	}
-	
-	public void setinforJMenuItemActionListener(ActionListener l){
-		   this.inforJMenuItem.addActionListener(l);
+
+	public void setinforJMenuItemActionListener(ActionListener l) {
+		this.inforJMenuItem.addActionListener(l);
 	}
-	public void setstop_SAP_CheckboxActionListener(ActionListener l){
-		   this.stop_SAP_Checkbox.addActionListener(l);
+
+	public void setstop_SAP_CheckboxActionListener(ActionListener l) {
+		this.stop_SAP_Checkbox.addActionListener(l);
 	}
-	
-	public void setapplyKernelCheckboxActionListener(ActionListener l){
-		   this.applyKernelCheckbox.addActionListener(l);
+
+	public void setapplyKernelCheckboxActionListener(ActionListener l) {
+		this.applyKernelCheckbox.addActionListener(l);
 	}
-	public void setstartSAPCheckBoxActionListener(ActionListener l){
-		   this.startSAPCheckBox.addActionListener(l);
+
+	public void setstartSAPCheckBoxActionListener(ActionListener l) {
+		this.startSAPCheckBox.addActionListener(l);
 	}
 
 	public JTextField getSid_field() {
@@ -376,7 +391,6 @@ public class OutputTestEditor extends JFrame {
 	public JCheckBox getStartSAPCheckBox() {
 		return startSAPCheckBox;
 	}
-
 
 	public JMenu getFile() {
 		return file;
@@ -409,7 +423,9 @@ public class OutputTestEditor extends JFrame {
 	public JButton getStopButton() {
 		return stopButton;
 	}
- 
-	
+
+	public JTextArea getJtextArea() {
+		return jtextArea;
+	}
 
 }

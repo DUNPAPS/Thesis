@@ -1,10 +1,16 @@
 package com.sap.on.ibm.i.tasks.main;
 
+import com.sap.on.ibm.i.logger.Logging;
 import com.sap.on.ibm.i.tasks.ExecuteSAPControl;
 
 public class RunTasks {
+	private static Logging logging = Logging.getInstance();
 
 	public static void main(String[] args) {
+		logging.setLogger(RunTasks.class.getName());
+		logging.getLogger().info("---------------------------------------------------------------------------");
+		logging.getLogger().info("                          Main                                             ");
+		logging.getLogger().info("---------------------------------------------------------------------------");
 
 		try {
 			ExecuteSAPControl sapControl = new ExecuteSAPControl();
@@ -13,7 +19,7 @@ public class RunTasks {
 				for (String arg : args) {
 					if (arg.equals("GetProcessList")) {
 						sapControl.setFunction("GetProcessList");
-					}
+					}      
 					if (arg.equals("00")) {
 						sapControl.setInstance("00");
 					}
@@ -22,14 +28,15 @@ public class RunTasks {
 					}
 				}
 				sapControl.execute();
-			}
-			else {
-				System.err.println("Error in Programm call.");
-				System.err.println("Parameter call missing: Instance host");
-				System.err.println("Exit Main.");
+			} else {
+				Throwable t = new IllegalArgumentException(
+						"Incorrect number of command line arguments: "
+								+ args.length);
+				logging.getLogger().fatal(t.getLocalizedMessage());
 				System.exit(8);
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {
+			// GetProcessList 00 as0013
 			System.err.println(e.getMessage().toString());
 		}
 

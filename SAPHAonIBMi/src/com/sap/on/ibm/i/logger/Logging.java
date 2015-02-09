@@ -2,12 +2,13 @@ package com.sap.on.ibm.i.logger;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.spi.LoggingEvent;
 
 /**
  * Logger class Singleton.
@@ -15,7 +16,7 @@ import org.apache.log4j.PropertyConfigurator;
  * @author Duncan
  */
 
-public class Logging {
+public class Logging extends AppenderSkeleton {
 
 	private static final String DATUM_FORMAT_JETZT = "dd/MM/yyyy HH:mm:ss";
 	private String LogFile = "log/LogFile.txt";
@@ -108,6 +109,24 @@ public class Logging {
 
 	public Logger getLogger() {
 		return logger;
+	}
+
+	@Override
+	public void close() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean requiresLayout() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void append(LoggingEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
