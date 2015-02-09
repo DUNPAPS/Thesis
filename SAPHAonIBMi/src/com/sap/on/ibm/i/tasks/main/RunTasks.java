@@ -8,9 +8,6 @@ public class RunTasks {
 
 	public static void main(String[] args) {
 		logging.setLogger(RunTasks.class.getName());
-		logging.getLogger().info("---------------------------------------------------------------------------");
-		logging.getLogger().info("                          Main                                             ");
-		logging.getLogger().info("---------------------------------------------------------------------------");
 
 		try {
 			ExecuteSAPControl sapControl = new ExecuteSAPControl();
@@ -19,7 +16,7 @@ public class RunTasks {
 				for (String arg : args) {
 					if (arg.equals("GetProcessList")) {
 						sapControl.setFunction("GetProcessList");
-					}      
+					}
 					if (arg.equals("00")) {
 						sapControl.setInstance("00");
 					}
@@ -39,13 +36,6 @@ public class RunTasks {
 			// GetProcessList 00 as0013
 			System.err.println(e.getMessage().toString());
 		}
-
-		// // ExecuteSSHCommand
-		// ExecuteSSHCommand ssh = new ExecuteSSHCommand();
-		// ssh.setCommand("GetProcessList");
-		// ssh.setUser("qsecofr");
-		// ssh.setPassword("bigboss");
-		// ssh.execute();
 
 	}
 }

@@ -313,3 +313,5 @@ java.lang.IllegalArgumentException: Incorrect number of command line arguments: 
 [AWT-EventQueue-0] INFO    - Start sap_ctrl command
 [AWT-EventQueue-0] INFO    - Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
 [AWT-EventQueue-0] INFO    - End sap_ctrl
+[AWT-EventQueue-0] WARN    - Please Enter User and Password
+[main] FATAL   - Incorrect number of command line arguments: 0

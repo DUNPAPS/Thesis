@@ -2,7 +2,5 @@
 /icudt50.dll
 /icuin50.dll
 /icuuc50.dll
-/plink.exe
-/sapcontrol.exe
-/log4j-1.2.15.jar
 /log/
+/plink.exe

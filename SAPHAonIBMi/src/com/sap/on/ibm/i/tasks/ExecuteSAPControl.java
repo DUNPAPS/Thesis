@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import com.sap.on.ibm.i.logger.Logging;
 
 public class ExecuteSAPControl {
-	private Logging logging=Logging.getInstance();
+	private Logging logging = Logging.getInstance();
 	private String param0;
 	private String param1;
 	private String instance;
@@ -53,9 +53,9 @@ public class ExecuteSAPControl {
 	}
 
 	public void execute() {
-		logging.getLogger().info("---------------------------------------------------------------------------");
+		logging.getLogger().info("\n"+ "--------------------");
 		logging.getLogger().info("  ExecuteSAPControl ");
-		logging.getLogger().info("---------------------------------------------------------------------------");
+		logging.getLogger().info("--------------------"+ "\n" );
 
 		String sap_ctrl = "sapcontrol.exe";
 
@@ -89,9 +89,10 @@ public class ExecuteSAPControl {
 
 		try {
 
-			
 			logging.getLogger().info("Start sap_ctrl command");
-			logging.getLogger().info( "Command: " + "  " + sap_ctrl);
+			logging.getLogger()
+					.info("Command: " + "\n" + "\n " + "\t" + "\t" + sap_ctrl
+							+ "\n ");
 
 			Process process = Runtime.getRuntime().exec(sap_ctrl);
 			BufferedReader bufferedReader = new BufferedReader(
