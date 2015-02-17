@@ -7,6 +7,8 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.JOptionPane;
+
 import com.sap.on.ibm.i.editor.model.User;
 import com.sap.on.ibm.i.editor.view.OutputTestEditor;
 import com.sap.on.ibm.i.logger.Logging;
@@ -16,12 +18,14 @@ import com.sap.on.ibm.i.tasks.main.RunTasks;
 public class Listener implements ActionListener, PropertyChangeListener,
 		ItemListener {
 	private OutputTestEditor _outputTestEditor;
-	private User _user;
 	private Logging logging;
+	private boolean stopSAPCheckBox;
+	private Controller controller;
+	private boolean applyKernelCheckBox;
 
-	public Listener(OutputTestEditor outputTestEditor, User user) {
-		this._outputTestEditor = outputTestEditor;
-		this._user = user;
+	public Listener(Controller controller) {
+		this.controller = controller;
+		this._outputTestEditor = controller.get_outputTestEditor();
 		logging = Logging.getInstance();
 		logging.setLogger(Listener.class.getName());
 	}
@@ -31,31 +35,29 @@ public class Listener implements ActionListener, PropertyChangeListener,
 		if (e.getSource() == this._outputTestEditor.getPlayButton()) {
 			String sid = this._outputTestEditor.getSID();
 			String password = this._outputTestEditor.getPassword();
-			boolean b = this._outputTestEditor.getStop_SAP_Checkbox()
+			stopSAPCheckBox = this._outputTestEditor.getStop_SAP_Checkbox()
 					.isSelected();
-			if (sid.equals("") || password.equals("")) {
-				logging.getLogger().warn("Please Enter User and Password");
-				return;
+			applyKernelCheckBox = this._outputTestEditor
+					.getApplyKernelCheckbox().isSelected();
+			if (sid.equals("") || password.equals("") || !sid.equals("bigboss")
+					|| !password.equals("qsecofer")) {
+
+				JOptionPane.showMessageDialog(null,
+						"Invalid username and password", "Try again",
+						JOptionPane.ERROR_MESSAGE);
+				this._outputTestEditor.getSid_field().setText("");
+				this._outputTestEditor.getPassword_field().setText("");
 			}
-			if (!b) {
-				logging.getLogger().info("Stop SAP First");
-				return;
+			 
+			if (stopSAPCheckBox) {
+				controller.executeSAPcontrol();
+			}
+			if (applyKernelCheckBox) {
+				controller.executeSSHCommand();
 			}
 			else {
-				
-			logging.getLogger()
-					.info("---------------------------------------------------------------------------");
-			logging.getLogger()
-					.info("                          ExecuteSAPControl                                             ");
-			logging.getLogger()
-					.info("---------------------------------------------------------------------------");
-
-			ExecuteSAPControl sapControl = new ExecuteSAPControl();
-
-			sapControl.setFunction("GetProcessList");
-			sapControl.setInstance("00");
-			sapControl.setHost("as0013");
-			sapControl.execute();
+				JOptionPane.showMessageDialog(null, " Select a Task to run..",
+						" Run Tasks ", JOptionPane.ERROR_MESSAGE);
 			}
 
 		}

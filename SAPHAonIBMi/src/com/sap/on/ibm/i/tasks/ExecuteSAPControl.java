@@ -4,7 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
+import org.apache.log4j.Level;
+
+import com.sap.on.ibm.i.editor.controller.Controller;
 import com.sap.on.ibm.i.logger.Logging;
 
 public class ExecuteSAPControl {
@@ -16,8 +21,12 @@ public class ExecuteSAPControl {
 	private String host;
 	private String version;
 	private String format;
+	private SimpleDateFormat datumFormat = null;
+	private Controller controller;
+	private static final String DATUM_FORMAT_JETZT = "dd/MM/yyyy HH:mm:ss";
 
-	public ExecuteSAPControl() {
+	public ExecuteSAPControl(Controller controller) {
+		this.controller = controller;
 		logging.setLogger(this.getClass().getName());
 	}
 
@@ -53,9 +62,29 @@ public class ExecuteSAPControl {
 	}
 
 	public void execute() {
-		logging.getLogger().info("\n"+ "--------------------");
-		logging.getLogger().info("  ExecuteSAPControl ");
-		logging.getLogger().info("--------------------"+ "\n" );
+
+		// start another thread to connect to the server to avoid blocking the
+		// ui
+		Thread t2 = new Thread(new Runnable() {
+			public void run() {
+				try {
+					controller.get_outputTestEditor().getjProgressBar()
+							.setIndeterminate(true);
+					controller.get_outputTestEditor().getjProgressBar()
+							.setBorderPainted(true);
+					controller.get_outputTestEditor().getjProgressBar()
+							.repaint();
+					Thread.sleep(800);
+					executeSAPControl();
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}, "Running command");
+		t2.start();
+	}
+
+	public void executeSAPControl() {
 
 		String sap_ctrl = "sapcontrol.exe";
 
@@ -88,11 +117,13 @@ public class ExecuteSAPControl {
 		}
 
 		try {
-
-			logging.getLogger().info("Start sap_ctrl command");
-			logging.getLogger()
-					.info("Command: " + "\n" + "\n " + "\t" + "\t" + sap_ctrl
-							+ "\n ");
+			logging.getLogger().setLevel(Level.INFO);
+			logging.getLogger().info(
+					logging.getLogger().getLevel() + " " + "Command:    "
+							+ sap_ctrl + "\n ");
+			logging.getLogger().info(
+					logging.getLogger().getLevel() + " "
+							+ "Executig SAP Control command...");
 
 			Process process = Runtime.getRuntime().exec(sap_ctrl);
 			BufferedReader bufferedReader = new BufferedReader(
@@ -100,7 +131,15 @@ public class ExecuteSAPControl {
 
 			String line = null;
 			while ((line = bufferedReader.readLine()) != null) {
-				System.out.println(line);
+				if (line.contains("FAIL")) {
+					Exception exception = new Exception(line);
+					printException(exception);
+				} else {
+					logging.getLogger().info(line);
+					controller.get_outputTestEditor().getjProgressBar()
+							.setIndeterminate(true);
+				}
+
 			}
 
 			// get the error stream of the process
@@ -110,13 +149,35 @@ public class ExecuteSAPControl {
 
 			String error = null;
 			while ((error = errorbufferedReader.readLine()) != null) {
-				logging.getLogger().warn(error);
+				logging.getLogger().setLevel(Level.ERROR);
+				logging.getLogger().error(logging.getLogger().getLevel()+error+"/n");
 			}
-
-			logging.getLogger().info("End sap_ctrl");
+			logging.getLogger().setLevel(Level.INFO);
+			logging.getLogger().info("\n"+logging.getLogger().getLevel()+" "+" End sap_ctrl" + "\n");
+			controller.get_outputTestEditor().getjProgressBar()
+					.setIndeterminate(false);
 
 		} catch (IOException e) {
-			logging.getLogger().error(e.getMessage());
+			e.printStackTrace();
 		}
+	}
+
+	private String actuallTime() {
+		if (datumFormat == null) {
+			datumFormat = new SimpleDateFormat(DATUM_FORMAT_JETZT);
+		}
+
+		Calendar cal = Calendar.getInstance(); // Calendar Singleton Objekt
+		return datumFormat.format(cal.getTime());
+
+	}
+
+	public void printException(Exception fehler) {
+
+		String zeit = actuallTime();
+		zeit = zeit + ":: ";
+		String exce = zeit + " ExceptionTrace";
+		logging.getLogger().warn(exce + "   " + fehler.getMessage() + "\n");
+
 	}
 }

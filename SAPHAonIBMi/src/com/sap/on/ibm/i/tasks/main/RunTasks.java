@@ -1,16 +1,18 @@
 package com.sap.on.ibm.i.tasks.main;
 
+import com.sap.on.ibm.i.editor.controller.Controller;
 import com.sap.on.ibm.i.logger.Logging;
 import com.sap.on.ibm.i.tasks.ExecuteSAPControl;
 
 public class RunTasks {
 	private static Logging logging = Logging.getInstance();
+	private  static Controller controller=new Controller();
 
 	public static void main(String[] args) {
 		logging.setLogger(RunTasks.class.getName());
 
 		try {
-			ExecuteSAPControl sapControl = new ExecuteSAPControl();
+			ExecuteSAPControl sapControl = new ExecuteSAPControl(controller);
 
 			if (args.length > 2) {
 				for (String arg : args) {

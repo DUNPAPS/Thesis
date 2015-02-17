@@ -1,14 +1,17 @@
 package com.sap.on.ibm.i.editor.view;
 
 import java.awt.BorderLayout;
-
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Label;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+
+import javafx.scene.layout.Pane;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -23,6 +26,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -35,10 +40,11 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+
 @SuppressWarnings("serial")
 public class OutputTestEditor extends JFrame {
-	private JTextField sid_field;
-	private JTextField password_field;
+	private JPasswordField sid_field;
+	private JPasswordField password_field;
 	private JCheckBox stop_SAP_Checkbox;
 	private JCheckBox applyKernelCheckbox;
 	private JCheckBox startSAPCheckBox;
@@ -53,6 +59,7 @@ public class OutputTestEditor extends JFrame {
 	private JButton stopButton;
 	private JScrollPane scrollPane;
 	private JTextArea jtextArea;
+	private JProgressBar jProgressBar;
 
 	public OutputTestEditor() {
 		super("OutputTestEditor");
@@ -134,12 +141,17 @@ public class OutputTestEditor extends JFrame {
 		lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNewLabel.setFont(new Font("Arial", Font.PLAIN, 12));
 
-		sid_field = new JTextField();
+		sid_field = new JPasswordField();
+		this.sid_field.setText("bigboss");
+		this.sid_field.setEchoChar('*');
+
 		sid_field.setFont(new Font("Arial", Font.PLAIN, 12));
 		sid_field.setHorizontalAlignment(SwingConstants.CENTER);
 		sid_field.setColumns(10);
 
-		password_field = new JTextField();
+		password_field = new JPasswordField();
+		this.password_field.setText("qsecofer");
+		this.password_field.setEchoChar('*');
 		password_field.setHorizontalAlignment(SwingConstants.CENTER);
 		password_field.setFont(new Font("Arial", Font.PLAIN, 12));
 		password_field.setColumns(10);
@@ -307,9 +319,9 @@ public class OutputTestEditor extends JFrame {
 		statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
 		statusPanel.setPreferredSize(new Dimension(main.getWidth(), 16));
 		statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
-		JLabel statusLabel = new JLabel("Running Tasks");
-		statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		statusPanel.add(statusLabel);
+
+		jProgressBar = new JProgressBar();
+		statusPanel.add(jProgressBar);
 
 		main.setBorder(titledBorder);
 		main.add(toolBar, BorderLayout.PAGE_START);
@@ -329,11 +341,13 @@ public class OutputTestEditor extends JFrame {
 	}
 
 	public String getSID() {
-		return this.sid_field.getText().trim();
+		String sid = new String(this.sid_field.getPassword()).trim();
+		return sid;
 	}
 
 	public String getPassword() {
-		return this.password_field.getText().trim();
+		String password = new String(this.password_field.getPassword()).trim();
+		return password;
 	}
 
 	public void setclearLogViewButtonActionListener(ActionListener l) {
@@ -346,6 +360,10 @@ public class OutputTestEditor extends JFrame {
 
 	public void setplayButtonActionListener(ActionListener l) {
 		this.playButton.addActionListener(l);
+	}
+
+	public void removePlayButtonActionListener(ActionListener l) {
+		this.playButton.removeActionListener(l);
 	}
 
 	public void setstopButtonActionListener(ActionListener l) {
@@ -426,6 +444,10 @@ public class OutputTestEditor extends JFrame {
 
 	public JTextArea getJtextArea() {
 		return jtextArea;
+	}
+
+	public JProgressBar getjProgressBar() {
+		return jProgressBar;
 	}
 
 }
