@@ -2,16 +2,12 @@ package com.sap.on.ibm.i.editor.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Label;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-
-import javafx.scene.layout.Pane;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -29,14 +25,12 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
@@ -58,18 +52,13 @@ public class OutputTestEditor extends JFrame {
 	private JButton playButton;
 	private JButton stopButton;
 	private JScrollPane scrollPane;
-	private JTextArea jtextArea;
+	private JTextPane jtextArea;
 	private JProgressBar jProgressBar;
+	private JMenuItem importScriptJMenuItem;
 
 	public OutputTestEditor() {
 		super("OutputTestEditor");
-		buildGUI();
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException | InstantiationException
-				| IllegalAccessException | UnsupportedLookAndFeelException e) {
-			e.printStackTrace();
-		}
+			buildGUI();
 	}
 
 	private void setzeMenue() {
@@ -79,6 +68,10 @@ public class OutputTestEditor extends JFrame {
 		this.file = new JMenu("File");
 		this.menuBar.add(this.file);
 
+		this.importScriptJMenuItem = new JMenuItem("Import Script");
+		this.file.add(importScriptJMenuItem);
+		this.importScriptJMenuItem.setActionCommand("Import");
+		this.file.addSeparator();
 		ImageIcon iconClose = new ImageIcon("exit.jpg");
 		this.exitJMenuItem = new JMenuItem("Exit", iconClose);
 		this.file.add(this.exitJMenuItem);
@@ -166,7 +159,6 @@ public class OutputTestEditor extends JFrame {
 						.addGroup(
 								gl_panInput
 										.createSequentialGroup()
-										.addGap(91)
 										.addGroup(
 												gl_panInput
 														.createParallelGroup(
@@ -174,20 +166,16 @@ public class OutputTestEditor extends JFrame {
 														.addGroup(
 																gl_panInput
 																		.createSequentialGroup()
-																		.addGap(187)
+																		.addGap(278)
 																		.addComponent(
 																				panInputLabels,
-																				GroupLayout.PREFERRED_SIZE,
-																				203,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addComponent(
-																				panInputFields,
 																				GroupLayout.PREFERRED_SIZE,
 																				203,
 																				GroupLayout.PREFERRED_SIZE))
 														.addGroup(
 																gl_panInput
 																		.createSequentialGroup()
+																		.addContainerGap()
 																		.addGroup(
 																				gl_panInput
 																						.createParallelGroup(
@@ -217,9 +205,12 @@ public class OutputTestEditor extends JFrame {
 																								GroupLayout.PREFERRED_SIZE,
 																								177,
 																								GroupLayout.PREFERRED_SIZE))))
-										.addGap(178)));
+										.addComponent(panInputFields,
+												GroupLayout.PREFERRED_SIZE,
+												203, GroupLayout.PREFERRED_SIZE)
+										.addContainerGap(192, Short.MAX_VALUE)));
 		gl_panInput.setVerticalGroup(gl_panInput.createParallelGroup(
-				Alignment.LEADING).addGroup(
+				Alignment.TRAILING).addGroup(
 				gl_panInput
 						.createSequentialGroup()
 						.addGroup(
@@ -233,7 +224,7 @@ public class OutputTestEditor extends JFrame {
 												GroupLayout.PREFERRED_SIZE,
 												GroupLayout.DEFAULT_SIZE,
 												GroupLayout.PREFERRED_SIZE))
-						.addPreferredGap(ComponentPlacement.UNRELATED)
+						.addPreferredGap(ComponentPlacement.RELATED)
 						.addGroup(
 								gl_panInput
 										.createParallelGroup(
@@ -244,17 +235,17 @@ public class OutputTestEditor extends JFrame {
 												Short.MAX_VALUE)
 										.addComponent(sid_field,
 												Alignment.LEADING,
-												GroupLayout.DEFAULT_SIZE, 42,
-												Short.MAX_VALUE))
+												GroupLayout.PREFERRED_SIZE, 42,
+												GroupLayout.PREFERRED_SIZE))
 						.addPreferredGap(ComponentPlacement.UNRELATED)
 						.addGroup(
 								gl_panInput
 										.createParallelGroup(Alignment.LEADING)
 										.addComponent(lblNewLabel,
-												GroupLayout.DEFAULT_SIZE, 42,
+												GroupLayout.DEFAULT_SIZE, 43,
 												Short.MAX_VALUE)
 										.addComponent(password_field,
-												GroupLayout.DEFAULT_SIZE, 42,
+												GroupLayout.DEFAULT_SIZE, 43,
 												Short.MAX_VALUE))
 						.addContainerGap()));
 
@@ -325,7 +316,8 @@ public class OutputTestEditor extends JFrame {
 
 		main.setBorder(titledBorder);
 		main.add(toolBar, BorderLayout.PAGE_START);
-		jtextArea = new JTextArea(20, 30);
+		jtextArea = new JTextPane();
+		// jtextArea.setBorder(border);
 
 		scrollPane = new JScrollPane(jtextArea);
 		main.add(scrollPane, BorderLayout.CENTER);
@@ -442,7 +434,7 @@ public class OutputTestEditor extends JFrame {
 		return stopButton;
 	}
 
-	public JTextArea getJtextArea() {
+	public JTextPane getJtextArea() {
 		return jtextArea;
 	}
 
@@ -450,4 +442,10 @@ public class OutputTestEditor extends JFrame {
 		return jProgressBar;
 	}
 
+	public JMenuItem getImportScriptJMenuItem() {
+		return importScriptJMenuItem;
+	}
+	public void setImportScriptJMenuItemActionListener(ActionListener l) {
+		this.importScriptJMenuItem.addActionListener(l);
+	}
 }

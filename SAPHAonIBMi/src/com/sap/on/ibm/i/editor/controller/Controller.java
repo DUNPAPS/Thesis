@@ -9,11 +9,14 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import org.apache.log4j.Layout;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 
 import com.sap.on.ibm.i.editor.model.User;
 import com.sap.on.ibm.i.editor.view.OutputTestEditor;
+import com.sap.on.ibm.i.editor.view.ScriptEditor;
 import com.sap.on.ibm.i.logger.Appender;
 import com.sap.on.ibm.i.logger.Levels;
 import com.sap.on.ibm.i.logger.Logging;
@@ -40,15 +43,28 @@ public class Controller {
 		this.addListener();
 	}
 
-	public void showView() {
-		Appender a = new Appender(this, this._outputTestEditor.getJtextArea());
+	public void showMainView() {
+		Appender appender = new Appender(this);
 		Logger root = Logger.getRootLogger();
-		root.addAppender(a);
+		PatternLayout layout = new PatternLayout("%m%n");
+		logging.setLayout(layout);
+		appender.setLayout(logging.getLayout());
+		root.addAppender(appender);
+		
+		
 
 		this._outputTestEditor.setVisible(true);
 
 	}
 
+	
+	public void showScriptView() {
+		 ScriptEditor scriptEditor = new ScriptEditor(this);
+		 scriptEditor.setVisible();
+
+	}
+	
+	
 	public void executeSAPcontrol() {
 
 		ExecuteSAPControl sapControl = new ExecuteSAPControl(this);
@@ -75,6 +91,7 @@ public class Controller {
 		_outputTestEditor.setstopButtonActionListener(_listener);
 		_outputTestEditor.setexitJMenuItemActionListener(_listener);
 		_outputTestEditor.setinforJMenuItemActionListener(_listener);
+		_outputTestEditor.setImportScriptJMenuItemActionListener(_listener);
 	}
 
 	public void removeListener(String msg) {
