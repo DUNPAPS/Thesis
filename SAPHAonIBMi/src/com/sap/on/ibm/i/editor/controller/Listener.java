@@ -9,20 +9,24 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.JOptionPane;
 
-import com.sap.on.ibm.i.editor.model.User;
 import com.sap.on.ibm.i.editor.view.OutputTestEditor;
 import com.sap.on.ibm.i.logger.Logging;
-import com.sap.on.ibm.i.tasks.ExecuteSAPControl;
-import com.sap.on.ibm.i.tasks.main.RunTasks;
 
 public class Listener implements ActionListener, PropertyChangeListener,
 		ItemListener {
+	
 	private OutputTestEditor _outputTestEditor;
+	
 	private Logging logging;
+	
 	private boolean stopSAPCheckBox;
+	
 	private Controller controller;
+	
 	private boolean applyKernelCheckBox;
-
+	
+	private boolean allChecked;
+	
 	public Listener(Controller controller) {
 		this.controller = controller;
 		this._outputTestEditor = controller.get_outputTestEditor();
@@ -41,25 +45,25 @@ public class Listener implements ActionListener, PropertyChangeListener,
 					.getApplyKernelCheckbox().isSelected();
 			if (sid.equals("") || password.equals("") || !sid.equals("bigboss")
 					|| !password.equals("qsecofer")) {
-
+				allChecked=true;
 				JOptionPane.showMessageDialog(null,
 						"Invalid username and password", "Try again",
 						JOptionPane.ERROR_MESSAGE);
 				this._outputTestEditor.getSid_field().setText("");
 				this._outputTestEditor.getPassword_field().setText("");
 			}
-			 
 			if (stopSAPCheckBox) {
+				allChecked=true;
 				controller.executeSAPcontrol();
 			}
 			if (applyKernelCheckBox) {
+				allChecked=true;
 				controller.executeSSHCommand();
 			}
-			else {
+			if (!allChecked) {
 				JOptionPane.showMessageDialog(null, " Select a Task to run..",
 						" Run Tasks ", JOptionPane.ERROR_MESSAGE);
 			}
-
 		}
 	}
 
@@ -69,7 +73,6 @@ public class Listener implements ActionListener, PropertyChangeListener,
 
 	@Override
 	public void propertyChange(PropertyChangeEvent arg0) {
-		// TODO Auto-generated method stub
 
 	}
 

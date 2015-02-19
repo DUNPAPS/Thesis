@@ -1,7 +1,5 @@
 package com.sap.on.ibm.i.logger;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -62,51 +60,6 @@ public class Logging extends AppenderSkeleton {
 		return datumFormat.format(cal.getTime());
 
 	}
-
-	public void printUserAction(String text) {
-		try {
-			FileWriter fstream = new FileWriter(LogFile, true);
-			BufferedWriter out = new BufferedWriter(fstream);
-
-			String zeit = actuallTime();
-			zeit = zeit + "::";
-			out.write(zeit + text);
-			out.newLine();
-			out.close();
-		} catch (Exception e) {
-			System.err.println("Error: " + e.getMessage());
-
-		}
-	}
-
-	public void printException(Exception fehler) {
-
-		try {
-			FileWriter fstream = new FileWriter(LogFile, true);
-			BufferedWriter out = new BufferedWriter(fstream);
-
-			String zeit = actuallTime();
-			zeit = zeit + "::";
-			out.write(zeit + "ExceptionTrace");
-			out.newLine();
-
-			out.write(fehler.getMessage());
-			out.newLine();
-
-			StackTraceElement[] elements = fehler.getStackTrace();
-			int noOfElements = elements.length;
-			for (int i = 0; i < noOfElements; i++) {
-				out.write("@ " + elements[i].toString());
-				out.newLine();
-			}
-
-			out.close();
-		} catch (Exception e) {
-			System.err.println("Error: " + e.getMessage());
-
-		}
-	}
-
 	public Logger getLogger() {
 		return logger;
 	}

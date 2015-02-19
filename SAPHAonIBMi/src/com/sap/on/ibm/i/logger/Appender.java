@@ -12,17 +12,25 @@ import com.sap.on.ibm.i.editor.controller.Controller;
 
 public class Appender extends AppenderSkeleton {
 
-	private JTextArea area;
+	private JTextArea textArea;
 	private Controller controller;
 	private static final int CONSOLE_LINE_BUFFER_SIZE = 1000;
 	private String cache;
 
 	public Appender(Controller controller, JTextArea a) {
-		this.area = a;
+		this.textArea = a;
 		this.controller = controller;
 	}
 
 	protected void append(LoggingEvent e) {
+	            String[] lines = e.getThrowableStrRep();
+	            if (lines != null) {
+	                for (String line : lines) {
+	                	System.out.println("we are here");
+	                    textArea.append(line + System.getProperty("line.separator"));
+	                }
+	            }
+
 		final String level = e.getLevel().toString();
 		final String msg = e.getRenderedMessage();
 		if (cache != null && cache.equals(msg)) {
@@ -31,21 +39,21 @@ public class Appender extends AppenderSkeleton {
 			SwingUtilities.invokeLater(new Thread(
 					"Agent Log4JJTextAreaAppender Thread") {
 				public void run() {
-					area.append(msg + "\n");
-					if (area.getLineCount() > CONSOLE_LINE_BUFFER_SIZE) {
+					textArea.append(msg + "\n");
+					if (textArea.getLineCount() > CONSOLE_LINE_BUFFER_SIZE) {
 						// remove old lines
 						try {
-							area.replaceRange(
+							textArea.replaceRange(
 									"",
 									0,
-									area.getLineEndOffset(area.getLineCount()
+									textArea.getLineEndOffset(textArea.getLineCount()
 											- CONSOLE_LINE_BUFFER_SIZE));
 						} catch (BadLocationException e) {
 							// ignore
 						}
 					}
 					// Make sure the last line is always visible
-					area.setCaretPosition(area.getDocument().getLength());
+					textArea.setCaretPosition(textArea.getDocument().getLength());
 				}
 			});
 			cache = msg;
