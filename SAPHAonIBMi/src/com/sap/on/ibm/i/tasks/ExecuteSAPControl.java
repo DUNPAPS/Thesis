@@ -1,5 +1,7 @@
 package com.sap.on.ibm.i.tasks;
 
+import java.awt.event.ActionEvent;
+
 import com.sap.on.ibm.i.editor.controller.Controller;
 
 public class ExecuteSAPControl {
@@ -61,13 +63,15 @@ public class ExecuteSAPControl {
 							.setBorderPainted(true);
 					controller.get_outputTestEditor().getjProgressBar()
 							.repaint();
-					Thread.sleep(800);
+					Thread.sleep(1000);
 					controller.runCommand(getCommand());
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}
+				ActionEvent e = new TaskDoneEvent(this,1234,"ExecuteSAPControlDone");
+				controller.sendDoneEvent(e);				
 			}
-		}, "Running command");
+		}, "Running SAPControl...");
 		t2.start();
 	}
 

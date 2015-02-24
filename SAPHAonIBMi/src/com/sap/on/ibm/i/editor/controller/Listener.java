@@ -9,7 +9,9 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.JOptionPane;
 
+import com.sap.on.ibm.i.logger.Levels;
 import com.sap.on.ibm.i.logger.Logging;
+import com.sap.on.ibm.i.tasks.TaskDoneEvent;
 
 public class Listener implements ActionListener, PropertyChangeListener,
 		ItemListener {
@@ -32,8 +34,19 @@ public class Listener implements ActionListener, PropertyChangeListener,
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == this.controller.get_outputTestEditor()
-				.getPlayButton()) {
+
+		try {
+			String EventName = e.getActionCommand();
+			controller.logMessages(Levels.INFO, EventName, null);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		if (e.getSource() == this.controller.get_outputTestEditor().getPlayButton()
+			||
+			e.getClass() == TaskDoneEvent.class) {
+			 
 			String sid = this.controller.get_outputTestEditor().getSID();
 			String password = this.controller.get_outputTestEditor()
 					.getPassword();
@@ -41,9 +54,11 @@ public class Listener implements ActionListener, PropertyChangeListener,
 					.getStop_SAP_Checkbox().isSelected();
 			applyKernelCheckBox = this.controller.get_outputTestEditor()
 					.getApplyKernelCheckbox().isSelected();
-			if (sid.equals("") || password.equals("") || !sid.equals("bigboss")
+			if (sid.equals("") || password.equals("")||!sid.equals("bigboss")
 					|| !password.equals("qsecofer")) {
 				allChecked = true;
+				stopSAPCheckBox=false;
+				applyKernelCheckBox=false;
 				JOptionPane.showMessageDialog(null,
 						"Invalid username and password", "Try again",
 						JOptionPane.ERROR_MESSAGE);
@@ -54,13 +69,15 @@ public class Listener implements ActionListener, PropertyChangeListener,
 			}
 			if (stopSAPCheckBox) {
 				allChecked = true;
-				controller.executeSAPcontrol();
+				controller.stopSAP();
+				this.controller.get_outputTestEditor().getStop_SAP_Checkbox().setSelected(false);
 			}
-			if (applyKernelCheckBox) {
+			else if (applyKernelCheckBox) {
 				allChecked = true;
-				controller.executeSSHCommand();
+				controller.applyKernel();
+				this.controller.get_outputTestEditor().getApplyKernelCheckbox().setSelected(false);
 			}
-			if (!allChecked) {
+			else if (!allChecked) {
 				JOptionPane.showMessageDialog(null, " Select a Task to run..",
 						" Run Tasks ", JOptionPane.ERROR_MESSAGE);
 			}

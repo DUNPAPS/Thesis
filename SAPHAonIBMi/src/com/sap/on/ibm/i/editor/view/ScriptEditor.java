@@ -12,6 +12,7 @@ import com.sap.on.ibm.i.editor.controller.Controller;
 
 import java.io.*;
 
+@SuppressWarnings("serial")
 public class ScriptEditor extends JFrame {
 
 	private JFileChooser fileChooser;
@@ -62,9 +63,16 @@ public class ScriptEditor extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				saveAs();
-				// JOptionPane.showMessageDialog(null,
-				// "The Message was Saved Successfully! ");
+				if (textarea.getText().equals("")) {
+					Cursor defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+					setCursor(defaultCursor);
+
+					JOptionPane.showMessageDialog(new JFrame(),
+							"There is no script to save", "Error",
+							JOptionPane.ERROR_MESSAGE);
+				} else {
+					saveAs();
+				}
 			}
 		};
 
@@ -122,37 +130,37 @@ public class ScriptEditor extends JFrame {
 											.setSelected(true);
 								}
 								if (firstSubString.trim().equals("SAP_SID")
-										&& secondSubString.trim().equals("DCN")) {
+										&& secondSubString.trim().equals("bigboss")) {
 									controller.get_outputTestEditor()
 											.getSid_field().setText("");
 									controller.get_outputTestEditor()
-											.getSid_field().setText("dcnadm");
-									System.out.println(controller.get_outputTestEditor()
-											.getSid_field().getText());
+											.getSid_field().setText("bigboss");
 								}
-								if (firstSubString.trim().equals("SAP_User")
+								if (firstSubString.trim().equals("SAP_Password")
 										&& secondSubString.trim().equals(
-												"dcnadm")) {
+												"qsecofer")) {
 									controller.get_outputTestEditor()
 											.getPassword_field().setText("");
 									controller.get_outputTestEditor()
 											.getPassword_field()
-											.setText("sapofr12");
-									System.out.println(controller.get_outputTestEditor()
-											.getPassword_field().getText());
+											.setText("qsecofer");
 								}
 								if (firstSubString.trim()
-										.equals("SAP_Password")
+										.equals("SAP_Userd")
 										&& secondSubString.trim().equals(
-												"sapofr12")) {
+												"dcnadm")) {
 									// TODO
 								}
 
 							}
-						}
 
+						}
+						controller
+								.getLogging()
+								.getLogger()
+								.info("Script" + " " + "[ " + file + " ]" + " "
+										+ "Successfully loaded....");
 					} catch (InterruptedException | BadLocationException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					setCursor(waitCursor);

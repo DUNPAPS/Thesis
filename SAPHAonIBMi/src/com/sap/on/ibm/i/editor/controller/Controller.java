@@ -1,15 +1,12 @@
-/**
- * 
- */
 package com.sap.on.ibm.i.editor.controller;
 
+import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import org.apache.log4j.Layout;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
@@ -20,8 +17,8 @@ import com.sap.on.ibm.i.editor.view.ScriptEditor;
 import com.sap.on.ibm.i.logger.Appender;
 import com.sap.on.ibm.i.logger.Levels;
 import com.sap.on.ibm.i.logger.Logging;
+import com.sap.on.ibm.i.tasks.ApplyKernel;
 import com.sap.on.ibm.i.tasks.ExecuteSAPControl;
-import com.sap.on.ibm.i.tasks.ExecuteSSHCommand;
 
 /**
  * @author Duncan
@@ -35,12 +32,20 @@ public class Controller {
 	private SimpleDateFormat datumFormat = null;
 	private static final String DATUM_FORMAT_JETZT = "dd/MM/yyyy HH:mm:ss";
 	private Levels levels;
-
+	
+	public void sendDoneEvent(ActionEvent e) {
+		_listener.actionPerformed(e);
+	}
+	
+	
 	public Controller() {
 		this._outputTestEditor = new OutputTestEditor();
 		this._user = new User();
+		this._user.setUser("qsecofr@as0013");
+		this._user.setPassword("bigboss");
 		this._listener = new Listener(this);
 		this.addListener();
+		 
 	}
 
 	public void showMainView() {
@@ -50,22 +55,18 @@ public class Controller {
 		logging.setLayout(layout);
 		appender.setLayout(logging.getLayout());
 		root.addAppender(appender);
-		
-		
 
 		this._outputTestEditor.setVisible(true);
 
 	}
 
-	
 	public void showScriptView() {
-		 ScriptEditor scriptEditor = new ScriptEditor(this);
-		 scriptEditor.setVisible();
+		ScriptEditor scriptEditor = new ScriptEditor(this);
+		scriptEditor.setVisible();
 
 	}
-	
-	
-	public void executeSAPcontrol() {
+
+	public void stopSAP() {
 
 		ExecuteSAPControl sapControl = new ExecuteSAPControl(this);
 		sapControl.setFunction("GetProcessList");
@@ -74,19 +75,32 @@ public class Controller {
 		sapControl.execute();
 	}
 
-	public void executeSSHCommand() {
+	public void applyKernel() {
 
-		ExecuteSSHCommand executeSSHCommand = new ExecuteSSHCommand(this);
-		executeSSHCommand.setUser("qsecofr@as0013");
-		executeSSHCommand.setPassword("bigboss");
-		executeSSHCommand.setCommand("ls -R /");
-		executeSSHCommand.execute();
+		ApplyKernel applylKernel = new ApplyKernel(this);
+		applylKernel.setCommand("STEP0", "cd /FSIASP/sapmnt/DCN/exe/uc");
+		//applylKernel.setCommand("STEP0", "cd /FSIASP/sapmnt/DCN/exe/uc; rm -R as400_pase_64.backup");
+		//applylKernel.setCommand("STEP1", "cd /FSIASP/sapmnt/DCN/exe/uc; cp -R as400_pase_64 as400_pase_64.backup");
+		applylKernel.exe();
+		
+//		LastNightSAPKernel lastNightSAPKernel = new LastNightSAPKernel(this);
+//		lastNightSAPKernel.setCommand("STEP0", "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXEDB_DB4.SAR .");
+//		lastNightSAPKernel.setCommand("STEP1", "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXE.SAR  .");
+//		lastNightSAPKernel.exe();
+		//getKernelBuildl.setCommand("STEP2", "cd /FSIASP/sapmnt/DCN/exe/uc; ");
+		//getKernelBuildl.setCommand("STEP3", "cd /FSIASP/sapmnt/DCN/exe/uc");
+		//getKernelBuildl.exe();
+		
+//		LastNightSAPKernel lastNightSAPKernel = new LastNightSAPKernel(this);
+//		lastNightSAPKernel.setCommand("STEP0", "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXEDB_DB4.SAR .");
+//		lastNightSAPKernel.setCommand("STEP1", "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXE.SAR  .");
+//		lastNightSAPKernel.exe();		
 	}
-
+	
 	public void addListener() {
 		_outputTestEditor.setclearLogViewButtonActionListener(_listener);
 		_outputTestEditor.setcopyActionListener(_listener);
-		_outputTestEditor.setstop_SAP_CheckboxActionListener(_listener);
+		//_outputTestEditor.setstop_SAP_CheckboxActionListener(_listener);
 		_outputTestEditor.setplayButtonActionListener(_listener);
 		_outputTestEditor.setstopButtonActionListener(_listener);
 		_outputTestEditor.setexitJMenuItemActionListener(_listener);
@@ -97,13 +111,7 @@ public class Controller {
 	public void removeListener(String msg) {
 	}
 
-	public OutputTestEditor get_outputTestEditor() {
-		return _outputTestEditor;
-	}
 
-	public User get_user() {
-		return _user;
-	}
 
 	public void logMessages(Levels enumLevels, String loggingMsg,
 			Exception exception) throws Exception {
@@ -136,38 +144,38 @@ public class Controller {
 		case WARN:
 			logging.getLogger().setLevel(Level.WARN);
 			String warn = logging.getLogger().getLevel() + " " + actuallTime();
-			logging.getLogger().warn(warn + "  " + exception.getLocalizedMessage() + "\n");
+			logging.getLogger().warn(
+					warn + "  " + exception.getLocalizedMessage() + "\n");
 			break;
 		case ERROR:
 			logging.getLogger().setLevel(Level.ERROR);
-			String error = logging.getLogger().getLevel().toString()+ " " + actuallTime();
-			logging.getLogger().error(error + "   " +  exception.getLocalizedMessage() + "\n");
+			String error = logging.getLogger().getLevel().toString() + " "
+					+ actuallTime();
+			logging.getLogger().error(
+					error + "   " + exception.getLocalizedMessage() + "\n");
 			break;
 		}
-
 	}
 
 	public void runCommand(String command) {
 
 		try {
 
-			logMessages(Levels.INFO, "Command:    " + command, null);
-			logMessages(Levels.INFO, "Executig command...", null);
 			
+
 			Process process = Runtime.getRuntime().exec(command);
 			BufferedReader bufferedReader = new BufferedReader(
 					new InputStreamReader(process.getInputStream()));
 
 			String line = null;
 			while ((line = bufferedReader.readLine()) != null) {
-				if (!line.equals("")&& line.contains("INFO")) {
+				if (!line.equals("") || line.contains("INFO")) {
 					logMessages(Levels.INFO, line, null);
 				}
-				else {
-					if (!line.equals("")&& line.contains("FAIL")){
-						logMessages(Levels.ERROR, null, new Exception(line));
-					}
+				if (!line.equals("") && line.contains("FAIL")) {
+					logMessages(Levels.ERROR, null, new Exception(line));
 				}
+
 			}
 
 			// get the error stream of the process
@@ -181,7 +189,7 @@ public class Controller {
 					logMessages(Levels.ERROR, null, new Exception(warning));
 				}
 			}
-			logMessages(Levels.INFO, " " + " Completed...", null);
+			logMessages(Levels.INFO, " " + " Finished ...", null);
 			get_outputTestEditor().getjProgressBar().setIndeterminate(false);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -198,6 +206,14 @@ public class Controller {
 
 	}
 
+	public OutputTestEditor get_outputTestEditor() {
+		return _outputTestEditor;
+	}
+
+	public User get_user() {
+		return _user;
+	}
+	
 	public Logging getLogging() {
 		return logging;
 	}
@@ -209,5 +225,7 @@ public class Controller {
 	public void setLevels(Levels levels) {
 		this.levels = levels;
 	}
+
+
 
 }

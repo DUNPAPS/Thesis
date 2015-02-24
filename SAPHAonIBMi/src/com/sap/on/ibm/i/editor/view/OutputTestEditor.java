@@ -42,6 +42,7 @@ public class OutputTestEditor extends JFrame {
 	private JCheckBox stop_SAP_Checkbox;
 	private JCheckBox applyKernelCheckbox;
 	private JCheckBox startSAPCheckBox;
+	private JCheckBox runHATestCheckBox;
 	private JMenuBar menuBar;
 	private JMenu file;
 	private JMenuItem exitJMenuItem;
@@ -121,8 +122,12 @@ public class OutputTestEditor extends JFrame {
 		applyKernelCheckbox = new JCheckBox("Apply Kernel");
 		applyKernelCheckbox.setFont(new Font("Arial", Font.PLAIN, 12));
 		tasksPanel.add(applyKernelCheckbox);
+		
+		runHATestCheckBox = new JCheckBox("Start SAP");
+		runHATestCheckBox.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		tasksPanel.add(runHATestCheckBox);
 
-		startSAPCheckBox = new JCheckBox("Start SAP");
+		startSAPCheckBox = new JCheckBox("RunHATest");
 		startSAPCheckBox.setFont(new Font("Arial", Font.PLAIN, 12));
 		tasksPanel.add(startSAPCheckBox);
 
