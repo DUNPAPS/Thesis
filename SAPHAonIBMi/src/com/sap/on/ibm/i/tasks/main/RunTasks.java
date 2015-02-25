@@ -26,7 +26,7 @@ public class RunTasks {
 						sapControl.setHost("as0013");
 					}
 				}
-				sapControl.execute();
+				sapControl.exe();
 			} else {
 				Throwable t = new IllegalArgumentException(
 						"Incorrect number of command line arguments: "

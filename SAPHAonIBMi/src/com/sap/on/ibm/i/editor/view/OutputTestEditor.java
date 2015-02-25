@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
@@ -91,8 +92,10 @@ public class OutputTestEditor extends JFrame {
 
 	private void buildGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(1107, 713);
-
+		Toolkit tk = Toolkit.getDefaultToolkit();
+		int xSize = ((int) tk.getScreenSize().getWidth());
+		int ySize = ((int) tk.getScreenSize().getHeight());
+		 setSize(xSize,ySize);
 		setzeMenue();
 
 		JPanel contentPane = (JPanel) getContentPane();

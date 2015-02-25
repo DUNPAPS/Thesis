@@ -72,7 +72,7 @@ public class Controller {
 		sapControl.setFunction("GetProcessList");
 		sapControl.setInstance("00");
 		sapControl.setHost("as0013");
-		sapControl.execute();
+		sapControl.exe();
 	}
 
 	public void applyKernel() {

@@ -1,8 +1,14 @@
 package com.sap.on.ibm.i.tasks;
 
 import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.sap.on.ibm.i.editor.controller.Controller;
+import com.sap.on.ibm.i.logger.Levels;
 
 public class ExecuteSAPControl {
 
@@ -13,7 +19,9 @@ public class ExecuteSAPControl {
 	private String host;
 	private String version;
 	private String format;
-	private Controller controller;
+	protected String SAP_CONTROL = "sapcontrol.exe";
+	protected Controller controller;
+	protected Map<String, String> myMap = new ConcurrentHashMap<String, String>();
 
 	public ExecuteSAPControl(Controller controller) {
 		this.controller = controller;
@@ -50,12 +58,11 @@ public class ExecuteSAPControl {
 	public void setDebug(Boolean debug) {
 	}
 
-	public void execute() {
-
-		// start another thread to connect to the server to avoid blocking the
-		// ui
+	public void exe() {
 		Thread t2 = new Thread(new Runnable() {
 			public void run() {
+				String line;
+
 				try {
 					controller.get_outputTestEditor().getjProgressBar()
 							.setIndeterminate(true);
@@ -63,15 +70,59 @@ public class ExecuteSAPControl {
 							.setBorderPainted(true);
 					controller.get_outputTestEditor().getjProgressBar()
 							.repaint();
-					Thread.sleep(1000);
-					controller.runCommand(getCommand());
+					SAP_CONTROL = " " + getCommand();
+					controller.logMessages(Levels.INFO, "Command:    "
+							+ SAP_CONTROL, null);
+					controller.logMessages(Levels.INFO, "Executig command...",
+							null);
+					Process p = Runtime.getRuntime().exec(SAP_CONTROL);
+					BufferedReader stdInput = new BufferedReader(
+							new InputStreamReader(p.getInputStream()));
+
+					// error
+					BufferedReader stdError = new BufferedReader(
+							new InputStreamReader(p.getErrorStream()));
+					while ((line = stdInput.readLine()) != null) {
+
+						if (!line.equals("") || line.contains("INFO")) {
+							controller.logMessages(Levels.INFO, line, null);
+						} else if (!line.equals("") && line.contains("FAIL")) {
+							controller.logMessages(Levels.ERROR, null,
+									new Exception(line));
+						} else {
+							controller.logMessages(Levels.INFO, line, null);
+						}
+					}
+					while ((line = stdError.readLine()) != null) {
+
+						if (!line.equals("")) {
+							controller.logMessages(Levels.ERROR, null,
+									new Exception(line));
+						}
+					}
+					p.waitFor();
 				} catch (Exception e) {
-					throw new RuntimeException(e);
+					try {
+						controller.logMessages(Levels.ERROR, null,
+								new Exception(e));
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
 				}
-				ActionEvent e = new TaskDoneEvent(this,1234,"ExecuteSAPControlDone");
-				controller.sendDoneEvent(e);				
+				try {
+					controller.logMessages(Levels.INFO, " " + " Finished ...",
+							null);
+					controller.get_outputTestEditor().getjProgressBar()
+							.setIndeterminate(false);
+					ActionEvent e = new TaskDoneEvent(this, 1234,
+							"SAP CONTROL DONE.....");
+					controller.sendDoneEvent(e);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
-		}, "Running SAPControl...");
+
+		}, "Execute SAP Control  .....");
 		t2.start();
 	}
 

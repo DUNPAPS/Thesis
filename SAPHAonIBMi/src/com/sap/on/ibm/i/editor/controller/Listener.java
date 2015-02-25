@@ -36,10 +36,11 @@ public class Listener implements ActionListener, PropertyChangeListener,
 	public void actionPerformed(ActionEvent e) {
 
 		try {
-			String EventName = e.getActionCommand();
-			controller.logMessages(Levels.INFO, EventName, null);
+			if ( e instanceof TaskDoneEvent){ 
+				String EventName = e.getActionCommand();
+				controller.logMessages(Levels.INFO, EventName, null);
+			}
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
