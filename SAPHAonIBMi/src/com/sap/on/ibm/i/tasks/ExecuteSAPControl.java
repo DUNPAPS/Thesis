@@ -3,7 +3,6 @@ package com.sap.on.ibm.i.tasks;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -56,6 +55,41 @@ public class ExecuteSAPControl {
 	}
 
 	public void setDebug(Boolean debug) {
+	}
+
+	public String getCommand() {
+
+		String sap_ctrl = "sapcontrol.exe";
+
+		if (instance != null) {
+			sap_ctrl += " -nr " + instance;
+		}
+		if (function != null) {
+			sap_ctrl += " -host " + host;
+		}
+		if (function != null) {
+			sap_ctrl += " -function " + function;
+		}
+		if (param0 != null) {
+			sap_ctrl += " " + param0;
+		}
+		if (param1 != null) {
+			sap_ctrl += " " + param1;
+		}
+
+		if (format != null) {
+			sap_ctrl += " -format " + format;
+		}
+
+		// if (debug) {
+		// sap_ctrl += " -debug";
+		// }
+
+		if (version != null) {
+			sap_ctrl += " " + version;
+		}
+		return sap_ctrl;
+
 	}
 
 	public void exe() {
@@ -126,39 +160,5 @@ public class ExecuteSAPControl {
 		t2.start();
 	}
 
-	public String getCommand() {
-
-		String sap_ctrl = "sapcontrol.exe";
-
-		if (instance != null) {
-			sap_ctrl += " -nr " + instance;
-		}
-		if (function != null) {
-			sap_ctrl += " -host " + host;
-		}
-		if (function != null) {
-			sap_ctrl += " -function " + function;
-		}
-		if (param0 != null) {
-			sap_ctrl += " " + param0;
-		}
-		if (param1 != null) {
-			sap_ctrl += " " + param1;
-		}
-
-		if (format != null) {
-			sap_ctrl += " -format " + format;
-		}
-
-		// if (debug) {
-		// sap_ctrl += " -debug";
-		// }
-
-		if (version != null) {
-			sap_ctrl += " " + version;
-		}
-		return sap_ctrl;
-
-	}
-
+	
 }
