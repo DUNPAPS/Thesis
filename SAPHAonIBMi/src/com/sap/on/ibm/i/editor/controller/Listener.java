@@ -34,25 +34,30 @@ public class Listener implements ActionListener, PropertyChangeListener,
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
 		try {
-			if (e instanceof TaskDoneEvent) {
-				String EventName = e.getActionCommand();
-				controller.logMessages(Levels.INFO, EventName, null);
-			}
 
+			if (e.getSource() == this.controller.get_outputTestEditor()
+					.getImportScriptJMenuItem()) {
+				this.controller.showScriptView();
+			}
 			if (e.getSource() == this.controller.get_outputTestEditor()
 					.getPlayButton() || e instanceof TaskDoneEvent) {
 
-				String sid = this.controller.get_outputTestEditor().getSID();
+				String EventName = e.getActionCommand();
+				controller.logMessages(Levels.INFO, EventName, null);
+
+				this.controller.get_outputTestEditor().getPlayButton()
+						.setEnabled(false);
+				String user = this.controller.get_outputTestEditor().getUSER();
 				String password = this.controller.get_outputTestEditor()
 						.getPassword();
 				stopSAPCheckBox = this.controller.get_outputTestEditor()
 						.getStop_SAP_Checkbox().isSelected();
 				applyKernelCheckBox = this.controller.get_outputTestEditor()
 						.getApplyKernelCheckbox().isSelected();
-				if (sid.equals("") || password.equals("")
-						|| !sid.equals("bigboss")
+
+				if (user.equals("") || password.equals("")
+						|| !user.equals("bigboss")
 						|| !password.equals("qsecofer")) {
 					allChecked = true;
 					stopSAPCheckBox = false;
@@ -60,30 +65,32 @@ public class Listener implements ActionListener, PropertyChangeListener,
 					JOptionPane.showMessageDialog(null,
 							"Invalid username and password", "Try again",
 							JOptionPane.ERROR_MESSAGE);
-					this.controller.get_outputTestEditor().getSid_field()
+					controller.get_outputTestEditor().getSap_SID_Field()
 							.setText("");
-					this.controller.get_outputTestEditor().getPassword_field()
+					controller.get_outputTestEditor().getSap_USER_Field()
+							.setText("");
+					controller.get_outputTestEditor().getSap_USER_Field()
 							.setText("");
 				}
+
 				if (stopSAPCheckBox) {
 					allChecked = true;
 					controller.stopSAP();
-					this.controller.get_outputTestEditor()
-							.getStop_SAP_Checkbox().setSelected(false);
+					controller.get_outputTestEditor().getStop_SAP_Checkbox()
+							.setSelected(false);
 				} else if (applyKernelCheckBox) {
 					allChecked = true;
 					controller.applyKernel();
-					this.controller.get_outputTestEditor()
-							.getApplyKernelCheckbox().setSelected(false);
-				} else if (!allChecked) {
+					controller.get_outputTestEditor().getApplyKernelCheckbox()
+							.setSelected(false);
+					controller.get_outputTestEditor().getStatusBarJLabel()
+							.setText("Finished");
+				}
+				if (!allChecked) {
 					JOptionPane.showMessageDialog(null,
 							" Select a Task to run..", " Run Tasks ",
 							JOptionPane.ERROR_MESSAGE);
 				}
-			}
-			if (e.getSource() == this.controller.get_outputTestEditor()
-					.getImportScriptJMenuItem()) {
-				this.controller.showScriptView();
 			}
 		} catch (Exception e1) {
 			e1.printStackTrace();
@@ -95,8 +102,23 @@ public class Listener implements ActionListener, PropertyChangeListener,
 	}
 
 	@Override
-	public void propertyChange(PropertyChangeEvent arg0) {
-
+	public void propertyChange(PropertyChangeEvent evt) {
+		if ("progress".equals(evt.getPropertyName())) {
+			int progress = (Integer) evt.getNewValue();
+			this.controller.get_outputTestEditor().getjProgressBar()
+					.setStringPainted(true);
+			this.controller.get_outputTestEditor().getjProgressBar()
+					.setValue(progress);
+			this.controller
+					.get_outputTestEditor()
+					.getStatusBarJLabel()
+					.setText("In " + evt.getPropertyName().toString() + " ....");
+		} else {
+			this.controller.get_outputTestEditor().getjProgressBar()
+					.setVisible(false);
+			this.controller.get_outputTestEditor().getStatusBarJLabel()
+					.setText("Task(s) " + evt.getNewValue().toString());
+		}
 	}
 
 }

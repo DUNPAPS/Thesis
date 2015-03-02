@@ -1,6 +1,7 @@
 package com.sap.on.ibm.i.editor.view;
 
 import java.awt.BorderLayout;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Event;
@@ -38,8 +39,6 @@ import javax.swing.border.TitledBorder;
 
 @SuppressWarnings("serial")
 public class OutputTestEditor extends JFrame {
-	private JPasswordField sid_field;
-	private JPasswordField password_field;
 	private JCheckBox stop_SAP_Checkbox;
 	private JCheckBox applyKernelCheckbox;
 	private JCheckBox startSAPCheckBox;
@@ -54,13 +53,23 @@ public class OutputTestEditor extends JFrame {
 	private JButton playButton;
 	private JButton stopButton;
 	private JScrollPane scrollPane;
-	private JTextPane jtextArea;
 	private JProgressBar jProgressBar;
 	private JMenuItem importScriptJMenuItem;
+	private JPanel panel;
+	private JLabel sap_global_KernelLabel;
+	private JLabel sap_SID_label;
+	private JTextPane jtextArea;
+	private JTextField sap_SID_Field;
+	private JTextField sap_USER_Field;
+	private JTextField SAP_Nigtly_MakeField;
+	private JPasswordField sap_PASSWORD_Field;
+	private JTextField sap_global_KernelField;
+	private JLabel label;
+	private JLabel statusBarJLabel;
 
 	public OutputTestEditor() {
 		super("OutputTestEditor");
-			buildGUI();
+		buildGUI();
 	}
 
 	private void setzeMenue() {
@@ -95,7 +104,8 @@ public class OutputTestEditor extends JFrame {
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		int xSize = ((int) tk.getScreenSize().getWidth());
 		int ySize = ((int) tk.getScreenSize().getHeight());
-		 setSize(xSize,ySize);
+		// setSize(xSize, ySize);
+		setSize(900, 800);
 		setzeMenue();
 
 		JPanel contentPane = (JPanel) getContentPane();
@@ -107,7 +117,7 @@ public class OutputTestEditor extends JFrame {
 		JPanel settingsPanel = new JPanel();
 		settingsPanel.setForeground(new Color(0, 0, 0));
 		settingsPanel.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder("Settings"),
+				BorderFactory.createTitledBorder("SAP System information"),
 				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 		JPanel tasksPanel = new JPanel();
 		tasksPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -125,7 +135,7 @@ public class OutputTestEditor extends JFrame {
 		applyKernelCheckbox = new JCheckBox("Apply Kernel");
 		applyKernelCheckbox.setFont(new Font("Arial", Font.PLAIN, 12));
 		tasksPanel.add(applyKernelCheckbox);
-		
+
 		runHATestCheckBox = new JCheckBox("Start SAP");
 		runHATestCheckBox.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		tasksPanel.add(runHATestCheckBox);
@@ -138,32 +148,49 @@ public class OutputTestEditor extends JFrame {
 		JPanel panUpper = new JPanel(new BorderLayout());
 		panUpper.add(settingsPanel, BorderLayout.NORTH);
 
-		JLabel lblNewLabel = new JLabel("Password");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+		JLabel sapPasswordLabel = new JLabel("SAP_PASSWORD");
+		sapPasswordLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		sapPasswordLabel.setFont(new Font("Arial", Font.PLAIN, 12));
 
-		sid_field = new JPasswordField();
-		this.sid_field.setText("bigboss");
-		this.sid_field.setEchoChar('*');
+		sap_PASSWORD_Field = new JPasswordField();
+		// sap_PASSWORD_Field.setText("sapofr12");
+		sap_PASSWORD_Field.setText("qsecofer");
+		sap_PASSWORD_Field.setHorizontalAlignment(SwingConstants.CENTER);
+		sap_PASSWORD_Field.setFont(new Font("Arial", Font.PLAIN, 12));
+		sap_PASSWORD_Field.setEchoChar('*');
+		sap_PASSWORD_Field.setColumns(10);
 
-		sid_field.setFont(new Font("Arial", Font.PLAIN, 12));
-		sid_field.setHorizontalAlignment(SwingConstants.CENTER);
-		sid_field.setColumns(10);
+		JLabel Sap_SID_label = new JLabel("SAP_USER");
+		Sap_SID_label.setHorizontalAlignment(SwingConstants.LEFT);
+		Sap_SID_label.setFont(new Font("Arial", Font.PLAIN, 12));
 
-		password_field = new JPasswordField();
-		this.password_field.setText("qsecofer");
-		this.password_field.setEchoChar('*');
-		password_field.setHorizontalAlignment(SwingConstants.CENTER);
-		password_field.setFont(new Font("Arial", Font.PLAIN, 12));
-		password_field.setColumns(10);
+		sap_USER_Field = new JTextField();
+		// sap_USER_Field.setText("dcnadm");
+		sap_USER_Field.setText("bigboss");
+		sap_USER_Field.setHorizontalAlignment(SwingConstants.CENTER);
+		sap_USER_Field.setFont(new Font("Arial", Font.PLAIN, 12));
+		sap_USER_Field.setColumns(10);
 
-		JLabel label = new JLabel("User");
-		label.setHorizontalAlignment(SwingConstants.RIGHT);
-		label.setFont(new Font("Arial", Font.PLAIN, 12));
+		panel = new JPanel();
+		panel.setBorder(BorderFactory.createCompoundBorder(
+
+		BorderFactory.createTitledBorder("Kernel location"),
+
+		BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+
+		sap_SID_label = new JLabel("SAP_SID");
+		sap_SID_label.setHorizontalAlignment(SwingConstants.LEFT);
+		sap_SID_label.setFont(new Font("Arial", Font.PLAIN, 12));
+
+		sap_SID_Field = new JTextField();
+		sap_SID_Field.setText("DCN");
+		sap_SID_Field.setHorizontalAlignment(SwingConstants.CENTER);
+		sap_SID_Field.setFont(new Font("Arial", Font.PLAIN, 12));
+		sap_SID_Field.setColumns(10);
 		GroupLayout gl_panInput = new GroupLayout(settingsPanel);
 		gl_panInput
 				.setHorizontalGroup(gl_panInput
-						.createParallelGroup(Alignment.TRAILING)
+						.createParallelGroup(Alignment.LEADING)
 						.addGroup(
 								gl_panInput
 										.createSequentialGroup()
@@ -179,83 +206,191 @@ public class OutputTestEditor extends JFrame {
 																				panInputLabels,
 																				GroupLayout.PREFERRED_SIZE,
 																				203,
+																				GroupLayout.PREFERRED_SIZE)
+																		.addGap(640)
+																		.addComponent(
+																				panInputFields,
+																				GroupLayout.PREFERRED_SIZE,
+																				203,
 																				GroupLayout.PREFERRED_SIZE))
 														.addGroup(
 																gl_panInput
 																		.createSequentialGroup()
-																		.addContainerGap()
+																		.addGroup(
+																				gl_panInput
+																						.createParallelGroup(
+																								Alignment.LEADING,
+																								false)
+																						.addGroup(
+																								gl_panInput
+																										.createSequentialGroup()
+																										.addContainerGap()
+																										.addComponent(
+																												sapPasswordLabel,
+																												GroupLayout.PREFERRED_SIZE,
+																												111,
+																												GroupLayout.PREFERRED_SIZE)
+																										.addPreferredGap(
+																												ComponentPlacement.RELATED)
+																										.addComponent(
+																												sap_PASSWORD_Field))
+																						.addGroup(
+																								gl_panInput
+																										.createSequentialGroup()
+																										.addGap(19)
+																										.addGroup(
+																												gl_panInput
+																														.createParallelGroup(
+																																Alignment.LEADING)
+																														.addComponent(
+																																sap_SID_label,
+																																GroupLayout.PREFERRED_SIZE,
+																																97,
+																																GroupLayout.PREFERRED_SIZE)
+																														.addComponent(
+																																Sap_SID_label,
+																																GroupLayout.PREFERRED_SIZE,
+																																93,
+																																GroupLayout.PREFERRED_SIZE))
+																										.addPreferredGap(
+																												ComponentPlacement.UNRELATED)
+																										.addGroup(
+																												gl_panInput
+																														.createParallelGroup(
+																																Alignment.TRAILING,
+																																false)
+																														.addComponent(
+																																sap_USER_Field)
+																														.addComponent(
+																																sap_SID_Field,
+																																GroupLayout.DEFAULT_SIZE,
+																																201,
+																																Short.MAX_VALUE))))
+																		.addGap(59)
+																		.addComponent(
+																				panel,
+																				GroupLayout.PREFERRED_SIZE,
+																				371,
+																				GroupLayout.PREFERRED_SIZE)))
+										.addContainerGap(
+												GroupLayout.DEFAULT_SIZE,
+												Short.MAX_VALUE)));
+		gl_panInput
+				.setVerticalGroup(gl_panInput
+						.createParallelGroup(Alignment.TRAILING)
+						.addGroup(
+								gl_panInput
+										.createSequentialGroup()
+										.addGroup(
+												gl_panInput
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addComponent(
+																panInputLabels,
+																GroupLayout.PREFERRED_SIZE,
+																GroupLayout.DEFAULT_SIZE,
+																GroupLayout.PREFERRED_SIZE)
+														.addComponent(
+																panInputFields,
+																GroupLayout.PREFERRED_SIZE,
+																GroupLayout.DEFAULT_SIZE,
+																GroupLayout.PREFERRED_SIZE))
+										.addGroup(
+												gl_panInput
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addGroup(
+																gl_panInput
+																		.createSequentialGroup()
+																		.addGap(20)
 																		.addGroup(
 																				gl_panInput
 																						.createParallelGroup(
 																								Alignment.TRAILING)
 																						.addComponent(
-																								label,
+																								Sap_SID_label,
 																								GroupLayout.PREFERRED_SIZE,
-																								36,
+																								35,
 																								GroupLayout.PREFERRED_SIZE)
 																						.addComponent(
-																								lblNewLabel,
+																								sap_USER_Field,
 																								GroupLayout.PREFERRED_SIZE,
-																								111,
+																								37,
 																								GroupLayout.PREFERRED_SIZE))
-																		.addGap(27)
+																		.addPreferredGap(
+																				ComponentPlacement.UNRELATED)
 																		.addGroup(
 																				gl_panInput
 																						.createParallelGroup(
 																								Alignment.LEADING)
 																						.addComponent(
-																								password_field,
+																								sap_SID_label,
 																								GroupLayout.PREFERRED_SIZE,
-																								177,
+																								38,
 																								GroupLayout.PREFERRED_SIZE)
+																						.addGroup(
+																								gl_panInput
+																										.createSequentialGroup()
+																										.addGap(1)
+																										.addComponent(
+																												sap_SID_Field,
+																												GroupLayout.PREFERRED_SIZE,
+																												37,
+																												GroupLayout.PREFERRED_SIZE)))
+																		.addPreferredGap(
+																				ComponentPlacement.UNRELATED)
+																		.addGroup(
+																				gl_panInput
+																						.createParallelGroup(
+																								Alignment.BASELINE)
 																						.addComponent(
-																								sid_field,
+																								sapPasswordLabel,
+																								GroupLayout.DEFAULT_SIZE,
+																								33,
+																								Short.MAX_VALUE)
+																						.addComponent(
+																								sap_PASSWORD_Field,
 																								GroupLayout.PREFERRED_SIZE,
-																								177,
-																								GroupLayout.PREFERRED_SIZE))))
-										.addComponent(panInputFields,
-												GroupLayout.PREFERRED_SIZE,
-												203, GroupLayout.PREFERRED_SIZE)
-										.addContainerGap(192, Short.MAX_VALUE)));
-		gl_panInput.setVerticalGroup(gl_panInput.createParallelGroup(
-				Alignment.TRAILING).addGroup(
-				gl_panInput
-						.createSequentialGroup()
-						.addGroup(
-								gl_panInput
-										.createParallelGroup(Alignment.LEADING)
-										.addComponent(panInputLabels,
-												GroupLayout.PREFERRED_SIZE,
-												GroupLayout.DEFAULT_SIZE,
-												GroupLayout.PREFERRED_SIZE)
-										.addComponent(panInputFields,
-												GroupLayout.PREFERRED_SIZE,
-												GroupLayout.DEFAULT_SIZE,
-												GroupLayout.PREFERRED_SIZE))
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addGroup(
-								gl_panInput
-										.createParallelGroup(
-												Alignment.TRAILING, false)
-										.addComponent(label, Alignment.LEADING,
-												GroupLayout.DEFAULT_SIZE,
-												GroupLayout.DEFAULT_SIZE,
-												Short.MAX_VALUE)
-										.addComponent(sid_field,
-												Alignment.LEADING,
-												GroupLayout.PREFERRED_SIZE, 42,
-												GroupLayout.PREFERRED_SIZE))
-						.addPreferredGap(ComponentPlacement.UNRELATED)
-						.addGroup(
-								gl_panInput
-										.createParallelGroup(Alignment.LEADING)
-										.addComponent(lblNewLabel,
-												GroupLayout.DEFAULT_SIZE, 43,
-												Short.MAX_VALUE)
-										.addComponent(password_field,
-												GroupLayout.DEFAULT_SIZE, 43,
-												Short.MAX_VALUE))
-						.addContainerGap()));
+																								37,
+																								GroupLayout.PREFERRED_SIZE)))
+														.addGroup(
+																gl_panInput
+																		.createSequentialGroup()
+																		.addPreferredGap(
+																				ComponentPlacement.RELATED)
+																		.addComponent(
+																				panel,
+																				GroupLayout.DEFAULT_SIZE,
+																				154,
+																				Short.MAX_VALUE)))
+										.addContainerGap()));
+		panel.setLayout(null);
+
+		SAP_Nigtly_MakeField = new JTextField();
+		SAP_Nigtly_MakeField.setHorizontalAlignment(SwingConstants.CENTER);
+		SAP_Nigtly_MakeField.setFont(new Font("Arial", Font.PLAIN, 12));
+		SAP_Nigtly_MakeField.setColumns(10);
+		SAP_Nigtly_MakeField.setBounds(127, 23, 229, 37);
+		panel.add(SAP_Nigtly_MakeField);
+
+		sap_global_KernelLabel = new JLabel("SAP_Global_Kernel");
+		sap_global_KernelLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		sap_global_KernelLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+		sap_global_KernelLabel.setBounds(8, 86, 109, 38);
+		panel.add(sap_global_KernelLabel);
+
+		label = new JLabel("SAP_Nigtly Make");
+		label.setHorizontalAlignment(SwingConstants.LEFT);
+		label.setFont(new Font("Arial", Font.PLAIN, 12));
+		label.setBounds(8, 22, 109, 38);
+		panel.add(label);
+
+		sap_global_KernelField = new JTextField();
+		sap_global_KernelField.setHorizontalAlignment(SwingConstants.CENTER);
+		sap_global_KernelField.setFont(new Font("Arial", Font.PLAIN, 12));
+		sap_global_KernelField.setColumns(10);
+		sap_global_KernelField.setBounds(127, 87, 229, 37);
+		panel.add(sap_global_KernelField);
 
 		settingsPanel.setLayout(gl_panInput);
 		contentPane.add(panUpper, BorderLayout.NORTH);
@@ -307,46 +442,43 @@ public class OutputTestEditor extends JFrame {
 		stopButton.setPreferredSize(new Dimension(toolBar.getWidth(), 16));
 		toolBar.add(stopButton);
 
-		Font myFont = new Font("Arial", Font.BOLD, 12);
-		Color myColor = Color.BLACK;
-		TitledBorder titledBorder = BorderFactory.createTitledBorder(null,
-				" Log Viewer", TitledBorder.DEFAULT_JUSTIFICATION,
-				TitledBorder.DEFAULT_POSITION, myFont, myColor);
-
 		// create the status bar panel and shove it down the bottom of the panel
-		JPanel statusPanel = new JPanel();
-		statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
-		statusPanel.setPreferredSize(new Dimension(main.getWidth(), 16));
-		statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
+		JPanel statusPanel = new JPanel(new BorderLayout());
 
 		jProgressBar = new JProgressBar();
-		statusPanel.add(jProgressBar);
+		jProgressBar.setBorder(BorderFactory.createEmptyBorder(1, 0, 0, 0));
+		jProgressBar.setPreferredSize(new Dimension(50, 20));
+		jProgressBar.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		jProgressBar.setBackground(new Color(255, 255, 255));
+		statusPanel.add(jProgressBar, BorderLayout.NORTH);
+		statusBarJLabel = new JLabel();
+		statusPanel.add(statusBarJLabel, BorderLayout.WEST);
 
-		main.setBorder(titledBorder);
 		main.add(toolBar, BorderLayout.PAGE_START);
 		jtextArea = new JTextPane();
-		// jtextArea.setBorder(border);
 
 		scrollPane = new JScrollPane(jtextArea);
 		main.add(scrollPane, BorderLayout.CENTER);
 
-		// ProgressBar
-		JPanel barPanel = new JPanel();
-		scrollPane.setRowHeaderView(barPanel);
-		barPanel.setPreferredSize(new Dimension(toolBar.getWidth(), 16));
-		main.add(statusPanel, BorderLayout.SOUTH);
+		main.add(statusPanel, BorderLayout.PAGE_END);
 
 		return main;
 
 	}
 
+	public String getUSER() {
+		String user = sap_USER_Field.getText().trim();
+		return user;
+	}
+
 	public String getSID() {
-		String sid = new String(this.sid_field.getPassword()).trim();
+		String sid = sap_SID_Field.getText().trim();
 		return sid;
 	}
 
 	public String getPassword() {
-		String password = new String(this.password_field.getPassword()).trim();
+		String password = new String(this.sap_PASSWORD_Field.getPassword())
+				.trim();
 		return password;
 	}
 
@@ -388,14 +520,6 @@ public class OutputTestEditor extends JFrame {
 
 	public void setstartSAPCheckBoxActionListener(ActionListener l) {
 		this.startSAPCheckBox.addActionListener(l);
-	}
-
-	public JTextField getSid_field() {
-		return sid_field;
-	}
-
-	public JTextField getPassword_field() {
-		return password_field;
 	}
 
 	public JCheckBox getStop_SAP_Checkbox() {
@@ -453,7 +577,24 @@ public class OutputTestEditor extends JFrame {
 	public JMenuItem getImportScriptJMenuItem() {
 		return importScriptJMenuItem;
 	}
+
 	public void setImportScriptJMenuItemActionListener(ActionListener l) {
 		this.importScriptJMenuItem.addActionListener(l);
+	}
+
+	public JTextField getSap_SID_Field() {
+		return sap_SID_Field;
+	}
+
+	public JTextField getSap_USER_Field() {
+		return sap_USER_Field;
+	}
+
+	public JPasswordField getSap_PASSWORD_Field() {
+		return sap_PASSWORD_Field;
+	}
+
+	public JLabel getStatusBarJLabel() {
+		return statusBarJLabel;
 	}
 }

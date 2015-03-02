@@ -1,9 +1,6 @@
 package com.sap.on.ibm.i.editor.controller;
 
 import java.awt.event.ActionEvent;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -32,12 +29,11 @@ public class Controller {
 	private SimpleDateFormat datumFormat = null;
 	private static final String DATUM_FORMAT_JETZT = "dd/MM/yyyy HH:mm:ss";
 	private Levels levels;
-	
+
 	public void sendDoneEvent(ActionEvent e) {
 		_listener.actionPerformed(e);
 	}
-	
-	
+
 	public Controller() {
 		this._outputTestEditor = new OutputTestEditor();
 		this._user = new User();
@@ -45,7 +41,7 @@ public class Controller {
 		this._user.setPassword("bigboss");
 		this._listener = new Listener(this);
 		this.addListener();
-		 
+
 	}
 
 	public void showMainView() {
@@ -72,46 +68,50 @@ public class Controller {
 		sapControl.setFunction("GetProcessList");
 		sapControl.setInstance("00");
 		sapControl.setHost("as0013");
-		sapControl.exe();
+		sapControl.addPropertyChangeListener(_listener);
+		sapControl.execute();
 	}
 
 	public void applyKernel() {
 
 		ApplyKernel applylKernel = new ApplyKernel(this);
 		applylKernel.setCommand("STEP0", "cd /FSIASP/sapmnt/DCN/exe/uc");
-		//applylKernel.setCommand("STEP0", "cd /FSIASP/sapmnt/DCN/exe/uc; rm -R as400_pase_64.backup");
-		//applylKernel.setCommand("STEP1", "cd /FSIASP/sapmnt/DCN/exe/uc; cp -R as400_pase_64 as400_pase_64.backup");
-		applylKernel.exe();
-		
-//		LastNightSAPKernel lastNightSAPKernel = new LastNightSAPKernel(this);
-//		lastNightSAPKernel.setCommand("STEP0", "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXEDB_DB4.SAR .");
-//		lastNightSAPKernel.setCommand("STEP1", "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXE.SAR  .");
-//		lastNightSAPKernel.exe();
-		//getKernelBuildl.setCommand("STEP2", "cd /FSIASP/sapmnt/DCN/exe/uc; ");
-		//getKernelBuildl.setCommand("STEP3", "cd /FSIASP/sapmnt/DCN/exe/uc");
-		//getKernelBuildl.exe();
-		
-//		LastNightSAPKernel lastNightSAPKernel = new LastNightSAPKernel(this);
-//		lastNightSAPKernel.setCommand("STEP0", "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXEDB_DB4.SAR .");
-//		lastNightSAPKernel.setCommand("STEP1", "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXE.SAR  .");
-//		lastNightSAPKernel.exe();		
+		// applylKernel.setCommand("STEP0",
+		// "cd /FSIASP/sapmnt/DCN/exe/uc; rm -R as400_pase_64.backup");
+		// applylKernel.setCommand("STEP1",
+		// "cd /FSIASP/sapmnt/DCN/exe/uc; cp -R as400_pase_64 as400_pase_64.backup");
+		applylKernel.addPropertyChangeListener(_listener);
+		applylKernel.execute();
+
+		// LastNightSAPKernel lastNightSAPKernel = new LastNightSAPKernel(this);
+		// lastNightSAPKernel.setCommand("STEP0",
+		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXEDB_DB4.SAR .");
+		// lastNightSAPKernel.setCommand("STEP1",
+		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXE.SAR  .");
+		// lastNightSAPKernel.exe();
+		// getKernelBuildl.setCommand("STEP2",
+		// "cd /FSIASP/sapmnt/DCN/exe/uc; ");
+		// getKernelBuildl.setCommand("STEP3", "cd /FSIASP/sapmnt/DCN/exe/uc");
+		// getKernelBuildl.exe();
+
+		// LastNightSAPKernel lastNightSAPKernel = new LastNightSAPKernel(this);
+		// lastNightSAPKernel.setCommand("STEP0",
+		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXEDB_DB4.SAR .");
+		// lastNightSAPKernel.setCommand("STEP1",
+		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXE.SAR  .");
+		// lastNightSAPKernel.exe();
 	}
-	
+
 	public void addListener() {
 		_outputTestEditor.setclearLogViewButtonActionListener(_listener);
 		_outputTestEditor.setcopyActionListener(_listener);
-		//_outputTestEditor.setstop_SAP_CheckboxActionListener(_listener);
+		 _outputTestEditor.setstop_SAP_CheckboxActionListener(_listener);
 		_outputTestEditor.setplayButtonActionListener(_listener);
 		_outputTestEditor.setstopButtonActionListener(_listener);
 		_outputTestEditor.setexitJMenuItemActionListener(_listener);
 		_outputTestEditor.setinforJMenuItemActionListener(_listener);
 		_outputTestEditor.setImportScriptJMenuItemActionListener(_listener);
 	}
-
-	public void removeListener(String msg) {
-	}
-
-
 
 	public void logMessages(Levels enumLevels, String loggingMsg,
 			Exception exception) throws Exception {
@@ -157,45 +157,6 @@ public class Controller {
 		}
 	}
 
-	public void runCommand(String command) {
-
-		try {
-
-			
-
-			Process process = Runtime.getRuntime().exec(command);
-			BufferedReader bufferedReader = new BufferedReader(
-					new InputStreamReader(process.getInputStream()));
-
-			String line = null;
-			while ((line = bufferedReader.readLine()) != null) {
-				if (!line.equals("") || line.contains("INFO")) {
-					logMessages(Levels.INFO, line, null);
-				}
-				if (!line.equals("") && line.contains("FAIL")) {
-					logMessages(Levels.ERROR, null, new Exception(line));
-				}
-
-			}
-
-			// get the error stream of the process
-			InputStream errorStream = process.getErrorStream();
-			BufferedReader errorbufferedReader = new BufferedReader(
-					new InputStreamReader(errorStream));
-
-			String warning = null;
-			while ((warning = errorbufferedReader.readLine()) != null) {
-				if (!warning.equals("")) {
-					logMessages(Levels.ERROR, null, new Exception(warning));
-				}
-			}
-			logMessages(Levels.INFO, " " + " Finished ...", null);
-			get_outputTestEditor().getjProgressBar().setIndeterminate(false);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	private String actuallTime() {
 		if (datumFormat == null) {
 			datumFormat = new SimpleDateFormat(DATUM_FORMAT_JETZT);
@@ -213,7 +174,7 @@ public class Controller {
 	public User get_user() {
 		return _user;
 	}
-	
+
 	public Logging getLogging() {
 		return logging;
 	}
@@ -226,6 +187,9 @@ public class Controller {
 		this.levels = levels;
 	}
 
-
+	public void setTime(long totaltime) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

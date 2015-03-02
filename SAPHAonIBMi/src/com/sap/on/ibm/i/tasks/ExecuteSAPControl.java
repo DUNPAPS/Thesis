@@ -3,13 +3,17 @@ package com.sap.on.ibm.i.tasks;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import javax.swing.SwingWorker;
 
 import com.sap.on.ibm.i.editor.controller.Controller;
 import com.sap.on.ibm.i.logger.Levels;
 
-public class ExecuteSAPControl {
+public class ExecuteSAPControl extends SwingWorker<String, Integer> {
 
 	private String param0;
 	private String param1;
@@ -92,73 +96,88 @@ public class ExecuteSAPControl {
 
 	}
 
-	public void exe() {
-		Thread t2 = new Thread(new Runnable() {
-			public void run() {
-				String line;
+	@Override
+	protected String doInBackground() throws Exception {
+		String line;
+		try {
+			SAP_CONTROL = " " + getCommand();
+			controller.logMessages(Levels.INFO, "Command:    " + SAP_CONTROL,
+					null);
+			controller.logMessages(Levels.INFO, "Executig command...", null);
+			Process p = Runtime.getRuntime().exec(SAP_CONTROL);
+			controller.get_outputTestEditor().getStatusBarJLabel().setText(" ");
+			controller.get_outputTestEditor().getStatusBarJLabel()
+					.setText("Stop SAP .....");
+			BufferedReader stdInput = new BufferedReader(new InputStreamReader(
+					p.getInputStream()));
 
-				try {
-					controller.get_outputTestEditor().getjProgressBar()
-							.setIndeterminate(true);
-					controller.get_outputTestEditor().getjProgressBar()
-							.setBorderPainted(true);
-					controller.get_outputTestEditor().getjProgressBar()
-							.repaint();
-					SAP_CONTROL = " " + getCommand();
-					controller.logMessages(Levels.INFO, "Command:    "
-							+ SAP_CONTROL, null);
-					controller.logMessages(Levels.INFO, "Executig command...",
-							null);
-					Process p = Runtime.getRuntime().exec(SAP_CONTROL);
-					BufferedReader stdInput = new BufferedReader(
-							new InputStreamReader(p.getInputStream()));
+			// error
+			BufferedReader stdError = new BufferedReader(new InputStreamReader(
+					p.getErrorStream()));
 
-					// error
-					BufferedReader stdError = new BufferedReader(
-							new InputStreamReader(p.getErrorStream()));
-					while ((line = stdInput.readLine()) != null) {
+			int progress = 0;
 
-						if (!line.equals("") || line.contains("INFO")) {
-							controller.logMessages(Levels.INFO, line, null);
-						} else if (!line.equals("") && line.contains("FAIL")) {
-							controller.logMessages(Levels.ERROR, null,
-									new Exception(line));
-						} else {
-							controller.logMessages(Levels.INFO, line, null);
-						}
-					}
-					while ((line = stdError.readLine()) != null) {
+			while (!isCancelled() && progress < 30) {
+				setProgress(++progress);
+				Thread.sleep(200);
 
-						if (!line.equals("")) {
-							controller.logMessages(Levels.ERROR, null,
-									new Exception(line));
-						}
-					}
-					p.waitFor();
-				} catch (Exception e) {
-					try {
-						controller.logMessages(Levels.ERROR, null,
-								new Exception(e));
-					} catch (Exception e1) {
-						e1.printStackTrace();
-					}
+			}
+			while ((line = stdInput.readLine()) != null) {
+
+				if (!line.equals("") || line.contains("INFO")) {
+					controller.logMessages(Levels.INFO, line, null);
+				} else if (!line.equals("") && line.contains("FAIL")) {
+					controller.logMessages(Levels.ERROR, null, new Exception(
+							line));
+				} else {
+					controller.logMessages(Levels.INFO, line, null);
 				}
-				try {
-					controller.logMessages(Levels.INFO, " " + " Finished ...",
-							null);
-					controller.get_outputTestEditor().getjProgressBar()
-							.setIndeterminate(false);
-					ActionEvent e = new TaskDoneEvent(this, 1234,
-							"SAP CONTROL DONE.....");
-					controller.sendDoneEvent(e);
-				} catch (Exception e) {
-					e.printStackTrace();
+			}
+			while ((line = stdError.readLine()) != null) {
+
+				if (!line.equals("")) {
+					controller.logMessages(Levels.ERROR, null, new Exception(
+							line));
 				}
 			}
 
-		}, "Execute SAP Control  .....");
-		t2.start();
+			p.waitFor();
+			while (!isCancelled() && progress < 100) {
+				setProgress(++progress);
+				Thread.sleep(50);
+
+			}
+		} catch (Exception e) {
+			try {
+				controller.logMessages(Levels.ERROR, null, new Exception(e));
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		}
+		try {
+			ActionEvent e = new TaskDoneEvent(this, 0, "SAP CONTROL DONE.....");
+			controller.logMessages(Levels.INFO, " " + " Finished ...", null);
+			controller.sendDoneEvent(e);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "SAP Stopped";
 	}
 
-	
+	@Override
+	protected void process(List<Integer> chunks) {
+		super.process(chunks);
+	}
+
+	@Override
+	protected void done() {
+		if (isCancelled()) {
+			controller.get_outputTestEditor().getStatusBarJLabel()
+					.setText("Process canceled");
+		} else {
+			controller.get_outputTestEditor().getStatusBarJLabel()
+					.setText("Stop SAP Done");
+		}
+	}
 }

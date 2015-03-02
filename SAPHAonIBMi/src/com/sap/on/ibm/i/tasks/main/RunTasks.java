@@ -6,7 +6,7 @@ import com.sap.on.ibm.i.tasks.ExecuteSAPControl;
 
 public class RunTasks {
 	private static Logging logging = Logging.getInstance();
-	private  static Controller controller=new Controller();
+	private static Controller controller = new Controller();
 
 	public static void main(String[] args) {
 		logging.setLogger(RunTasks.class.getName());
@@ -26,7 +26,7 @@ public class RunTasks {
 						sapControl.setHost("as0013");
 					}
 				}
-				sapControl.exe();
+				// sapControl.exe();
 			} else {
 				Throwable t = new IllegalArgumentException(
 						"Incorrect number of command line arguments: "

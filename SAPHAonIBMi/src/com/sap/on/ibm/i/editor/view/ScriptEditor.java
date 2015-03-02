@@ -130,23 +130,26 @@ public class ScriptEditor extends JFrame {
 											.setSelected(true);
 								}
 								if (firstSubString.trim().equals("SAP_SID")
-										&& secondSubString.trim().equals("bigboss")) {
+										&& secondSubString.trim().equals(
+												"bigboss")) {
 									controller.get_outputTestEditor()
-											.getSid_field().setText("");
+											.getSap_SID_Field().setText("");
 									controller.get_outputTestEditor()
-											.getSid_field().setText("bigboss");
+											.getSap_SID_Field()
+											.setText("bigboss");
 								}
-								if (firstSubString.trim().equals("SAP_Password")
+								if (firstSubString.trim()
+										.equals("SAP_Password")
 										&& secondSubString.trim().equals(
 												"qsecofer")) {
 									controller.get_outputTestEditor()
-											.getPassword_field().setText("");
+											.getSap_PASSWORD_Field()
+											.setText(" ");
 									controller.get_outputTestEditor()
-											.getPassword_field()
+											.getSap_PASSWORD_Field()
 											.setText("qsecofer");
 								}
-								if (firstSubString.trim()
-										.equals("SAP_Userd")
+								if (firstSubString.trim().equals("SAP_Userd")
 										&& secondSubString.trim().equals(
 												"dcnadm")) {
 									// TODO
