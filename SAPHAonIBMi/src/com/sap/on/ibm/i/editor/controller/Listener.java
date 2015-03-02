@@ -78,19 +78,26 @@ public class Listener implements ActionListener, PropertyChangeListener,
 					controller.stopSAP();
 					controller.get_outputTestEditor().getStop_SAP_Checkbox()
 							.setSelected(false);
+
 				} else if (applyKernelCheckBox) {
 					allChecked = true;
 					controller.applyKernel();
 					controller.get_outputTestEditor().getApplyKernelCheckbox()
 							.setSelected(false);
-					controller.get_outputTestEditor().getStatusBarJLabel()
-							.setText("Finished");
+
 				}
-				if (!allChecked) {
+				else if (!allChecked) {
 					JOptionPane.showMessageDialog(null,
 							" Select a Task to run..", " Run Tasks ",
 							JOptionPane.ERROR_MESSAGE);
+					this.controller.get_outputTestEditor().getPlayButton().setEnabled(true);
 				}
+				else {
+					allChecked = false;
+					
+				}
+				this.controller.get_outputTestEditor().getjProgressBar()
+						.setString(" ");
 			}
 		} catch (Exception e1) {
 			e1.printStackTrace();
@@ -113,11 +120,14 @@ public class Listener implements ActionListener, PropertyChangeListener,
 					.get_outputTestEditor()
 					.getStatusBarJLabel()
 					.setText("In " + evt.getPropertyName().toString() + " ....");
+			this.controller.get_outputTestEditor().getPlayButton()
+			.setEnabled(false);
 		} else {
-			this.controller.get_outputTestEditor().getjProgressBar()
-					.setVisible(false);
 			this.controller.get_outputTestEditor().getStatusBarJLabel()
 					.setText("Task(s) " + evt.getNewValue().toString());
+			this.controller.get_outputTestEditor().getPlayButton()
+			.setEnabled(true);
+
 		}
 	}
 

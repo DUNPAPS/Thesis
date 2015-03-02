@@ -53,8 +53,7 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 						null);
 				controller
 						.logMessages(Levels.INFO, "Executig command...", null);
-				controller.get_outputTestEditor().getStatusBarJLabel().setText(" ");
-				controller.get_outputTestEditor().getStatusBarJLabel().setText("Applying kernel .....");
+				
 				Process p = Runtime.getRuntime().exec(PLINK_EXE);
 				BufferedReader stdInput = new BufferedReader(
 						new InputStreamReader(p.getInputStream()));
@@ -67,6 +66,7 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 
 				while (!isCancelled() && progress < 50) {
 					setProgress(++progress);
+					this.controller.get_outputTestEditor().getjProgressBar().setString("Applying kernel ....."+progress + "%");
 					Thread.sleep(DELAY);
 
 				}
@@ -93,6 +93,7 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 				 
 				while (!isCancelled() && progress < 100) {
 					setProgress(++progress);
+					this.controller.get_outputTestEditor().getjProgressBar().setString("Applying kernel ....."+progress + "%");
 					Thread.sleep(50);
 
 				}

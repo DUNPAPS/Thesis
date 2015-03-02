@@ -101,11 +101,7 @@ public class OutputTestEditor extends JFrame {
 
 	private void buildGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Toolkit tk = Toolkit.getDefaultToolkit();
-		int xSize = ((int) tk.getScreenSize().getWidth());
-		int ySize = ((int) tk.getScreenSize().getHeight());
-		// setSize(xSize, ySize);
-		setSize(900, 800);
+		setSize(1500, 850);
 		setzeMenue();
 
 		JPanel contentPane = (JPanel) getContentPane();
@@ -448,9 +444,12 @@ public class OutputTestEditor extends JFrame {
 		jProgressBar = new JProgressBar();
 		jProgressBar.setBorder(BorderFactory.createEmptyBorder(1, 0, 0, 0));
 		jProgressBar.setPreferredSize(new Dimension(50, 20));
-		jProgressBar.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		jProgressBar.setBackground(new Color(255, 255, 255));
+		jProgressBar.setFont(new Font("Arial", Font.PLAIN, 18));
+		jProgressBar.setForeground(new Color(070, 130, 180));
 		statusPanel.add(jProgressBar, BorderLayout.NORTH);
+
+		// status Bar JLabel
 		statusBarJLabel = new JLabel();
 		statusPanel.add(statusBarJLabel, BorderLayout.WEST);
 

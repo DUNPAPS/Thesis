@@ -104,10 +104,9 @@ public class ExecuteSAPControl extends SwingWorker<String, Integer> {
 			controller.logMessages(Levels.INFO, "Command:    " + SAP_CONTROL,
 					null);
 			controller.logMessages(Levels.INFO, "Executig command...", null);
+
 			Process p = Runtime.getRuntime().exec(SAP_CONTROL);
 			controller.get_outputTestEditor().getStatusBarJLabel().setText(" ");
-			controller.get_outputTestEditor().getStatusBarJLabel()
-					.setText("Stop SAP .....");
 			BufferedReader stdInput = new BufferedReader(new InputStreamReader(
 					p.getInputStream()));
 
@@ -119,6 +118,8 @@ public class ExecuteSAPControl extends SwingWorker<String, Integer> {
 
 			while (!isCancelled() && progress < 30) {
 				setProgress(++progress);
+				this.controller.get_outputTestEditor().getjProgressBar()
+						.setString("Running SAP Control....." + progress + "%");
 				Thread.sleep(200);
 
 			}
@@ -144,6 +145,8 @@ public class ExecuteSAPControl extends SwingWorker<String, Integer> {
 			p.waitFor();
 			while (!isCancelled() && progress < 100) {
 				setProgress(++progress);
+				this.controller.get_outputTestEditor().getjProgressBar()
+						.setString("Running SAP Control....." + progress + "%");
 				Thread.sleep(50);
 
 			}
@@ -175,9 +178,6 @@ public class ExecuteSAPControl extends SwingWorker<String, Integer> {
 		if (isCancelled()) {
 			controller.get_outputTestEditor().getStatusBarJLabel()
 					.setText("Process canceled");
-		} else {
-			controller.get_outputTestEditor().getStatusBarJLabel()
-					.setText("Stop SAP Done");
 		}
 	}
 }
