@@ -1,27 +1,41 @@
 package com.sap.on.ibm.i.editor.view;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Cursor;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 
-import com.sap.on.ibm.i.editor.controller.Controller;
-
-import java.io.*;
+import com.sap.on.ibm.i.editor.controller.ScriptViewController;
 
 @SuppressWarnings("serial")
 public class ScriptEditor extends JFrame {
 
 	private JFileChooser fileChooser;
 	private JTextArea textarea = new JTextArea(10, 40);
-	private Controller controller;
+	private ScriptViewController controller;
 	private File file;
-	private boolean waitCursorIsShowing;
 
-	public ScriptEditor(Controller controller) {
+	public ScriptEditor(ScriptViewController controller) {
 		this.controller = controller;
 		this.setTitle("Run Script");
 		getContentPane().add(initComponents());
@@ -111,30 +125,30 @@ public class ScriptEditor extends JFrame {
 								if (firstSubString.trim().equals("Step0")
 										&& secondSubString.trim().equals(
 												"StopSAP")) {
-									controller.get_outputTestEditor()
+									controller.getOutputTestEditor()
 											.getStop_SAP_Checkbox()
 											.setSelected(true);
 								}
 								if (firstSubString.trim().equals("Step1")
 										&& secondSubString.trim().equals(
 												"ApplyKernel")) {
-									controller.get_outputTestEditor()
+									controller.getOutputTestEditor()
 											.getApplyKernelCheckbox()
 											.setSelected(true);
 								}
 								if (firstSubString.trim().equals("Step2")
 										&& secondSubString.trim().equals(
 												"StartSAP")) {
-									controller.get_outputTestEditor()
+									controller.getOutputTestEditor()
 											.getStartSAPCheckBox()
 											.setSelected(true);
 								}
 								if (firstSubString.trim().equals("SAP_SID")
 										&& secondSubString.trim().equals(
 												"bigboss")) {
-									controller.get_outputTestEditor()
+									controller.getOutputTestEditor()
 											.getSap_SID_Field().setText("");
-									controller.get_outputTestEditor()
+									controller.getOutputTestEditor()
 											.getSap_SID_Field()
 											.setText("bigboss");
 								}
@@ -142,10 +156,10 @@ public class ScriptEditor extends JFrame {
 										.equals("SAP_Password")
 										&& secondSubString.trim().equals(
 												"qsecofer")) {
-									controller.get_outputTestEditor()
+									controller.getOutputTestEditor()
 											.getSap_PASSWORD_Field()
 											.setText(" ");
-									controller.get_outputTestEditor()
+									controller.getOutputTestEditor()
 											.getSap_PASSWORD_Field()
 											.setText("qsecofer");
 								}
@@ -158,11 +172,11 @@ public class ScriptEditor extends JFrame {
 							}
 
 						}
-						controller
-								.getLogging()
-								.getLogger()
-								.info("Script" + " " + "[ " + file + " ]" + " "
-										+ "Successfully loaded....");
+						// controller TODO
+						// .getLogging()
+						// .getLogger()
+						// .info("Script" + " " + "[ " + file + " ]" + " "
+						//			+ "Successfully loaded....");
 					} catch (InterruptedException | BadLocationException e1) {
 						e1.printStackTrace();
 					}

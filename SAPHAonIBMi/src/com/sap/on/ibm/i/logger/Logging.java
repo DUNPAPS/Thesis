@@ -3,10 +3,9 @@ package com.sap.on.ibm.i.logger;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.apache.log4j.spi.LoggingEvent;
 
 /**
  * Logger class Singleton.
@@ -14,17 +13,17 @@ import org.apache.log4j.spi.LoggingEvent;
  * @author Duncan
  */
 
-public class Logging extends AppenderSkeleton {
+public class Logging  {
 
 	private static final String DATUM_FORMAT_JETZT = "dd/MM/yyyy HH:mm:ss";
-	private String LogFile = "log/LogFile.txt";
 	static final String LOG_PROPERTIES_FILE = "log/log.properties";
 	private SimpleDateFormat datumFormat = null;
+	private Logger logger;
 	private static Logging instance = null;
 
-	private Logger logger;
 
 	private Logging() {
+		
 		initializeLogger();
 
 	}
@@ -36,11 +35,6 @@ public class Logging extends AppenderSkeleton {
 				.getResource("log/log.properties"));
 
 	}
-
-	public void setLogger(String name) {
-		logger = Logger.getLogger("");
-	}
-
 	/**
 	 * @return instance
 	 */
@@ -60,26 +54,54 @@ public class Logging extends AppenderSkeleton {
 		return datumFormat.format(cal.getTime());
 
 	}
+	public void setLogger(String className){
+		this.logger=Logger.getLogger(className);
+	}
 	public Logger getLogger() {
-		return logger;
+		return this.logger;
 	}
 
-	@Override
-	public void close() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void logMessages(Levels enumLevels, String loggingMsg,
+			Exception exception) throws Exception {
 
-	@Override
-	public boolean requiresLayout() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+		switch (enumLevels) {
+		case TRACE:
+			 getLogger().setLevel(Level.TRACE);
+			String trace =  getLogger().getLevel() + " " + actuallTime()
+					+ "::" + " full stack trace";
+			 getLogger().warn(trace + "   " + exception + "\n");
+			break;
+		case DEBUG:
+			 getLogger().setLevel(Level.DEBUG);
+			String debug =  getLogger().getLevel() + " " + actuallTime()
+					+ "::" + " full stack trace";
+			 getLogger().warn(debug + "   " + exception + "\n");
+			break;
+		case INFO:
+			if (loggingMsg == null) {
+				throw new Exception(
+						"Parameter 'loggingMsg' of this Method is null");
+			} else {
+				 getLogger().setLevel(Level.INFO);
+				String info =  getLogger().getLevel() + " "
+						+ actuallTime();
+				 getLogger().info(info + "   " + loggingMsg + "\n");
 
-	@Override
-	protected void append(LoggingEvent arg0) {
-		// TODO Auto-generated method stub
-		
+			}
+			break;
+		case WARN:
+			 getLogger().setLevel(Level.WARN);
+			String warn =  getLogger().getLevel() + " " + actuallTime();
+			 getLogger().warn(
+					warn + "  " + exception.getLocalizedMessage() + "\n");
+			break;
+		case ERROR:
+			 getLogger().setLevel(Level.ERROR);
+			String error =  getLogger().getLevel().toString() + " "
+					+ actuallTime();
+			 getLogger().error(
+					error + "   " + exception.getLocalizedMessage() + "\n");
+			break;
+		}
 	}
-
 }

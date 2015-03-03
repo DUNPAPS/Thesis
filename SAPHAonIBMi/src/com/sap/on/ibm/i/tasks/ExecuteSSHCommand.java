@@ -1,11 +1,11 @@
 package com.sap.on.ibm.i.tasks;
 
-import com.sap.on.ibm.i.editor.controller.Controller;
+import com.sap.on.ibm.i.editor.controller.GUIScriptController;
 
 public class ExecuteSSHCommand extends ApplyKernel {
-	private Controller controller;
+	private GUIScriptController controller;
 
-	public ExecuteSSHCommand(Controller controller) {
+	public ExecuteSSHCommand(GUIScriptController controller) {
 		super(controller);
 		// TODO Auto-generated constructor stub
 	}

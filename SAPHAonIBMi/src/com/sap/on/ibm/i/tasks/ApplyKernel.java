@@ -10,17 +10,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.swing.SwingWorker;
 
-import com.sap.on.ibm.i.editor.controller.Controller;
+import com.sap.on.ibm.i.editor.controller.GUIScriptController;
 import com.sap.on.ibm.i.logger.Levels;
 
 public class ApplyKernel extends SwingWorker<String, Integer> {
 	protected String PLINK_EXE = "plink.exe";
-	protected Controller controller;
+	protected GUIScriptController controller;
 	protected Map<String, String> myMap = new ConcurrentHashMap<String, String>();
-	private int i = 0;
 	private long DELAY = 200;
 
-	public ApplyKernel(Controller controller) {
+	public ApplyKernel(GUIScriptController controller) {
 		this.controller = controller;
 	}
 
@@ -28,6 +27,7 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 		myMap.put(commandName, command);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static Object getKeyFromValue(Map hm, Object value) {
 		for (Object o : hm.keySet()) {
 			if (hm.get(o).equals(value)) {
@@ -49,11 +49,7 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 
 				PLINK_EXE += " " + controller.get_user().getUserData();
 				PLINK_EXE += " " + nextCommand;
-				controller.logMessages(Levels.INFO, "Command:    " + PLINK_EXE,
-						null);
-				controller
-						.logMessages(Levels.INFO, "Executig command...", null);
-				
+
 				Process p = Runtime.getRuntime().exec(PLINK_EXE);
 				BufferedReader stdInput = new BufferedReader(
 						new InputStreamReader(p.getInputStream()));
@@ -61,55 +57,62 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 				// error
 				BufferedReader stdError = new BufferedReader(
 						new InputStreamReader(p.getErrorStream()));
-				
+
 				int progress = 0;
 
 				while (!isCancelled() && progress < 50) {
 					setProgress(++progress);
-					this.controller.get_outputTestEditor().getjProgressBar().setString("Applying kernel ....."+progress + "%");
+					this.controller
+							.getOutputTestEditor()
+							.getjProgressBar()
+							.setString("Applying kernel ....." + progress + "%");
 					Thread.sleep(DELAY);
 
 				}
-				
+
 				while ((line = stdInput.readLine()) != null) {
 
 					if (!line.equals("") || line.contains("INFO")) {
-						controller.logMessages(Levels.INFO, line, null);
+						controller.getLogger().logMessages(Levels.INFO, line,
+								null);
 					}
 					if (!line.equals("") && line.contains("FAIL")) {
-						controller.logMessages(Levels.ERROR, null,
+						controller.getLogger().logMessages(Levels.ERROR, null,
 								new Exception(line));
 					} else {
-						controller.logMessages(Levels.INFO, line, null);
+						controller.getLogger().logMessages(Levels.INFO, line,
+								null);
 					}
 				}
 				while ((line = stdError.readLine()) != null) {
 
 					if (!line.equals("")) {
-						controller.logMessages(Levels.ERROR, null,
+						controller.getLogger().logMessages(Levels.ERROR, null,
 								new Exception(line));
 					}
 				}
-				 
+
 				while (!isCancelled() && progress < 100) {
 					setProgress(++progress);
-					this.controller.get_outputTestEditor().getjProgressBar().setString("Applying kernel ....."+progress + "%");
+					this.controller
+							.getOutputTestEditor()
+							.getjProgressBar()
+							.setString("Applying kernel ....." + progress + "%");
 					Thread.sleep(50);
 
 				}
-				
 
 			} catch (Exception e) {
 				try {
-					controller
-							.logMessages(Levels.ERROR, null, new Exception(e));
+					controller.getLogger().logMessages(Levels.ERROR, null,
+							new Exception(e));
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 			}
 			try {
-				controller
-						.logMessages(Levels.INFO, " " + " Finished ...", null);
+				controller.getLogger().logMessages(Levels.INFO,
+						" " + " Finished ...", null);
 				ActionEvent e = new TaskDoneEvent(this, 1234, "ApplyKernelDONE");
 				controller.sendDoneEvent(e);
 			} catch (Exception e) {
@@ -118,7 +121,7 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 
 		}
 
-		return "Done Applying kernel";
+		return "ApplyKernelDONE";
 	}
 
 	@Override
@@ -129,9 +132,11 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 	@Override
 	protected void done() {
 		if (isCancelled()) {
-			controller.get_outputTestEditor().getStatusBarJLabel().setText("Process canceled");
+			controller.getOutputTestEditor().getStatusBarJLabel()
+					.setText("Process canceled");
 		} else {
- 			controller.get_outputTestEditor().getStatusBarJLabel().setText("Apply Kernel Done");
+			controller.getOutputTestEditor().getStatusBarJLabel()
+					.setText("Apply Kernel Done");
 		}
 	}
 
