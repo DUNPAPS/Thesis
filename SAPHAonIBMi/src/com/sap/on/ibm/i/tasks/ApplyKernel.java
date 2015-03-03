@@ -10,17 +10,24 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.swing.SwingWorker;
 
-import com.sap.on.ibm.i.editor.controller.GUIScriptController;
+import com.sap.on.ibm.i.editor.model.User;
+import com.sap.on.ibm.i.editor.view.OutputTestEditor;
 import com.sap.on.ibm.i.logger.Levels;
+import com.sap.on.ibm.i.logger.Logging;
 
 public class ApplyKernel extends SwingWorker<String, Integer> {
 	protected String PLINK_EXE = "plink.exe";
-	protected GUIScriptController controller;
 	protected Map<String, String> myMap = new ConcurrentHashMap<String, String>();
 	private long DELAY = 200;
+	private Logging logger;
+	private OutputTestEditor outputTestEditor;
+	private ActionEvent event;
+	private User user;
 
-	public ApplyKernel(GUIScriptController controller) {
-		this.controller = controller;
+	public ApplyKernel() {
+		this.user = new User();
+		this.user.setUser("qsecofr@as0013");
+		this.user.setPassword("bigboss");
 	}
 
 	public void setCommand(String commandName, String command) {
@@ -47,7 +54,7 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 			String nextCommand = myMap.get(command);
 			try {
 
-				PLINK_EXE += " " + controller.get_user().getUserData();
+				PLINK_EXE += " " + getUser().getUserData();
 				PLINK_EXE += " " + nextCommand;
 
 				Process p = Runtime.getRuntime().exec(PLINK_EXE);
@@ -62,10 +69,9 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 
 				while (!isCancelled() && progress < 50) {
 					setProgress(++progress);
-					this.controller
-							.getOutputTestEditor()
-							.getjProgressBar()
-							.setString("Applying kernel ....." + progress + "%");
+
+					getOutputTestEditor().getjProgressBar().setString(
+							"Applying kernel ....." + progress + "%");
 					Thread.sleep(DELAY);
 
 				}
@@ -73,48 +79,45 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 				while ((line = stdInput.readLine()) != null) {
 
 					if (!line.equals("") || line.contains("INFO")) {
-						controller.getLogger().logMessages(Levels.INFO, line,
-								null);
+						getLogger().logMessages(Levels.INFO, line, null);
 					}
 					if (!line.equals("") && line.contains("FAIL")) {
-						controller.getLogger().logMessages(Levels.ERROR, null,
+						getLogger().logMessages(Levels.ERROR, null,
 								new Exception(line));
 					} else {
-						controller.getLogger().logMessages(Levels.INFO, line,
-								null);
+						getLogger().logMessages(Levels.INFO, line, null);
 					}
 				}
 				while ((line = stdError.readLine()) != null) {
 
 					if (!line.equals("")) {
-						controller.getLogger().logMessages(Levels.ERROR, null,
+						getLogger().logMessages(Levels.ERROR, null,
 								new Exception(line));
 					}
 				}
 
 				while (!isCancelled() && progress < 100) {
 					setProgress(++progress);
-					this.controller
-							.getOutputTestEditor()
-							.getjProgressBar()
-							.setString("Applying kernel ....." + progress + "%");
+
+					getOutputTestEditor().getjProgressBar().setString(
+							"Applying kernel ....." + progress + "%");
 					Thread.sleep(50);
 
 				}
 
 			} catch (Exception e) {
 				try {
-					controller.getLogger().logMessages(Levels.ERROR, null,
+					getLogger().logMessages(Levels.ERROR, null,
 							new Exception(e));
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 			}
 			try {
-				controller.getLogger().logMessages(Levels.INFO,
-						" " + " Finished ...", null);
+				getLogger().logMessages(Levels.INFO, " " + " Finished ...",
+						null);
 				ActionEvent e = new TaskDoneEvent(this, 1234, "ApplyKernelDONE");
-				controller.sendDoneEvent(e);
+				setEvent(e);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -132,14 +135,42 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 	@Override
 	protected void done() {
 		if (isCancelled()) {
-			controller.getOutputTestEditor().getStatusBarJLabel()
-					.setText("Process canceled");
+			getOutputTestEditor().getStatusBarJLabel().setText(
+					"Process canceled");
 		} else {
-			controller.getOutputTestEditor().getStatusBarJLabel()
-					.setText("Apply Kernel Done");
+			getOutputTestEditor().getStatusBarJLabel().setText(
+					"Apply Kernel Done");
 		}
 	}
 
+	public OutputTestEditor getOutputTestEditor() {
+		return outputTestEditor;
+	}
+
+	public void setOutputTestEditor(OutputTestEditor outputTestEditor) {
+		this.outputTestEditor = outputTestEditor;
+	}
+
+	public void setLogger(Logging logger) {
+		this.logger = logger;
+	}
+
+	public Logging getLogger() {
+		return logger;
+	}
+
+	public ActionEvent getEvent() {
+		return event;
+	}
+
+	public void setEvent(ActionEvent event) {
+		this.event = event;
+	}
+
+	public User getUser() {
+		return user;
+	}
+	
 }
 /*
  * // --------------------- // Backup Orignal Kernel // --------------------- cd

@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.swing.SwingUtilities;
 
+import com.sap.on.ibm.i.editor.controller.CommandLineScriptController;
 import com.sap.on.ibm.i.editor.controller.GUIScriptController;
 import com.sap.on.ibm.i.logger.Logging;
 
@@ -18,7 +19,6 @@ import com.sap.on.ibm.i.logger.Logging;
  */
 public class Main {
 
-	private static GUIScriptController controller;
 	private static BufferedReader br = null;
 	private static File inFile = null;
 	private static Logging logger = Logging.getInstance();
@@ -34,7 +34,10 @@ public class Main {
 		}
 
 		else if (mode.equals("-script")) {
-
+			CommandLineScriptController controller = new CommandLineScriptController();
+			logger.setLogger(controller.getClass().getName());
+			controller.setLogger(logger);
+			
 			try {
 
 				if (0 < args.length) {
@@ -65,7 +68,7 @@ public class Main {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					controller = new GUIScriptController();
+					GUIScriptController controller = new GUIScriptController();
 					logger.setLogger(controller.getClass().getName());
 					controller.setLogger(logger);
 					controller.showMainView();

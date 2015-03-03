@@ -73,7 +73,7 @@ public class ScriptEditor extends JFrame {
 
 		Action save = new AbstractAction("Save") {
 
-			BufferedWriter writer;
+			// BufferedWriter writer; TODO
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -176,7 +176,7 @@ public class ScriptEditor extends JFrame {
 						// .getLogging()
 						// .getLogger()
 						// .info("Script" + " " + "[ " + file + " ]" + " "
-						//			+ "Successfully loaded....");
+						// + "Successfully loaded....");
 					} catch (InterruptedException | BadLocationException e1) {
 						e1.printStackTrace();
 					}

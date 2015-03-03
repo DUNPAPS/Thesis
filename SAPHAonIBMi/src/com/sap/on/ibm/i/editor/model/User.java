@@ -1,8 +1,5 @@
 package com.sap.on.ibm.i.editor.model;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
 
 public class User {
 

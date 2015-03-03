@@ -12,7 +12,6 @@ import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 
-import com.sap.on.ibm.i.editor.model.User;
 import com.sap.on.ibm.i.editor.view.OutputTestEditor;
 import com.sap.on.ibm.i.logger.Appender;
 import com.sap.on.ibm.i.logger.Levels;
@@ -28,7 +27,6 @@ import com.sap.on.ibm.i.tasks.TaskDoneEvent;
 public class GUIScriptController implements ActionListener, ItemListener,
 		PropertyChangeListener, IScriptController {
 	private OutputTestEditor outputTestEditor;
-	private User _user;
 	private Levels levels;
 	private boolean stopSAPCheckBox;
 	private boolean applyKernelCheckBox;
@@ -38,9 +36,6 @@ public class GUIScriptController implements ActionListener, ItemListener,
 
 	public GUIScriptController() {
 		this.outputTestEditor = new OutputTestEditor();
-		this._user = new User();
-		this._user.setUser("qsecofr@as0013");
-		this._user.setPassword("bigboss");
 		this.addListener();
 	}
 
@@ -55,7 +50,7 @@ public class GUIScriptController implements ActionListener, ItemListener,
 	}
 
 	public void stopSAP() {
-		ExecuteSAPControl sapControl = new ExecuteSAPControl(this);
+		ExecuteSAPControl sapControl = new ExecuteSAPControl();
 		sapControl.setFunction("GetProcessList");
 		sapControl.setInstance("00");
 		sapControl.setHost("as0013");
@@ -64,6 +59,8 @@ public class GUIScriptController implements ActionListener, ItemListener,
 			getLogger().logMessages(Levels.INFO,
 					"Running Apply Kernel command...", null);
 			sapControl.execute();
+			sendDoneEvent(sapControl.getEvent());
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -72,7 +69,7 @@ public class GUIScriptController implements ActionListener, ItemListener,
 
 	public void applyKernel() {
 
-		ApplyKernel applylKernel = new ApplyKernel(this);
+		ApplyKernel applylKernel = new ApplyKernel();
 		applylKernel.setCommand("STEP0", "cd /FSIASP/sapmnt/DCN/exe/uc");
 		// applylKernel.setCommand("STEP0",
 		// "cd /FSIASP/sapmnt/DCN/exe/uc; rm -R as400_pase_64.backup");
@@ -217,10 +214,6 @@ public class GUIScriptController implements ActionListener, ItemListener,
 
 	public Logging getLogger() {
 		return logger;
-	}
-
-	public User get_user() {
-		return _user;
 	}
 
 	public Levels getLevels() {
