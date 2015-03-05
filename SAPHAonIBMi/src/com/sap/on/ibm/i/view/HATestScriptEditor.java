@@ -1,4 +1,4 @@
-package com.sap.on.ibm.i.editor.view;
+package com.sap.on.ibm.i.view;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;
@@ -25,17 +25,17 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 
-import com.sap.on.ibm.i.editor.controller.ScriptViewController;
+import com.sap.on.ibm.i.controller.ScriptViewController;
 
 @SuppressWarnings("serial")
-public class ScriptEditor extends JFrame {
+public class HATestScriptEditor extends JFrame {
 
 	private JFileChooser fileChooser;
 	private JTextArea textarea = new JTextArea(10, 40);
 	private ScriptViewController controller;
 	private File file;
 
-	public ScriptEditor(ScriptViewController controller) {
+	public HATestScriptEditor(ScriptViewController controller) {
 		this.controller = controller;
 		this.setTitle("Run Script");
 		getContentPane().add(initComponents());

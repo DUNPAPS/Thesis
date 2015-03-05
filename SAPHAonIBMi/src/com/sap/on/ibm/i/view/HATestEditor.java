@@ -1,4 +1,4 @@
-package com.sap.on.ibm.i.editor.view;
+package com.sap.on.ibm.i.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -33,7 +33,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 
 @SuppressWarnings("serial")
-public class OutputTestEditor extends JFrame {
+public class HATestEditor extends JFrame {
 	private JCheckBox stop_SAP_Checkbox;
 	private JCheckBox applyKernelCheckbox;
 	private JCheckBox startSAPCheckBox;
@@ -62,7 +62,7 @@ public class OutputTestEditor extends JFrame {
 	private JLabel label;
 	private JLabel statusBarJLabel;
 
-	public OutputTestEditor() {
+	public HATestEditor() {
 		super("OutputTestEditor");
 		buildGUI();
 	}
@@ -179,59 +179,165 @@ public class OutputTestEditor extends JFrame {
 		sap_SID_Field.setFont(new Font("Arial", Font.PLAIN, 12));
 		sap_SID_Field.setColumns(10);
 		GroupLayout gl_panInput = new GroupLayout(settingsPanel);
-		gl_panInput.setHorizontalGroup(
-			gl_panInput.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panInput.createSequentialGroup()
-					.addGroup(gl_panInput.createParallelGroup(Alignment.LEADING, false)
-						.addGroup(gl_panInput.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(sapPasswordLabel, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(sap_PASSWORD_Field))
-						.addGroup(gl_panInput.createSequentialGroup()
-							.addGap(19)
-							.addGroup(gl_panInput.createParallelGroup(Alignment.LEADING)
-								.addComponent(sap_SID_label, GroupLayout.PREFERRED_SIZE, 97, GroupLayout.PREFERRED_SIZE)
-								.addComponent(Sap_SID_label, GroupLayout.PREFERRED_SIZE, 93, GroupLayout.PREFERRED_SIZE))
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addGroup(gl_panInput.createParallelGroup(Alignment.TRAILING, false)
-								.addComponent(sap_USER_Field)
-								.addComponent(sap_SID_Field, GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE))))
-					.addPreferredGap(ComponentPlacement.RELATED, 294, Short.MAX_VALUE)
-					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 807, GroupLayout.PREFERRED_SIZE)
-					.addGap(34))
-				.addGroup(gl_panInput.createSequentialGroup()
-					.addGap(278)
-					.addComponent(panInputLabels, GroupLayout.PREFERRED_SIZE, 203, GroupLayout.PREFERRED_SIZE)
-					.addGap(640)
-					.addComponent(panInputFields, GroupLayout.PREFERRED_SIZE, 203, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(138, Short.MAX_VALUE))
-		);
-		gl_panInput.setVerticalGroup(
-			gl_panInput.createParallelGroup(Alignment.TRAILING)
-				.addGroup(gl_panInput.createSequentialGroup()
-					.addGroup(gl_panInput.createParallelGroup(Alignment.LEADING)
-						.addComponent(panInputLabels, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(panInputFields, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGroup(gl_panInput.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panInput.createSequentialGroup()
-							.addGap(20)
-							.addGroup(gl_panInput.createParallelGroup(Alignment.TRAILING)
-								.addComponent(Sap_SID_label, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-								.addComponent(sap_USER_Field, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE))
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addGroup(gl_panInput.createParallelGroup(Alignment.LEADING)
-								.addComponent(sap_SID_label, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
-								.addGroup(gl_panInput.createSequentialGroup()
-									.addGap(1)
-									.addComponent(sap_SID_Field, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)))
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addGroup(gl_panInput.createParallelGroup(Alignment.BASELINE)
-								.addComponent(sapPasswordLabel, GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-								.addComponent(sap_PASSWORD_Field, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)))
-						.addComponent(panel, GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
-					.addContainerGap())
-		);
+		gl_panInput
+				.setHorizontalGroup(gl_panInput
+						.createParallelGroup(Alignment.LEADING)
+						.addGroup(
+								gl_panInput
+										.createSequentialGroup()
+										.addGroup(
+												gl_panInput
+														.createParallelGroup(
+																Alignment.LEADING,
+																false)
+														.addGroup(
+																gl_panInput
+																		.createSequentialGroup()
+																		.addContainerGap()
+																		.addComponent(
+																				sapPasswordLabel,
+																				GroupLayout.PREFERRED_SIZE,
+																				111,
+																				GroupLayout.PREFERRED_SIZE)
+																		.addPreferredGap(
+																				ComponentPlacement.RELATED)
+																		.addComponent(
+																				sap_PASSWORD_Field))
+														.addGroup(
+																gl_panInput
+																		.createSequentialGroup()
+																		.addGap(19)
+																		.addGroup(
+																				gl_panInput
+																						.createParallelGroup(
+																								Alignment.LEADING)
+																						.addComponent(
+																								sap_SID_label,
+																								GroupLayout.PREFERRED_SIZE,
+																								97,
+																								GroupLayout.PREFERRED_SIZE)
+																						.addComponent(
+																								Sap_SID_label,
+																								GroupLayout.PREFERRED_SIZE,
+																								93,
+																								GroupLayout.PREFERRED_SIZE))
+																		.addPreferredGap(
+																				ComponentPlacement.UNRELATED)
+																		.addGroup(
+																				gl_panInput
+																						.createParallelGroup(
+																								Alignment.TRAILING,
+																								false)
+																						.addComponent(
+																								sap_USER_Field)
+																						.addComponent(
+																								sap_SID_Field,
+																								GroupLayout.DEFAULT_SIZE,
+																								201,
+																								Short.MAX_VALUE))))
+										.addPreferredGap(
+												ComponentPlacement.RELATED,
+												294, Short.MAX_VALUE)
+										.addComponent(panel,
+												GroupLayout.PREFERRED_SIZE,
+												807, GroupLayout.PREFERRED_SIZE)
+										.addGap(34))
+						.addGroup(
+								gl_panInput
+										.createSequentialGroup()
+										.addGap(278)
+										.addComponent(panInputLabels,
+												GroupLayout.PREFERRED_SIZE,
+												203, GroupLayout.PREFERRED_SIZE)
+										.addGap(640)
+										.addComponent(panInputFields,
+												GroupLayout.PREFERRED_SIZE,
+												203, GroupLayout.PREFERRED_SIZE)
+										.addContainerGap(138, Short.MAX_VALUE)));
+		gl_panInput
+				.setVerticalGroup(gl_panInput
+						.createParallelGroup(Alignment.TRAILING)
+						.addGroup(
+								gl_panInput
+										.createSequentialGroup()
+										.addGroup(
+												gl_panInput
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addComponent(
+																panInputLabels,
+																GroupLayout.PREFERRED_SIZE,
+																GroupLayout.DEFAULT_SIZE,
+																GroupLayout.PREFERRED_SIZE)
+														.addComponent(
+																panInputFields,
+																GroupLayout.PREFERRED_SIZE,
+																GroupLayout.DEFAULT_SIZE,
+																GroupLayout.PREFERRED_SIZE))
+										.addGroup(
+												gl_panInput
+														.createParallelGroup(
+																Alignment.LEADING)
+														.addGroup(
+																gl_panInput
+																		.createSequentialGroup()
+																		.addGap(20)
+																		.addGroup(
+																				gl_panInput
+																						.createParallelGroup(
+																								Alignment.TRAILING)
+																						.addComponent(
+																								Sap_SID_label,
+																								GroupLayout.PREFERRED_SIZE,
+																								35,
+																								GroupLayout.PREFERRED_SIZE)
+																						.addComponent(
+																								sap_USER_Field,
+																								GroupLayout.PREFERRED_SIZE,
+																								37,
+																								GroupLayout.PREFERRED_SIZE))
+																		.addPreferredGap(
+																				ComponentPlacement.UNRELATED)
+																		.addGroup(
+																				gl_panInput
+																						.createParallelGroup(
+																								Alignment.LEADING)
+																						.addComponent(
+																								sap_SID_label,
+																								GroupLayout.PREFERRED_SIZE,
+																								38,
+																								GroupLayout.PREFERRED_SIZE)
+																						.addGroup(
+																								gl_panInput
+																										.createSequentialGroup()
+																										.addGap(1)
+																										.addComponent(
+																												sap_SID_Field,
+																												GroupLayout.PREFERRED_SIZE,
+																												37,
+																												GroupLayout.PREFERRED_SIZE)))
+																		.addPreferredGap(
+																				ComponentPlacement.UNRELATED)
+																		.addGroup(
+																				gl_panInput
+																						.createParallelGroup(
+																								Alignment.BASELINE)
+																						.addComponent(
+																								sapPasswordLabel,
+																								GroupLayout.DEFAULT_SIZE,
+																								33,
+																								Short.MAX_VALUE)
+																						.addComponent(
+																								sap_PASSWORD_Field,
+																								GroupLayout.PREFERRED_SIZE,
+																								37,
+																								GroupLayout.PREFERRED_SIZE)))
+														.addComponent(
+																panel,
+																GroupLayout.DEFAULT_SIZE,
+																154,
+																Short.MAX_VALUE))
+										.addContainerGap()));
 		panel.setLayout(null);
 
 		sap_Nigtly_MakeField = new JTextField();
@@ -318,7 +424,7 @@ public class OutputTestEditor extends JFrame {
 		jProgressBar.setPreferredSize(new Dimension(50, 20));
 		jProgressBar.setBackground(new Color(255, 255, 255));
 		jProgressBar.setFont(new Font("Arial", Font.PLAIN, 18));
-		jProgressBar.setForeground(new Color(070,	130	,180));
+		jProgressBar.setForeground(new Color(070, 130, 180));
 		statusPanel.add(jProgressBar, BorderLayout.NORTH);
 
 		// status Bar JLabel

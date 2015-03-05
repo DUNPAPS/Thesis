@@ -1,4 +1,4 @@
-package com.sap.on.ibm.i.editor.model;
+package com.sap.on.ibm.i.model;
 
 
 public class User {

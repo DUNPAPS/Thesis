@@ -1,10 +1,10 @@
 package com.sap.on.ibm.i.tasks;
 
-import com.sap.on.ibm.i.editor.controller.GUIScriptController;
+import com.sap.on.ibm.i.controller.GUIController;
 
 public class ExecuteSSHCommand{
 
-	public ExecuteSSHCommand(GUIScriptController controller) {
+	public ExecuteSSHCommand(GUIController controller) {
 		// TODO Auto-generated constructor stub
 	}
 }

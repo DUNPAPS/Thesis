@@ -1,4 +1,4 @@
-package com.sap.on.ibm.i.editor.controller;
+package com.sap.on.ibm.i.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,15 +7,15 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import com.sap.on.ibm.i.editor.view.OutputTestEditor;
-import com.sap.on.ibm.i.editor.view.ScriptEditor;
+import com.sap.on.ibm.i.view.HATestEditor;
+import com.sap.on.ibm.i.view.HATestScriptEditor;
 
-public class ScriptViewController implements IScriptController, ActionListener,
+public class ScriptViewController implements IController, ActionListener,
 		PropertyChangeListener, ItemListener {
-	private GUIScriptController guiScriptController;
-	private OutputTestEditor outputTestEditor;
+	private GUIController guiScriptController;
+	private HATestEditor outputTestEditor;
 
-	public ScriptViewController(GUIScriptController guiScriptController) {
+	public ScriptViewController(GUIController guiScriptController) {
 		this.guiScriptController = guiScriptController;
 		this.outputTestEditor = this.guiScriptController.getOutputTestEditor();
 	}
@@ -33,7 +33,7 @@ public class ScriptViewController implements IScriptController, ActionListener,
 	}
 
 	public void showScriptView() {
-		ScriptEditor scriptEditor = new ScriptEditor(this);
+		HATestScriptEditor scriptEditor = new HATestScriptEditor(this);
 		scriptEditor.setVisible();
 
 	}
@@ -58,7 +58,7 @@ public class ScriptViewController implements IScriptController, ActionListener,
 
 	}
 
-	public OutputTestEditor getOutputTestEditor() {
+	public HATestEditor getOutputTestEditor() {
 		return outputTestEditor;
 	}
 

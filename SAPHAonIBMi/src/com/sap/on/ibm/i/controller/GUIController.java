@@ -1,4 +1,4 @@
-package com.sap.on.ibm.i.editor.controller;
+package com.sap.on.ibm.i.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -6,27 +6,29 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 
-import com.sap.on.ibm.i.editor.view.OutputTestEditor;
 import com.sap.on.ibm.i.logger.Appender;
 import com.sap.on.ibm.i.logger.Levels;
 import com.sap.on.ibm.i.logger.Logging;
 import com.sap.on.ibm.i.tasks.ApplyKernel;
 import com.sap.on.ibm.i.tasks.ExecuteSAPControl;
 import com.sap.on.ibm.i.tasks.TaskDoneEvent;
+import com.sap.on.ibm.i.view.HATestEditor;
 
 /**
  * @author Duncan
  *
  */
-public class GUIScriptController implements ActionListener, ItemListener,
-		PropertyChangeListener, IScriptController {
-	private OutputTestEditor outputTestEditor;
+public class GUIController implements ActionListener, ItemListener,
+		PropertyChangeListener, IController {
+	private HATestEditor outputTestEditor;
 	private Levels levels;
 	private boolean stopSAPCheckBox;
 	private boolean applyKernelCheckBox;
@@ -34,8 +36,8 @@ public class GUIScriptController implements ActionListener, ItemListener,
 	private Logging logger;
 	private ScriptViewController scriptViewController;
 
-	public GUIScriptController() {
-		this.outputTestEditor = new OutputTestEditor();
+	public GUIController() {
+		this.outputTestEditor = new HATestEditor();
 		this.addListener();
 	}
 
@@ -47,65 +49,6 @@ public class GUIScriptController implements ActionListener, ItemListener,
 
 		this.outputTestEditor.setVisible(true);
 
-	}
-
-	public void stopSAP() {
-		ExecuteSAPControl sapControl = new ExecuteSAPControl();
-		sapControl.setFunction("GetProcessList");
-		sapControl.setInstance("00");
-		sapControl.setHost("as0013");
-		sapControl.addPropertyChangeListener(this);
-		try {
-			getLogger().logMessages(Levels.INFO,
-					"Running Apply Kernel command...", null);
-			sapControl.execute();
-			sendDoneEvent(sapControl.getEvent());
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public void applyKernel() {
-
-		ApplyKernel applylKernel = new ApplyKernel();
-		applylKernel.setCommand("STEP0", "cd /FSIASP/sapmnt/DCN/exe/uc");
-		// applylKernel.setCommand("STEP0",
-		// "cd /FSIASP/sapmnt/DCN/exe/uc; rm -R as400_pase_64.backup");
-		// applylKernel.setCommand("STEP1",
-		// "cd /FSIASP/sapmnt/DCN/exe/uc; cp -R as400_pase_64 as400_pase_64.backup");
-		applylKernel.addPropertyChangeListener(this);
-		applylKernel.execute();
-
-		// LastNightSAPKernel lastNightSAPKernel = new LastNightSAPKernel(this);
-		// lastNightSAPKernel.setCommand("STEP0",
-		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXEDB_DB4.SAR .");
-		// lastNightSAPKernel.setCommand("STEP1",
-		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXE.SAR  .");
-		// lastNightSAPKernel.exe();
-		// getKernelBuildl.setCommand("STEP2",
-		// "cd /FSIASP/sapmnt/DCN/exe/uc; ");
-		// getKernelBuildl.setCommand("STEP3", "cd /FSIASP/sapmnt/DCN/exe/uc");
-		// getKernelBuildl.exe();
-
-		// LastNightSAPKernel lastNightSAPKernel = new LastNightSAPKernel(this);
-		// lastNightSAPKernel.setCommand("STEP0",
-		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXEDB_DB4.SAR .");
-		// lastNightSAPKernel.setCommand("STEP1",
-		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXE.SAR  .");
-		// lastNightSAPKernel.exe();
-	}
-
-	public void addListener() {
-		outputTestEditor.setclearLogViewButtonActionListener(this);
-		outputTestEditor.setcopyActionListener(this);
-		outputTestEditor.setstop_SAP_CheckboxActionListener(this);
-		outputTestEditor.setplayButtonActionListener(this);
-		outputTestEditor.setstopButtonActionListener(this);
-		outputTestEditor.setexitJMenuItemActionListener(this);
-		outputTestEditor.setinforJMenuItemActionListener(this);
-		outputTestEditor.setImportScriptJMenuItemActionListener(this);
 	}
 
 	@Override
@@ -129,9 +72,7 @@ public class GUIScriptController implements ActionListener, ItemListener,
 			}
 			if (e.getSource() == outputTestEditor.getPlayButton()
 					|| e instanceof TaskDoneEvent) {
-
-				String EventName = e.getActionCommand();
-				getLogger().logMessages(Levels.INFO, EventName, null);
+				outputTestEditor.getjProgressBar().setEnabled(true);
 				outputTestEditor.getPlayButton().setEnabled(false);
 				String user = outputTestEditor.getUSER();
 				String password = outputTestEditor.getPassword();
@@ -158,7 +99,6 @@ public class GUIScriptController implements ActionListener, ItemListener,
 					allChecked = true;
 					stopSAP();
 					outputTestEditor.getStop_SAP_Checkbox().setSelected(false);
-
 				} else if (applyKernelCheckBox) {
 					allChecked = true;
 					applyKernel();
@@ -181,21 +121,31 @@ public class GUIScriptController implements ActionListener, ItemListener,
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void progress(PropertyChangeEvent evt) {
+		SwingWorker worker = (SwingWorker) evt.getSource();
 		if ("progress".equals(evt.getPropertyName())) {
 			int progress = (Integer) evt.getNewValue();
 			outputTestEditor.getjProgressBar().setStringPainted(true);
-			outputTestEditor.getjProgressBar().setValue(progress);
+			outputTestEditor.getjProgressBar().setValue(+progress);
 			outputTestEditor.getStatusBarJLabel().setText(
 					"In " + evt.getPropertyName().toString() + " ....");
 			outputTestEditor.getPlayButton().setEnabled(false);
-		} else {
-			outputTestEditor.getStatusBarJLabel().setText(
-					"Task(s) " + evt.getNewValue().toString());
-			outputTestEditor.getPlayButton().setEnabled(true);
+		} else if ("state".equalsIgnoreCase(evt.getPropertyName())) {
+			if (worker.isDone()) {
+				try {
+					ActionEvent e = new TaskDoneEvent(this, 1234, worker.get()
+							.toString());
+					sendDoneEvent(e);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					e.printStackTrace();
+				}
 
-		}
+			}
+		} 
 
 	}
 
@@ -204,7 +154,69 @@ public class GUIScriptController implements ActionListener, ItemListener,
 		actionPerformed(e);
 	}
 
-	public OutputTestEditor getOutputTestEditor() {
+	private void stopSAP() {
+		ExecuteSAPControl sapControl = new ExecuteSAPControl();
+		sapControl.setOutputTestEditor(outputTestEditor);
+		sapControl.setLogger(getLogger());
+		sapControl.setFunction("GetProcessList");
+		sapControl.setInstance("00");
+		sapControl.setHost("as0013");
+		try {
+			sapControl.execute();
+			sapControl.addPropertyChangeListener(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void applyKernel() {
+
+		ApplyKernel applylKernel = new ApplyKernel();
+		applylKernel.setLogger(getLogger());
+		applylKernel.setOutputTestEditor(outputTestEditor);
+		applylKernel.setCommand("STEP0", "cd /FSIASP/sapmnt/DCN/exe/uc");
+		// applylKernel.setCommand("STEP0",
+		// "cd /FSIASP/sapmnt/DCN/exe/uc; rm -R as400_pase_64.backup");
+		// applylKernel.setCommand("STEP1",
+		// "cd /FSIASP/sapmnt/DCN/exe/uc; cp -R as400_pase_64 as400_pase_64.backup");
+		try {
+			applylKernel.execute();
+			applylKernel.addPropertyChangeListener(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// LastNightSAPKernel lastNightSAPKernel = new LastNightSAPKernel(this);
+		// lastNightSAPKernel.setCommand("STEP0",
+		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXEDB_DB4.SAR .");
+		// lastNightSAPKernel.setCommand("STEP1",
+		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXE.SAR  .");
+		// lastNightSAPKernel.exe();
+		// getKernelBuildl.setCommand("STEP2",
+		// "cd /FSIASP/sapmnt/DCN/exe/uc; ");
+		// getKernelBuildl.setCommand("STEP3", "cd /FSIASP/sapmnt/DCN/exe/uc");
+		// getKernelBuildl.exe();
+
+		// LastNightSAPKernel lastNightSAPKernel = new LastNightSAPKernel(this);
+		// lastNightSAPKernel.setCommand("STEP0",
+		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXEDB_DB4.SAR .");
+		// lastNightSAPKernel.setCommand("STEP1",
+		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXE.SAR  .");
+		// lastNightSAPKernel.exe();
+	}
+
+	private void addListener() {
+		outputTestEditor.setclearLogViewButtonActionListener(this);
+		outputTestEditor.setcopyActionListener(this);
+		outputTestEditor.setstop_SAP_CheckboxActionListener(this);
+		outputTestEditor.setplayButtonActionListener(this);
+		outputTestEditor.setstopButtonActionListener(this);
+		outputTestEditor.setexitJMenuItemActionListener(this);
+		outputTestEditor.setinforJMenuItemActionListener(this);
+		outputTestEditor.setImportScriptJMenuItemActionListener(this);
+	}
+
+	public HATestEditor getOutputTestEditor() {
 		return outputTestEditor;
 	}
 
@@ -225,10 +237,10 @@ public class GUIScriptController implements ActionListener, ItemListener,
 	}
 
 	public ScriptViewController getScriptViewController() {
-		if (this.scriptViewController == null) {
-			this.scriptViewController = new ScriptViewController(this);
+		if (this.scriptViewController != null) {
 			return this.scriptViewController;
 		} else {
+			this.scriptViewController = new ScriptViewController(this);
 			return this.scriptViewController;
 		}
 	}

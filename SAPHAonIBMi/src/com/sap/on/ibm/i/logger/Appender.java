@@ -17,7 +17,7 @@ import org.apache.log4j.Layout;
 import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
 
-import com.sap.on.ibm.i.editor.controller.GUIScriptController;
+import com.sap.on.ibm.i.controller.GUIController;
 
 public class Appender extends AppenderSkeleton {
 
@@ -27,7 +27,7 @@ public class Appender extends AppenderSkeleton {
 	private static Hashtable<Level, SimpleAttributeSet> attributes = null;
 	protected Layout layout;
 
-	public Appender(GUIScriptController controller) {
+	public Appender(GUIController controller) {
 		this.textArea = controller.getOutputTestEditor().getJtextArea();
 		getTextPaneInstance();
 	}

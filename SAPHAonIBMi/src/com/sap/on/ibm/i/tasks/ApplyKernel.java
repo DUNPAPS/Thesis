@@ -7,20 +7,21 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.SwingWorker;
 
-import com.sap.on.ibm.i.editor.model.User;
-import com.sap.on.ibm.i.editor.view.OutputTestEditor;
 import com.sap.on.ibm.i.logger.Levels;
 import com.sap.on.ibm.i.logger.Logging;
+import com.sap.on.ibm.i.model.User;
+import com.sap.on.ibm.i.view.HATestEditor;
 
 public class ApplyKernel extends SwingWorker<String, Integer> {
 	protected String PLINK_EXE = "plink.exe";
 	protected Map<String, String> myMap = new ConcurrentHashMap<String, String>();
 	private long DELAY = 200;
 	private Logging logger;
-	private OutputTestEditor outputTestEditor;
+	private HATestEditor outputTestEditor;
 	private ActionEvent event;
 	private User user;
 
@@ -56,6 +57,10 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 
 				PLINK_EXE += " " + getUser().getUserData();
 				PLINK_EXE += " " + nextCommand;
+				getLogger().logMessages(Levels.INFO,
+						"Command:    " + PLINK_EXE, null);
+				getLogger().logMessages(Levels.INFO, "Executig command...",
+						null);
 
 				Process p = Runtime.getRuntime().exec(PLINK_EXE);
 				BufferedReader stdInput = new BufferedReader(
@@ -114,10 +119,7 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 				}
 			}
 			try {
-				getLogger().logMessages(Levels.INFO, " " + " Finished ...",
-						null);
-				ActionEvent e = new TaskDoneEvent(this, 1234, "ApplyKernelDONE");
-				setEvent(e);
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -134,20 +136,31 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 
 	@Override
 	protected void done() {
-		if (isCancelled()) {
-			getOutputTestEditor().getStatusBarJLabel().setText(
-					"Process canceled");
-		} else {
-			getOutputTestEditor().getStatusBarJLabel().setText(
-					"Apply Kernel Done");
+		try {
+			ActionEvent e = new TaskDoneEvent(this, 1234, get());
+			setEvent(e);
+			if (isCancelled()) {
+				getOutputTestEditor().getStatusBarJLabel().setText(
+						"Process canceled");
+			} else {
+				getLogger().logMessages(Levels.INFO, " " + get(), null);
+				getOutputTestEditor().getStatusBarJLabel().setText(get());
+				getOutputTestEditor().getPlayButton().setEnabled(true);
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		} catch (Exception e1) {
+			e1.printStackTrace();
 		}
 	}
 
-	public OutputTestEditor getOutputTestEditor() {
+	public HATestEditor getOutputTestEditor() {
 		return outputTestEditor;
 	}
 
-	public void setOutputTestEditor(OutputTestEditor outputTestEditor) {
+	public void setOutputTestEditor(HATestEditor outputTestEditor) {
 		this.outputTestEditor = outputTestEditor;
 	}
 
@@ -170,7 +183,7 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 	public User getUser() {
 		return user;
 	}
-	
+
 }
 /*
  * // --------------------- // Backup Orignal Kernel // --------------------- cd

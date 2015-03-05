@@ -1,10 +1,10 @@
-package com.sap.on.ibm.i.editor.controller;
+package com.sap.on.ibm.i.controller;
 
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 
 
-public interface IScriptController  {
+public interface IController  {
  
 	public void progress(PropertyChangeEvent e);
 

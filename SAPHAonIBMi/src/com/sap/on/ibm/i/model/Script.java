@@ -1,3 +1,4 @@
+package com.sap.on.ibm.i.model;
 //package com.sap.on.ibm.i.editor.model;
 //
 //import com.sap.on.ibm.i.editor.controller.GUIScriptController;

@@ -1,17 +1,17 @@
 package com.sap.on.ibm.i.tasks;
 
-import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.SwingWorker;
 
-import com.sap.on.ibm.i.editor.view.OutputTestEditor;
 import com.sap.on.ibm.i.logger.Levels;
 import com.sap.on.ibm.i.logger.Logging;
+import com.sap.on.ibm.i.view.HATestEditor;
 
 public class ExecuteSAPControl extends SwingWorker<String, Integer> {
 
@@ -24,9 +24,8 @@ public class ExecuteSAPControl extends SwingWorker<String, Integer> {
 	private String format;
 	protected String SAP_CONTROL = "sapcontrol.exe";
 	private Logging logger;
-	private OutputTestEditor outputTestEditor;
+	private HATestEditor outputTestEditor;
 	protected Map<String, String> myMap = new ConcurrentHashMap<String, String>();
-	private ActionEvent event;
 
 	public ExecuteSAPControl() {
 	}
@@ -112,7 +111,7 @@ public class ExecuteSAPControl extends SwingWorker<String, Integer> {
 			SAP_CONTROL = " " + getCommand();
 			getLogger().logMessages(Levels.INFO, "Command:    " + SAP_CONTROL,
 					null);
-			getLogger().logMessages(Levels.INFO, "Executig command...", null);
+			getLogger().logMessages(Levels.INFO, getState().toString(), null);
 
 			Process p = Runtime.getRuntime().exec(SAP_CONTROL);
 			getOutputTestEditor().getStatusBarJLabel().setText(" ");
@@ -150,7 +149,6 @@ public class ExecuteSAPControl extends SwingWorker<String, Integer> {
 							new Exception(line));
 				}
 			}
-
 			p.waitFor();
 			while (!isCancelled() && progress < 100) {
 				setProgress(++progress);
@@ -159,19 +157,13 @@ public class ExecuteSAPControl extends SwingWorker<String, Integer> {
 				Thread.sleep(50);
 
 			}
+
 		} catch (Exception e) {
 			try {
 				getLogger().logMessages(Levels.ERROR, null, new Exception(e));
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
-		}
-		try {
-			ActionEvent e = new TaskDoneEvent(this, 0, "SAP CONTROL DONE.....");
-			getLogger().logMessages(Levels.INFO, " " + " Finished ...", null);
-			setEvent(e);
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 
 		return "SAP Stopped";
@@ -184,25 +176,29 @@ public class ExecuteSAPControl extends SwingWorker<String, Integer> {
 
 	@Override
 	protected void done() {
-		if (isCancelled()) {
-			getOutputTestEditor().getStatusBarJLabel().setText(
-					"Process canceled");
+		try {
+			if (isCancelled()) {
+				getOutputTestEditor().getStatusBarJLabel().setText(
+						"Process canceled");
+			} else {
+				getLogger().logMessages(Levels.INFO, " " + get(), null);
+				getOutputTestEditor().getStatusBarJLabel().setText(get());
+				getOutputTestEditor().getPlayButton().setEnabled(true);
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		} catch (Exception e1) {
+			e1.printStackTrace();
 		}
 	}
 
-	public OutputTestEditor getOutputTestEditor() {
+	public HATestEditor getOutputTestEditor() {
 		return outputTestEditor;
 	}
 
-	public void setOutputTestEditor(OutputTestEditor outputTestEditor) {
+	public void setOutputTestEditor(HATestEditor outputTestEditor) {
 		this.outputTestEditor = outputTestEditor;
-	}
-
-	public ActionEvent getEvent() {
-		return event;
-	}
-
-	public void setEvent(ActionEvent event) {
-		this.event = event;
 	}
 }
