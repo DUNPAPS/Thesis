@@ -10,12 +10,12 @@ import java.beans.PropertyChangeListener;
 import com.sap.on.ibm.i.view.HATestEditor;
 import com.sap.on.ibm.i.view.HATestScriptEditor;
 
-public class ScriptViewController implements IController, ActionListener,
+public class ScriptController implements IController, ActionListener,
 		PropertyChangeListener, ItemListener {
 	private GUIController guiScriptController;
 	private HATestEditor outputTestEditor;
 
-	public ScriptViewController(GUIController guiScriptController) {
+	public ScriptController(GUIController guiScriptController) {
 		this.guiScriptController = guiScriptController;
 		this.outputTestEditor = this.guiScriptController.getOutputTestEditor();
 	}

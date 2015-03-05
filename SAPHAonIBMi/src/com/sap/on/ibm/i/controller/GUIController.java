@@ -35,7 +35,7 @@ public class GUIController implements ActionListener, ItemListener,
 	private boolean applyKernelCheckBox;
 	private boolean allChecked;
 	private Logging logger;
-	private ScriptViewController scriptViewController;
+	private ScriptController scriptViewController;
 	private PropertyChangeSupport changeSupport;
 	@SuppressWarnings("unused")
 	private String name;
@@ -273,11 +273,11 @@ public class GUIController implements ActionListener, ItemListener,
 		this.levels = levels;
 	}
 
-	public ScriptViewController getScriptViewController() {
+	public ScriptController getScriptViewController() {
 		if (this.scriptViewController != null) {
 			return this.scriptViewController;
 		} else {
-			this.scriptViewController = new ScriptViewController(this);
+			this.scriptViewController = new ScriptController(this);
 			return this.scriptViewController;
 		}
 	}
