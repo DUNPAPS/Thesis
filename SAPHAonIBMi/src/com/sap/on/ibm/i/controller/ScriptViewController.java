@@ -21,9 +21,9 @@ public class ScriptViewController implements IController, ActionListener,
 	}
 
 	@Override
-	public void progress(PropertyChangeEvent e) {
+	public void progress(PropertyChangeEvent e, String Taskname) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
@@ -61,5 +61,9 @@ public class ScriptViewController implements IController, ActionListener,
 	public HATestEditor getOutputTestEditor() {
 		return outputTestEditor;
 	}
+
+
+
+
 
 }

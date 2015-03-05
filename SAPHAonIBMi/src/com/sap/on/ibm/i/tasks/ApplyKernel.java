@@ -74,9 +74,6 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 
 				while (!isCancelled() && progress < 50) {
 					setProgress(++progress);
-
-					getOutputTestEditor().getjProgressBar().setString(
-							"Applying kernel ....." + progress + "%");
 					Thread.sleep(DELAY);
 
 				}
@@ -100,12 +97,11 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 								new Exception(line));
 					}
 				}
-
 				while (!isCancelled() && progress < 100) {
 					setProgress(++progress);
 
-					getOutputTestEditor().getjProgressBar().setString(
-							"Applying kernel ....." + progress + "%");
+//					getOutputTestEditor().getjProgressBar().setString(
+//							"Applying kernel ....." + progress + "%");
 					Thread.sleep(50);
 
 				}
@@ -137,8 +133,6 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 	@Override
 	protected void done() {
 		try {
-			ActionEvent e = new TaskDoneEvent(this, 1234, get());
-			setEvent(e);
 			if (isCancelled()) {
 				getOutputTestEditor().getStatusBarJLabel().setText(
 						"Process canceled");
@@ -171,15 +165,6 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 	public Logging getLogger() {
 		return logger;
 	}
-
-	public ActionEvent getEvent() {
-		return event;
-	}
-
-	public void setEvent(ActionEvent event) {
-		this.event = event;
-	}
-
 	public User getUser() {
 		return user;
 	}

@@ -45,7 +45,7 @@ public class CommandLineController implements ActionListener,
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void progress(PropertyChangeEvent evt) {
+	public void progress(PropertyChangeEvent evt, String Taskname) {
 		SwingWorker worker = (SwingWorker) evt.getSource();
 		if ("progress".equals(evt.getPropertyName())) {
 			int progress = (Integer) evt.getNewValue();
@@ -85,7 +85,7 @@ public class CommandLineController implements ActionListener,
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		progress(evt);
+		// progress(evt);
 	}
 
 	@Override

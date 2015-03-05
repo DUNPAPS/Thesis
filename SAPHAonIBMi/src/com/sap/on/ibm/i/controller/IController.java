@@ -6,7 +6,7 @@ import java.beans.PropertyChangeEvent;
 
 public interface IController  {
  
-	public void progress(PropertyChangeEvent e);
+	public void progress(PropertyChangeEvent e,String Taskname);
 
 	public void sendDoneEvent(ActionEvent e);
 

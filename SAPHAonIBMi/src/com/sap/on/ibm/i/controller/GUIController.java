@@ -6,6 +6,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JOptionPane;
@@ -35,8 +36,14 @@ public class GUIController implements ActionListener, ItemListener,
 	private boolean allChecked;
 	private Logging logger;
 	private ScriptViewController scriptViewController;
+	private PropertyChangeSupport changeSupport;
+	private String name;
+	private String oldValue;
+	private String newValue;
 
 	public GUIController() {
+		changeSupport = new PropertyChangeSupport(this);
+		changeSupport.addPropertyChangeListener(this);
 		this.outputTestEditor = new HATestEditor();
 		this.addListener();
 	}
@@ -58,8 +65,60 @@ public class GUIController implements ActionListener, ItemListener,
 	}
 
 	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
-		progress(evt);
+	public void sendDoneEvent(ActionEvent e) {
+		actionPerformed(e);
+	}
+
+	private void stopSAP() {
+		ExecuteSAPControl sapControl = new ExecuteSAPControl();
+		sapControl.setOutputTestEditor(outputTestEditor);
+		sapControl.setLogger(getLogger());
+		sapControl.setFunction("GetProcessList");
+		sapControl.setInstance("00");
+		sapControl.setHost("as0013");
+		try {
+			sapControl.execute();
+			sapControl.addPropertyChangeListener(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void applyKernel() {
+
+		ApplyKernel applylKernel = new ApplyKernel();
+		applylKernel.setLogger(getLogger());
+		applylKernel.setOutputTestEditor(outputTestEditor);
+		applylKernel.setCommand("STEP0", "cd /FSIASP/sapmnt/DCN/exe/uc");
+		// applylKernel.setCommand("STEP0",
+		// "cd /FSIASP/sapmnt/DCN/exe/uc; rm -R as400_pase_64.backup");
+		// applylKernel.setCommand("STEP1",
+		// "cd /FSIASP/sapmnt/DCN/exe/uc; cp -R as400_pase_64 as400_pase_64.backup");
+		try {
+			applylKernel.execute();
+			changeSupport.firePropertyChange("Task", "old", "ApplylKernel");
+			applylKernel.addPropertyChangeListener(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// LastNightSAPKernel lastNightSAPKernel = new LastNightSAPKernel(this);
+		// lastNightSAPKernel.setCommand("STEP0",
+		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXEDB_DB4.SAR .");
+		// lastNightSAPKernel.setCommand("STEP1",
+		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXE.SAR  .");
+		// lastNightSAPKernel.exe();
+		// getKernelBuildl.setCommand("STEP2",
+		// "cd /FSIASP/sapmnt/DCN/exe/uc; ");
+		// getKernelBuildl.setCommand("STEP3", "cd /FSIASP/sapmnt/DCN/exe/uc");
+		// getKernelBuildl.exe();
+
+		// LastNightSAPKernel lastNightSAPKernel = new LastNightSAPKernel(this);
+		// lastNightSAPKernel.setCommand("STEP0",
+		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXEDB_DB4.SAR .");
+		// lastNightSAPKernel.setCommand("STEP1",
+		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXE.SAR  .");
+		// lastNightSAPKernel.exe();
 	}
 
 	@Override
@@ -121,16 +180,32 @@ public class GUIController implements ActionListener, ItemListener,
 		}
 	}
 
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (evt.getSource() instanceof GUIController) {
+			this.name = evt.getPropertyName();
+			this.oldValue = (String) evt.getOldValue();
+			this.newValue = this.name + " " + evt.getNewValue();
+		}
+		if (evt.getSource() instanceof SwingWorker) {
+			progress(evt, this.newValue);
+		}
+
+	}
+
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void progress(PropertyChangeEvent evt) {
+	public void progress(PropertyChangeEvent evt, String Taskname) {
+
 		SwingWorker worker = (SwingWorker) evt.getSource();
 		if ("progress".equals(evt.getPropertyName())) {
 			int progress = (Integer) evt.getNewValue();
-			outputTestEditor.getjProgressBar().setStringPainted(true);
-			outputTestEditor.getjProgressBar().setValue(+progress);
+			outputTestEditor.getjProgressBar().setString(
+					Taskname + " " + progress + "%");
 			outputTestEditor.getStatusBarJLabel().setText(
 					"In " + evt.getPropertyName().toString() + " ....");
+			outputTestEditor.getjProgressBar().setValue(+progress);
+			outputTestEditor.getjProgressBar().setStringPainted(true);
 			outputTestEditor.getPlayButton().setEnabled(false);
 		} else if ("state".equalsIgnoreCase(evt.getPropertyName())) {
 			if (worker.isDone()) {
@@ -145,65 +220,28 @@ public class GUIController implements ActionListener, ItemListener,
 				}
 
 			}
-		} 
-
-	}
-
-	@Override
-	public void sendDoneEvent(ActionEvent e) {
-		actionPerformed(e);
-	}
-
-	private void stopSAP() {
-		ExecuteSAPControl sapControl = new ExecuteSAPControl();
-		sapControl.setOutputTestEditor(outputTestEditor);
-		sapControl.setLogger(getLogger());
-		sapControl.setFunction("GetProcessList");
-		sapControl.setInstance("00");
-		sapControl.setHost("as0013");
-		try {
-			sapControl.execute();
-			sapControl.addPropertyChangeListener(this);
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
-	private void applyKernel() {
-
-		ApplyKernel applylKernel = new ApplyKernel();
-		applylKernel.setLogger(getLogger());
-		applylKernel.setOutputTestEditor(outputTestEditor);
-		applylKernel.setCommand("STEP0", "cd /FSIASP/sapmnt/DCN/exe/uc");
-		// applylKernel.setCommand("STEP0",
-		// "cd /FSIASP/sapmnt/DCN/exe/uc; rm -R as400_pase_64.backup");
-		// applylKernel.setCommand("STEP1",
-		// "cd /FSIASP/sapmnt/DCN/exe/uc; cp -R as400_pase_64 as400_pase_64.backup");
-		try {
-			applylKernel.execute();
-			applylKernel.addPropertyChangeListener(this);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		// LastNightSAPKernel lastNightSAPKernel = new LastNightSAPKernel(this);
-		// lastNightSAPKernel.setCommand("STEP0",
-		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXEDB_DB4.SAR .");
-		// lastNightSAPKernel.setCommand("STEP1",
-		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXE.SAR  .");
-		// lastNightSAPKernel.exe();
-		// getKernelBuildl.setCommand("STEP2",
-		// "cd /FSIASP/sapmnt/DCN/exe/uc; ");
-		// getKernelBuildl.setCommand("STEP3", "cd /FSIASP/sapmnt/DCN/exe/uc");
-		// getKernelBuildl.exe();
-
-		// LastNightSAPKernel lastNightSAPKernel = new LastNightSAPKernel(this);
-		// lastNightSAPKernel.setCommand("STEP0",
-		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXEDB_DB4.SAR .");
-		// lastNightSAPKernel.setCommand("STEP1",
-		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXE.SAR  .");
-		// lastNightSAPKernel.exe();
-	}
+	// String propertyName = evt.getPropertyName();
+	//
+	// if (propertyName.equals("state")) {
+	// // StateValue changed
+	// SwingWorker.StateValue stateValue = (StateValue) evt.getNewValue();
+	// if (stateValue.equals(SwingWorker.StateValue.STARTED)) {
+	// _progressJDialog.setVisible(true);
+	// } else if (stateValue.equals(SwingWorker.StateValue.DONE)) {
+	// _progressJDialog.dispose();
+	// }
+	// } else if (propertyName.equals("progress")) {
+	// // Progress change
+	// if (_progressJDialog.isCancelled()) {
+	// _swingWorker.cancel(true);
+	// } else {
+	// _progressJDialog.setProgress((Integer) evt.getNewValue());
+	// }
+	// }
+	// }
 
 	private void addListener() {
 		outputTestEditor.setclearLogViewButtonActionListener(this);
