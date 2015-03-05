@@ -37,7 +37,9 @@ public class GUIController implements ActionListener, ItemListener,
 	private Logging logger;
 	private ScriptViewController scriptViewController;
 	private PropertyChangeSupport changeSupport;
+	@SuppressWarnings("unused")
 	private String name;
+	@SuppressWarnings("unused")
 	private String oldValue;
 	private String newValue;
 
@@ -78,6 +80,7 @@ public class GUIController implements ActionListener, ItemListener,
 		sapControl.setHost("as0013");
 		try {
 			sapControl.execute();
+			changeSupport.firePropertyChange("Task", "old", "SapControl");
 			sapControl.addPropertyChangeListener(this);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -185,7 +188,7 @@ public class GUIController implements ActionListener, ItemListener,
 		if (evt.getSource() instanceof GUIController) {
 			this.name = evt.getPropertyName();
 			this.oldValue = (String) evt.getOldValue();
-			this.newValue = this.name + " " + evt.getNewValue();
+			this.newValue = (String) evt.getNewValue();
 		}
 		if (evt.getSource() instanceof SwingWorker) {
 			progress(evt, this.newValue);
@@ -196,52 +199,48 @@ public class GUIController implements ActionListener, ItemListener,
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void progress(PropertyChangeEvent evt, String Taskname) {
-
 		SwingWorker worker = (SwingWorker) evt.getSource();
-		if ("progress".equals(evt.getPropertyName())) {
+		Object stateValue = evt.getNewValue();
+		String propertyName = evt.getPropertyName();
+		if (stateValue.equals(SwingWorker.StateValue.STARTED)) {
+			// _progressJDialog.setVisible(true);
+		}
+
+		else if (propertyName.equals("progress")) {
 			int progress = (Integer) evt.getNewValue();
 			outputTestEditor.getjProgressBar().setString(
 					Taskname + " " + progress + "%");
 			outputTestEditor.getStatusBarJLabel().setText(
-					"In " + evt.getPropertyName().toString() + " ....");
+					"In " + evt.getPropertyName().toString());
 			outputTestEditor.getjProgressBar().setValue(+progress);
 			outputTestEditor.getjProgressBar().setStringPainted(true);
 			outputTestEditor.getPlayButton().setEnabled(false);
-		} else if ("state".equalsIgnoreCase(evt.getPropertyName())) {
-			if (worker.isDone()) {
-				try {
-					ActionEvent e = new TaskDoneEvent(this, 1234, worker.get()
-							.toString());
-					sendDoneEvent(e);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					e.printStackTrace();
-				}
-
-			}
 		}
-	}
 
-	// String propertyName = evt.getPropertyName();
-	//
-	// if (propertyName.equals("state")) {
-	// // StateValue changed
-	// SwingWorker.StateValue stateValue = (StateValue) evt.getNewValue();
-	// if (stateValue.equals(SwingWorker.StateValue.STARTED)) {
-	// _progressJDialog.setVisible(true);
-	// } else if (stateValue.equals(SwingWorker.StateValue.DONE)) {
-	// _progressJDialog.dispose();
-	// }
-	// } else if (propertyName.equals("progress")) {
-	// // Progress change
-	// if (_progressJDialog.isCancelled()) {
-	// _swingWorker.cancel(true);
-	// } else {
-	// _progressJDialog.setProgress((Integer) evt.getNewValue());
-	// }
-	// }
-	// }
+		else if (stateValue.equals(SwingWorker.StateValue.PENDING)) {
+			outputTestEditor.getStatusBarJLabel().setText(
+					 evt.getPropertyName().toString() + " ....");
+		}
+		else if (stateValue.equals(SwingWorker.StateValue.DONE)) {
+			// _progressJDialog.dispose();
+			// if (_progressJDialog.isCancelled()) {
+			// _swingWorker.cancel(true);
+			// } else {
+			// _progressJDialog.setProgress((Integer) evt.getNewValue());
+			// }
+			try {
+				ActionEvent e = new TaskDoneEvent(this, 1234, worker.get()
+						.toString());
+				sendDoneEvent(e);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			}
+
+		}
+
+	}
 
 	private void addListener() {
 		outputTestEditor.setclearLogViewButtonActionListener(this);

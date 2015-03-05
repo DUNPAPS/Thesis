@@ -22,6 +22,7 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 	private long DELAY = 200;
 	private Logging logger;
 	private HATestEditor outputTestEditor;
+	@SuppressWarnings("unused")
 	private ActionEvent event;
 	private User user;
 
@@ -99,9 +100,6 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 				}
 				while (!isCancelled() && progress < 100) {
 					setProgress(++progress);
-
-//					getOutputTestEditor().getjProgressBar().setString(
-//							"Applying kernel ....." + progress + "%");
 					Thread.sleep(50);
 
 				}
@@ -122,7 +120,7 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 
 		}
 
-		return "ApplyKernelDONE";
+		return "ApplyKernel DONE";
 	}
 
 	@Override
@@ -165,6 +163,7 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 	public Logging getLogger() {
 		return logger;
 	}
+
 	public User getUser() {
 		return user;
 	}

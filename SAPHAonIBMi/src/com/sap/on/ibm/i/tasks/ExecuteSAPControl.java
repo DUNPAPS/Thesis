@@ -126,8 +126,6 @@ public class ExecuteSAPControl extends SwingWorker<String, Integer> {
 
 			while (!isCancelled() && progress < 30) {
 				setProgress(++progress);
-				getOutputTestEditor().getjProgressBar().setString(
-						"Running SAP Control....." + progress + "%");
 				Thread.sleep(200);
 
 			}
@@ -152,8 +150,6 @@ public class ExecuteSAPControl extends SwingWorker<String, Integer> {
 			p.waitFor();
 			while (!isCancelled() && progress < 100) {
 				setProgress(++progress);
-				getOutputTestEditor().getjProgressBar().setString(
-						"Running SAP Control....." + progress + "%");
 				Thread.sleep(50);
 
 			}
