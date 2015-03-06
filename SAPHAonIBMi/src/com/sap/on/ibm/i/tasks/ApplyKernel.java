@@ -4,32 +4,28 @@ import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
 
-import javax.swing.SwingWorker;
-
+import com.sap.on.ibm.i.controller.IController;
 import com.sap.on.ibm.i.logger.Levels;
 import com.sap.on.ibm.i.logger.Logging;
 import com.sap.on.ibm.i.model.User;
-import com.sap.on.ibm.i.view.HATestEditor;
 
-public class ApplyKernel extends SwingWorker<String, Integer> {
+public class ApplyKernel {
 	protected String PLINK_EXE = "plink.exe";
 	protected Map<String, String> myMap = new ConcurrentHashMap<String, String>();
-	private long DELAY = 200;
 	private Logging logger;
-	private HATestEditor outputTestEditor;
 	@SuppressWarnings("unused")
 	private ActionEvent event;
 	private User user;
+	private IController myController;
 
-	public ApplyKernel() {
+	public ApplyKernel(IController myController) {
 		this.user = new User();
 		this.user.setUser("qsecofr@as0013");
 		this.user.setPassword("bigboss");
+		this.myController = myController;
 	}
 
 	public void setCommand(String commandName, String command) {
@@ -46,114 +42,83 @@ public class ApplyKernel extends SwingWorker<String, Integer> {
 		return null;
 	}
 
-	@Override
-	protected String doInBackground() throws Exception {
-		String line;
-		Iterator<String> commands = myMap.keySet().iterator();
+	public void execute() {
+		Thread t2 = new Thread(new Runnable() {
+			public void run() {
+				String line;
+				myController.setProgressbarMax(1000);
+				myController.updateProgressbar();//update progressbar
+				Iterator<String> commands = myMap.keySet().iterator();
 
-		while (commands.hasNext()) {
-			String command = commands.next();
-			String nextCommand = myMap.get(command);
-			try {
+				while (commands.hasNext()) {
 
-				PLINK_EXE += " " + getUser().getUserData();
-				PLINK_EXE += " " + nextCommand;
-				getLogger().logMessages(Levels.INFO,
-						"Command:    " + PLINK_EXE, null);
-				getLogger().logMessages(Levels.INFO, "Executig command...",
-						null);
+					String command = commands.next();
+					String nextCommand = myMap.get(command);
+					try {
 
-				Process p = Runtime.getRuntime().exec(PLINK_EXE);
-				BufferedReader stdInput = new BufferedReader(
-						new InputStreamReader(p.getInputStream()));
+						PLINK_EXE += " " + getUser().getUserData();
+						PLINK_EXE += " " + nextCommand;
+						getLogger().logMessages(Levels.INFO,
+								"Command:    " + PLINK_EXE, null);
+						getLogger().logMessages(Levels.INFO,
+								"Executig command...", null);
 
-				// error
-				BufferedReader stdError = new BufferedReader(
-						new InputStreamReader(p.getErrorStream()));
+						Process p = Runtime.getRuntime().exec(PLINK_EXE);
+						BufferedReader stdInput = new BufferedReader(
+								new InputStreamReader(p.getInputStream()));
 
-				int progress = 0;
+						// error
+						BufferedReader stdError = new BufferedReader(
+								new InputStreamReader(p.getErrorStream()));
+						
+						
+						
+						while ((line = stdInput.readLine()) != null) {
 
-				while (!isCancelled() && progress < 50) {
-					setProgress(++progress);
-					Thread.sleep(DELAY);
+							if (!line.equals("") || line.contains("INFO")) {
+								getLogger()
+										.logMessages(Levels.INFO, line, null);
+							}
+							if (!line.equals("") && line.contains("FAIL")) {
+								getLogger().logMessages(Levels.ERROR, null,
+										new Exception(line));
+							} else {
+								getLogger()
+										.logMessages(Levels.INFO, line, null);
+							}
+						}
+						while ((line = stdError.readLine()) != null) {
 
-				}
+							if (!line.equals("")) {
+								getLogger().logMessages(Levels.ERROR, null,
+										new Exception(line));
+							}
+						}
+						p.waitFor();
 
-				while ((line = stdInput.readLine()) != null) {
-
-					if (!line.equals("") || line.contains("INFO")) {
-						getLogger().logMessages(Levels.INFO, line, null);
+					} catch (Exception e) {
+						try {
+							getLogger().logMessages(Levels.ERROR, null,
+									new Exception(e));
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
 					}
-					if (!line.equals("") && line.contains("FAIL")) {
-						getLogger().logMessages(Levels.ERROR, null,
-								new Exception(line));
-					} else {
-						getLogger().logMessages(Levels.INFO, line, null);
+					try {
+						getLogger().logMessages(Levels.INFO,
+								" " + " Finished ...", null);
+						ActionEvent e = new TaskDoneEvent(this, 1234,
+								"ApplyKernelDONE");
+						myController.sendDoneEvent(e);
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 				}
-				while ((line = stdError.readLine()) != null) {
 
-					if (!line.equals("")) {
-						getLogger().logMessages(Levels.ERROR, null,
-								new Exception(line));
-					}
-				}
-				while (!isCancelled() && progress < 100) {
-					setProgress(++progress);
-					Thread.sleep(50);
-
-				}
-
-			} catch (Exception e) {
-				try {
-					getLogger().logMessages(Levels.ERROR, null,
-							new Exception(e));
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-			}
-			try {
-
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 
-		}
-
-		return "ApplyKernel DONE";
-	}
-
-	@Override
-	protected void process(List<Integer> chunks) {
-		super.process(chunks);
-	}
-
-	@Override
-	protected void done() {
-		try {
-			if (isCancelled()) {
-				getOutputTestEditor().getStatusBarJLabel().setText(
-						"Process canceled");
-			} else {
-				getLogger().logMessages(Levels.INFO, " " + get(), null);
-				getOutputTestEditor().getStatusBarJLabel().setText(get());
-				getOutputTestEditor().getPlayButton().setEnabled(true);
-			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-	}
-
-	public HATestEditor getOutputTestEditor() {
-		return outputTestEditor;
-	}
-
-	public void setOutputTestEditor(HATestEditor outputTestEditor) {
-		this.outputTestEditor = outputTestEditor;
+		}, "Execute Apply Kernel .....");
+		t2.start();
 	}
 
 	public void setLogger(Logging logger) {

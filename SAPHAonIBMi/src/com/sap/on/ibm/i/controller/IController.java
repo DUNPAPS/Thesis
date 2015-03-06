@@ -8,6 +8,10 @@ public interface IController  {
  
 	public void progress(PropertyChangeEvent e,String Taskname);
 
+	public void setProgressbarMax(int nSteps);
+	
+	public void updateProgressbar();
+	
 	public void sendDoneEvent(ActionEvent e);
 
 }

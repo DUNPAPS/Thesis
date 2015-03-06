@@ -27,25 +27,22 @@ import com.sap.on.ibm.i.view.HATestEditor;
  * @author Duncan
  *
  */
-public class GUIController implements ActionListener, ItemListener,
-		PropertyChangeListener, IController {
+public class GUIController implements ActionListener, ItemListener, IController {
 	private HATestEditor outputTestEditor;
 	private Levels levels;
 	private boolean stopSAPCheckBox;
 	private boolean applyKernelCheckBox;
 	private boolean allChecked;
 	private Logging logger;
-	private ScriptController scriptViewController;
-	private PropertyChangeSupport changeSupport;
 	@SuppressWarnings("unused")
 	private String name;
 	@SuppressWarnings("unused")
-	private String oldValue;
-	private String newValue;
+	private int currentStep;
+	private int maxSteps;
+
+	private long DELAY = 200;
 
 	public GUIController() {
-		changeSupport = new PropertyChangeSupport(this);
-		changeSupport.addPropertyChangeListener(this);
 		this.outputTestEditor = new HATestEditor();
 		this.addListener();
 	}
@@ -72,38 +69,25 @@ public class GUIController implements ActionListener, ItemListener,
 	}
 
 	private void stopSAP() {
-		ExecuteSAPControl sapControl = new ExecuteSAPControl();
-		sapControl.setOutputTestEditor(outputTestEditor);
+		ExecuteSAPControl sapControl = new ExecuteSAPControl(this);
 		sapControl.setLogger(getLogger());
 		sapControl.setFunction("GetProcessList");
 		sapControl.setInstance("00");
 		sapControl.setHost("as0013");
-		try {
-			sapControl.execute();
-			changeSupport.firePropertyChange("Task", "old", "SapControl");
-			sapControl.addPropertyChangeListener(this);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		sapControl.execute();
+
 	}
 
 	private void applyKernel() {
 
-		ApplyKernel applylKernel = new ApplyKernel();
+		ApplyKernel applylKernel = new ApplyKernel(this);
 		applylKernel.setLogger(getLogger());
-		applylKernel.setOutputTestEditor(outputTestEditor);
 		applylKernel.setCommand("STEP0", "cd /FSIASP/sapmnt/DCN/exe/uc");
+		applylKernel.execute();
 		// applylKernel.setCommand("STEP0",
 		// "cd /FSIASP/sapmnt/DCN/exe/uc; rm -R as400_pase_64.backup");
 		// applylKernel.setCommand("STEP1",
 		// "cd /FSIASP/sapmnt/DCN/exe/uc; cp -R as400_pase_64 as400_pase_64.backup");
-		try {
-			applylKernel.execute();
-			changeSupport.firePropertyChange("Task", "old", "ApplylKernel");
-			applylKernel.addPropertyChangeListener(this);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
 		// LastNightSAPKernel lastNightSAPKernel = new LastNightSAPKernel(this);
 		// lastNightSAPKernel.setCommand("STEP0",
@@ -127,11 +111,6 @@ public class GUIController implements ActionListener, ItemListener,
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		try {
-			if (e.getSource() == outputTestEditor.getImportScriptJMenuItem()) {
-
-				getScriptViewController().showScriptView();
-
-			}
 			if (e.getSource() == outputTestEditor.getPlayButton()
 					|| e instanceof TaskDoneEvent) {
 				outputTestEditor.getjProgressBar().setEnabled(true);
@@ -184,26 +163,14 @@ public class GUIController implements ActionListener, ItemListener,
 	}
 
 	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
-		if (evt.getSource() instanceof GUIController) {
-			this.name = evt.getPropertyName();
-			this.oldValue = (String) evt.getOldValue();
-			this.newValue = (String) evt.getNewValue();
-		}
-		if (evt.getSource() instanceof SwingWorker) {
-			progress(evt, this.newValue);
-		}
-
-	}
-
-	@SuppressWarnings("rawtypes")
-	@Override
 	public void progress(PropertyChangeEvent evt, String Taskname) {
 		SwingWorker worker = (SwingWorker) evt.getSource();
 		Object stateValue = evt.getNewValue();
 		String propertyName = evt.getPropertyName();
 		if (stateValue.equals(SwingWorker.StateValue.STARTED)) {
 			// _progressJDialog.setVisible(true);
+			outputTestEditor.getStatusBarJLabel().setText(
+					"In " + evt.getPropertyName().toString());
 		}
 
 		else if (propertyName.equals("progress")) {
@@ -219,23 +186,32 @@ public class GUIController implements ActionListener, ItemListener,
 
 		else if (stateValue.equals(SwingWorker.StateValue.PENDING)) {
 			outputTestEditor.getStatusBarJLabel().setText(
-					 evt.getPropertyName().toString() + " ....");
-		}
-		else if (stateValue.equals(SwingWorker.StateValue.DONE)) {
-			// _progressJDialog.dispose();
-			// if (_progressJDialog.isCancelled()) {
-			// _swingWorker.cancel(true);
-			// } else {
-			// _progressJDialog.setProgress((Integer) evt.getNewValue());
-			// }
+					evt.getPropertyName().toString() + " ....");
+		} else if (stateValue.equals(SwingWorker.StateValue.DONE)) {
 			try {
-				ActionEvent e = new TaskDoneEvent(this, 1234, worker.get()
-						.toString());
-				sendDoneEvent(e);
+				// if (isCancelled()) {
+				// getOutputTestEditor().getStatusBarJLabel().setText(
+				// "Process canceled");
+				// } else {
+				getLogger().logMessages(Levels.INFO, " " + worker.get(), null);
+				getOutputTestEditor().getStatusBarJLabel().setText(
+						worker.get().toString());
+				getOutputTestEditor().getPlayButton().setEnabled(true);
+				// }
+				// _progressJDialog.dispose();
+				// if (_progressJDialog.isCancelled()) {
+				// _swingWorker.cancel(true);
+				// } else {
+				// _progressJDialog.setProgress((Integer) evt.getNewValue());
+				// }
+
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (ExecutionException e) {
 				e.printStackTrace();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
 
 		}
@@ -273,13 +249,30 @@ public class GUIController implements ActionListener, ItemListener,
 		this.levels = levels;
 	}
 
-	public ScriptController getScriptViewController() {
-		if (this.scriptViewController != null) {
-			return this.scriptViewController;
-		} else {
-			this.scriptViewController = new ScriptController(this);
-			return this.scriptViewController;
+	@Override
+	public void setProgressbarMax(int nSteps) {
+		this.currentStep = 0;
+		this.maxSteps = nSteps;
+	}
+
+	@Override
+	public void updateProgressbar() {
+		while (currentStep < 30) {
+			try {
+				outputTestEditor.getjProgressBar().setValue(++this.currentStep);
+				outputTestEditor.getjProgressBar().setStringPainted(true);
+				outputTestEditor.getPlayButton().setEnabled(false);
+				Thread.sleep(DELAY);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
 		}
+
+	}
+
+	public int getCurrentStep() {
+		return currentStep;
 	}
 
 }

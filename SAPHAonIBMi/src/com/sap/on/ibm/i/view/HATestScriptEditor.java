@@ -25,17 +25,17 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 
-import com.sap.on.ibm.i.controller.ScriptController;
+import com.sap.on.ibm.i.controller.IController;
 
 @SuppressWarnings("serial")
 public class HATestScriptEditor extends JFrame {
 
 	private JFileChooser fileChooser;
 	private JTextArea textarea = new JTextArea(10, 40);
-	private ScriptController controller;
+	private IController controller;
 	private File file;
 
-	public HATestScriptEditor(ScriptController controller) {
+	public HATestScriptEditor(IController controller) {
 		this.controller = controller;
 		this.setTitle("Run Script");
 		getContentPane().add(initComponents());
@@ -122,52 +122,52 @@ public class HATestScriptEditor extends JFrame {
 								String firstSubString = split[0];
 								String secondSubString = split[1];
 
-								if (firstSubString.trim().equals("Step0")
-										&& secondSubString.trim().equals(
-												"StopSAP")) {
-									controller.getOutputTestEditor()
-											.getStop_SAP_Checkbox()
-											.setSelected(true);
-								}
-								if (firstSubString.trim().equals("Step1")
-										&& secondSubString.trim().equals(
-												"ApplyKernel")) {
-									controller.getOutputTestEditor()
-											.getApplyKernelCheckbox()
-											.setSelected(true);
-								}
-								if (firstSubString.trim().equals("Step2")
-										&& secondSubString.trim().equals(
-												"StartSAP")) {
-									controller.getOutputTestEditor()
-											.getStartSAPCheckBox()
-											.setSelected(true);
-								}
-								if (firstSubString.trim().equals("SAP_SID")
-										&& secondSubString.trim().equals(
-												"bigboss")) {
-									controller.getOutputTestEditor()
-											.getSap_SID_Field().setText("");
-									controller.getOutputTestEditor()
-											.getSap_SID_Field()
-											.setText("bigboss");
-								}
-								if (firstSubString.trim()
-										.equals("SAP_Password")
-										&& secondSubString.trim().equals(
-												"qsecofer")) {
-									controller.getOutputTestEditor()
-											.getSap_PASSWORD_Field()
-											.setText(" ");
-									controller.getOutputTestEditor()
-											.getSap_PASSWORD_Field()
-											.setText("qsecofer");
-								}
-								if (firstSubString.trim().equals("SAP_Userd")
-										&& secondSubString.trim().equals(
-												"dcnadm")) {
-									// TODO
-								}
+//								if (firstSubString.trim().equals("Step0")
+//										&& secondSubString.trim().equals(
+//												"StopSAP")) {
+//									controller.getOutputTestEditor()
+//											.getStop_SAP_Checkbox()
+//											.setSelected(true);
+//								}
+//								if (firstSubString.trim().equals("Step1")
+//										&& secondSubString.trim().equals(
+//												"ApplyKernel")) {
+//									controller.getOutputTestEditor()
+//											.getApplyKernelCheckbox()
+//											.setSelected(true);
+//								}
+//								if (firstSubString.trim().equals("Step2")
+//										&& secondSubString.trim().equals(
+//												"StartSAP")) {
+//									controller.getOutputTestEditor()
+//											.getStartSAPCheckBox()
+//											.setSelected(true);
+//								}
+//								if (firstSubString.trim().equals("SAP_SID")
+//										&& secondSubString.trim().equals(
+//												"bigboss")) {
+//									controller.getOutputTestEditor()
+//											.getSap_SID_Field().setText("");
+//									controller.getOutputTestEditor()
+//											.getSap_SID_Field()
+//											.setText("bigboss");
+//								}
+//								if (firstSubString.trim()
+//										.equals("SAP_Password")
+//										&& secondSubString.trim().equals(
+//												"qsecofer")) {
+//									controller.getOutputTestEditor()
+//											.getSap_PASSWORD_Field()
+//											.setText(" ");
+//									controller.getOutputTestEditor()
+//											.getSap_PASSWORD_Field()
+//											.setText("qsecofer");
+//								}
+//								if (firstSubString.trim().equals("SAP_Userd")
+//										&& secondSubString.trim().equals(
+//												"dcnadm")) {
+//									// TODO
+//								}
 
 							}
 

@@ -1,6 +1,7 @@
 package com.sap.on.ibm.i.main;
 
 import java.io.BufferedReader;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -37,33 +38,33 @@ public class Main {
 			CommandLineController controller = new CommandLineController();
 			logger.setLogger(controller.getClass().getName());
 			controller.setLogger(logger);
-			
-			try {
+			controller.run();
+//			try {
+//
+//				if (0 < args.length) {
+//					inFile = new File(args[1]);
+//				}
+//
+//				String sCurrentLine;
+//
+//				br = new BufferedReader(new FileReader(inFile));
+//
+//				while ((sCurrentLine = br.readLine()) != null) {
+//					System.out.println(sCurrentLine);
+//				}
+//
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
 
-				if (0 < args.length) {
-					inFile = new File(args[1]);
-				}
-
-				String sCurrentLine;
-
-				br = new BufferedReader(new FileReader(inFile));
-
-				while ((sCurrentLine = br.readLine()) != null) {
-					System.out.println(sCurrentLine);
-				}
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			finally {
-				try {
-					if (br != null)
-						br.close();
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
-			}
+//			finally {
+//				try {
+//					if (br != null)
+//						br.close();
+//				} catch (IOException ex) {
+//					ex.printStackTrace();
+//				}
+//			}
 		} else if (mode.equals("-gui")) {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override

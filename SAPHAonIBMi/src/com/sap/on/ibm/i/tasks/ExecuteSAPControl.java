@@ -1,19 +1,19 @@
 package com.sap.on.ibm.i.tasks;
 
+import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
 
 import javax.swing.SwingWorker;
 
+import com.sap.on.ibm.i.controller.IController;
 import com.sap.on.ibm.i.logger.Levels;
 import com.sap.on.ibm.i.logger.Logging;
-import com.sap.on.ibm.i.view.HATestEditor;
 
-public class ExecuteSAPControl extends SwingWorker<String, Integer> {
+public class ExecuteSAPControl {
 
 	private String param0;
 	private String param1;
@@ -22,12 +22,14 @@ public class ExecuteSAPControl extends SwingWorker<String, Integer> {
 	private String host;
 	private String version;
 	private String format;
-	protected String SAP_CONTROL = "sapcontrol.exe";
+	protected String SAP_CONTROL = "C:\\Users\\IBM_ADMIN\\git\\Thesis\\SAPHAonIBMi\\sapcontrol.exe";
+//	protected String SAP_CONTROL = "sapcontrol.exe";
 	private Logging logger;
-	private HATestEditor outputTestEditor;
+	private IController myController;
 	protected Map<String, String> myMap = new ConcurrentHashMap<String, String>();
 
-	public ExecuteSAPControl() {
+	public ExecuteSAPControl(IController myController) {
+		this.myController = myController;
 	}
 
 	public void setFunction(String function) {
@@ -63,7 +65,7 @@ public class ExecuteSAPControl extends SwingWorker<String, Integer> {
 
 	public String getCommand() {
 
-		String sap_ctrl = "sapcontrol.exe";
+		String sap_ctrl = SAP_CONTROL;
 
 		if (instance != null) {
 			sap_ctrl += " -nr " + instance;
@@ -104,97 +106,80 @@ public class ExecuteSAPControl extends SwingWorker<String, Integer> {
 		return logger;
 	}
 
-	@Override
-	protected String doInBackground() throws Exception {
-		String line;
-		try {
-			SAP_CONTROL = " " + getCommand();
-			getLogger().logMessages(Levels.INFO, "Command:    " + SAP_CONTROL,
-					null);
-			getLogger().logMessages(Levels.INFO, getState().toString(), null);
+	public void execute() {
 
-			Process p = Runtime.getRuntime().exec(SAP_CONTROL);
-			getOutputTestEditor().getStatusBarJLabel().setText(" ");
-			BufferedReader stdInput = new BufferedReader(new InputStreamReader(
-					p.getInputStream()));
+		Thread t2 = new Thread(new Runnable() {
+			public void run() {
+				String line;
+				ProgressbarTimedUpdate PGU = new ProgressbarTimedUpdate(myController);
 
-			// error
-			BufferedReader stdError = new BufferedReader(new InputStreamReader(
-					p.getErrorStream()));
+				try {
 
-			int progress = 0;
+					int maxWaitTimeSEC = 30;
+					
+					SAP_CONTROL = " " + getCommand();
+					getLogger().logMessages(Levels.INFO,
+							"Command:    " + SAP_CONTROL, null);
+					getLogger().logMessages(Levels.INFO, "Executig command...",
+							null);
+					
+					
+					PGU.Start(maxWaitTimeSEC);
+					
+					Process p = Runtime.getRuntime().exec(SAP_CONTROL);
+					BufferedReader stdInput = new BufferedReader(
+							new InputStreamReader(p.getInputStream()));
+					
+			
+					
+					// error
+					BufferedReader stdError = new BufferedReader(
+							new InputStreamReader(p.getErrorStream()));
+					
+					
+					
+					
+					while ((line = stdInput.readLine()) != null) {
 
-			while (!isCancelled() && progress < 30) {
-				setProgress(++progress);
-				Thread.sleep(200);
+						if (!line.equals("") || line.contains("INFO")) {
+							getLogger().logMessages(Levels.INFO, line, null);
+						} else if (!line.equals("") && line.contains("FAIL")) {
+							getLogger().logMessages(Levels.ERROR, null,
+									new Exception(line));
+						} else {
+							getLogger().logMessages(Levels.INFO, line, null);
+						}
+					}
+					while ((line = stdError.readLine()) != null) {
 
-			}
-			while ((line = stdInput.readLine()) != null) {
-
-				if (!line.equals("") || line.contains("INFO")) {
-					getLogger().logMessages(Levels.INFO, line, null);
-				} else if (!line.equals("") && line.contains("FAIL")) {
-					getLogger().logMessages(Levels.ERROR, null,
-							new Exception(line));
-				} else {
-					getLogger().logMessages(Levels.INFO, line, null);
+						if (!line.equals("")) {
+							getLogger().logMessages(Levels.ERROR, null,
+									new Exception(line));
+						}
+					}
+					p.waitFor();
+				} catch (Exception e) {
+					try {
+						getLogger().logMessages(Levels.ERROR, null,
+								new Exception(e));
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+				try {
+					getLogger().logMessages(Levels.INFO, " " + " Finished ...",
+							null);
+					ActionEvent e = new TaskDoneEvent(this, 1234,
+							"SAP CONTROL DONE.....");
+					myController.sendDoneEvent(e);
+					PGU.Stop();
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
-			while ((line = stdError.readLine()) != null) {
 
-				if (!line.equals("")) {
-					getLogger().logMessages(Levels.ERROR, null,
-							new Exception(line));
-				}
-			}
-			p.waitFor();
-			while (!isCancelled() && progress < 100) {
-				setProgress(++progress);
-				Thread.sleep(50);
-
-			}
-
-		} catch (Exception e) {
-			try {
-				getLogger().logMessages(Levels.ERROR, null, new Exception(e));
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-		}
-
-		return "SAP Stopped";
+		}, "Execute SAP Control  .....");
+		t2.start();
 	}
 
-	@Override
-	protected void process(List<Integer> chunks) {
-		super.process(chunks);
-	}
-
-	@Override
-	protected void done() {
-		try {
-			if (isCancelled()) {
-				getOutputTestEditor().getStatusBarJLabel().setText(
-						"Process canceled");
-			} else {
-				getLogger().logMessages(Levels.INFO, " " + get(), null);
-				getOutputTestEditor().getStatusBarJLabel().setText(get());
-				getOutputTestEditor().getPlayButton().setEnabled(true);
-			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-	}
-
-	public HATestEditor getOutputTestEditor() {
-		return outputTestEditor;
-	}
-
-	public void setOutputTestEditor(HATestEditor outputTestEditor) {
-		this.outputTestEditor = outputTestEditor;
-	}
 }
