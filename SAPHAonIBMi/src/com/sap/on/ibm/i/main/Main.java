@@ -1,26 +1,18 @@
 package com.sap.on.ibm.i.main;
 
-import java.io.BufferedReader;
-
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-
 import javax.swing.SwingUtilities;
-
 import com.sap.on.ibm.i.controller.CommandLineController;
 import com.sap.on.ibm.i.controller.GUIController;
 import com.sap.on.ibm.i.logger.Logging;
-
-;
-
+import com.sap.on.ibm.io.ScriptReader;
 /**
  * @author Duncan
  *
  */
 public class Main {
 
-	private static BufferedReader br = null;
 	private static File inFile = null;
 	private static Logging logger = Logging.getInstance();
 
@@ -39,33 +31,20 @@ public class Main {
 			logger.setLogger(controller.getClass().getName());
 			controller.setLogger(logger);
 			controller.run();
-//			try {
-//
-//				if (0 < args.length) {
-//					inFile = new File(args[1]);
-//				}
-//
-//				String sCurrentLine;
-//
-//				br = new BufferedReader(new FileReader(inFile));
-//
-//				while ((sCurrentLine = br.readLine()) != null) {
-//					System.out.println(sCurrentLine);
-//				}
-//
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
 
-//			finally {
-//				try {
-//					if (br != null)
-//						br.close();
-//				} catch (IOException ex) {
-//					ex.printStackTrace();
-//				}
-//			}
-		} else if (mode.equals("-gui")) {
+			if (0 < args.length) {
+				inFile = new File(args[1]);
+				try {
+					ScriptReader reader = new ScriptReader(inFile);
+					reader.read();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();   
+				}
+			}
+		}
+		else if (mode.equals("-gui")) {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {

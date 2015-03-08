@@ -1,16 +1,24 @@
 package com.sap.on.ibm.i.controller;
 
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.BadLocationException;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
@@ -18,10 +26,12 @@ import org.apache.log4j.PatternLayout;
 import com.sap.on.ibm.i.logger.Appender;
 import com.sap.on.ibm.i.logger.Levels;
 import com.sap.on.ibm.i.logger.Logging;
+import com.sap.on.ibm.i.model.ScriptModel;
 import com.sap.on.ibm.i.tasks.ApplyKernel;
 import com.sap.on.ibm.i.tasks.ExecuteSAPControl;
 import com.sap.on.ibm.i.tasks.TaskDoneEvent;
 import com.sap.on.ibm.i.view.HATestEditor;
+import com.sap.on.ibm.i.view.HATestScriptEditor;
 
 /**
  * @author Duncan
@@ -34,17 +44,16 @@ public class GUIController implements ActionListener, ItemListener, IController 
 	private boolean applyKernelCheckBox;
 	private boolean allChecked;
 	private Logging logger;
-	@SuppressWarnings("unused")
-	private String name;
-	@SuppressWarnings("unused")
 	private int currentStep;
 	private int maxSteps;
-
+	private File file;
+	private HATestScriptEditor haTestScriptEditor;
 	private long DELAY = 200;
+	private JFileChooser fileChooser;
 
 	public GUIController() {
 		this.outputTestEditor = new HATestEditor();
-		this.addListener();
+		haTestScriptEditor = new HATestScriptEditor();
 	}
 
 	public void showMainView() {
@@ -52,8 +61,8 @@ public class GUIController implements ActionListener, ItemListener, IController 
 		Appender appender = new Appender(this);
 		appender.setLayout(layout);
 		Logger.getRootLogger().addAppender(appender);
-
 		this.outputTestEditor.setVisible(true);
+		this.addListener();
 
 	}
 
@@ -108,9 +117,238 @@ public class GUIController implements ActionListener, ItemListener, IController 
 		// lastNightSAPKernel.exe();
 	}
 
+	public void saveScriptFile() {
+		// BufferedWriter writer; TODO
+
+		if (haTestScriptEditor.getTextarea().getText().equals("")) {
+			Cursor defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+			haTestScriptEditor.setCursor(defaultCursor);
+
+			JOptionPane.showMessageDialog(new JFrame(),
+					"There is no script to save", "Error",
+					JOptionPane.ERROR_MESSAGE);
+		} else {
+			saveScriptAs();
+		}
+	}
+
+	public void saveScriptAs() {
+		FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter(
+				"Text File", "txt");
+		final JFileChooser saveAsFileChooser = new JFileChooser();
+		saveAsFileChooser.setApproveButtonText("Save");
+		saveAsFileChooser.setFileFilter(extensionFilter);
+		int actionDialog = saveAsFileChooser.showOpenDialog(haTestScriptEditor);
+		if (actionDialog != JFileChooser.APPROVE_OPTION) {
+			return;
+		}
+		File file = saveAsFileChooser.getSelectedFile();
+		if (!file.getName().endsWith(".txt")) {
+			file = new File(file.getAbsolutePath() + ".txt");
+		}
+
+		BufferedWriter outFile = null;
+		try {
+			outFile = new BufferedWriter(new FileWriter(file));
+
+			haTestScriptEditor.getTextarea().write(outFile);
+
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} finally {
+			if (outFile != null) {
+				try {
+					outFile.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+	}
+
+	/**
+	 * Read a representation of the script model from the input stream
+	 * 
+	 * @return the script model as read from the compressed file
+	 * 
+	 * @throws ClassNotFoundException
+	 *             if the compressed file is corrupt
+	 * @throws IOException
+	 * 
+	 * @see scriptModel
+	 */
+	public ScriptModel readScriptToModel(String guiscript)
+			throws ClassNotFoundException, IOException {
+		ScriptModel scriptModel = new ScriptModel();
+		try {
+			  
+				int totalLines = haTestScriptEditor.getTextarea()
+						.getLineCount();
+				for (int i = 0; i < totalLines; i++) {
+					int start = haTestScriptEditor.getTextarea()
+							.getLineStartOffset(i);
+					int end;
+					end = haTestScriptEditor.getTextarea().getLineEndOffset(i);
+					String line = guiscript.substring(start, end);
+					if (!line.equals("") && line.contains(":")) {
+						String[] split = guiscript.split(":");
+						String firstSubString = split[0];
+						String secondSubString = split[1];
+
+						if (firstSubString.trim().equals("SAP_SID")) {
+							scriptModel.setSid(secondSubString);
+						}
+
+						if (firstSubString.trim().equals("SAP_User")) {
+							scriptModel.setSid(secondSubString);
+						}
+
+						if (firstSubString.trim().equals("SAP_Password")) {
+							scriptModel.setPassword(secondSubString);
+						}
+
+						if (firstSubString.trim().equals("SAP_Global_Kernel")) {
+							scriptModel.setGlobal_Kernel(secondSubString);
+						}
+
+						if (firstSubString.trim().equals("SAP_NightlyMake")) {
+							scriptModel.setNightlyMake(secondSubString);
+						}
+
+						if (firstSubString.trim().equals("Step0")) {
+							scriptModel.setStopSAP(secondSubString);
+						}
+
+						if (firstSubString.trim().equals("Step1")) {
+							scriptModel.setApplyKernel(secondSubString);
+						}
+
+						if (firstSubString.trim().equals("Step2")) {
+							scriptModel.setStartSAP(secondSubString);
+						}
+
+						if (firstSubString.trim().equals("Step3")) {
+							scriptModel.setRunHATest(secondSubString);
+						}
+
+					}
+				}
+			 
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
+		return scriptModel;
+	}
+
+	public void loadScript() {
+
+		if (haTestScriptEditor.getTextarea().equals("")) {
+			Cursor defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+			haTestScriptEditor.setCursor(defaultCursor);
+
+			JOptionPane.showMessageDialog(new JFrame(),
+					"There is no script to run", "Error",
+					JOptionPane.ERROR_MESSAGE);
+		} else {
+
+			Cursor waitCursor = new Cursor(Cursor.WAIT_CURSOR);
+			try {
+				synchronized (waitCursor) {
+					haTestScriptEditor.setCursor(Cursor
+							.getPredefinedCursor(Cursor.WAIT_CURSOR));
+					waitCursor.wait(900);
+				}
+				
+				String script = haTestScriptEditor.getTextarea().getText();
+				ScriptModel readScriptToModel = readScriptToModel(script);
+
+				if (readScriptToModel.getStopSAP().trim().equals("StopSAP")) {
+					getOutputTestEditor().getStop_SAP_Checkbox().setSelected(
+							true);
+				}
+				if (readScriptToModel.getApplyKernel().trim()
+						.equals("ApplyKernel")) {
+					getOutputTestEditor().getApplyKernelCheckbox().setSelected(
+							true);
+				}
+				if (readScriptToModel.getStartSAP().trim().equals("StartSAP")) {
+					getOutputTestEditor().getStartSAPCheckBox().setSelected(
+							true);
+				}
+				if (readScriptToModel.getSid().trim().equals("SAP_SID")) {
+					getOutputTestEditor().getSap_SID_Field().setText("");
+					getOutputTestEditor().getSap_SID_Field().setText("bigboss");
+				}
+				if (!readScriptToModel.getPassword().trim().equals(" ")) {
+					getOutputTestEditor().getSap_PASSWORD_Field().setText(" ");
+					getOutputTestEditor().getSap_PASSWORD_Field().setText(
+							"qsecofer");
+				}
+				if (!readScriptToModel.getGlobal_Kernel().equals("")) {
+					getOutputTestEditor().getSap_Nigtly_MakeField().setText(
+							readScriptToModel.getGlobal_Kernel());
+				}
+
+				if (!readScriptToModel.getNightlyMake().equals("")) {
+					getOutputTestEditor().getSap_Nigtly_MakeField().setText(
+							readScriptToModel.getGlobal_Kernel());
+				}
+
+			} catch (ClassNotFoundException | IOException
+					| InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			logger.getLogger().info(
+					"Script" + " " + "[ " + file + " ]" + " "
+							+ "Successfully loaded....");
+
+			haTestScriptEditor.setCursor(waitCursor);
+
+			Cursor defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+			haTestScriptEditor.setCursor(defaultCursor);
+			haTestScriptEditor.setInVisible();
+		}
+
+	}
+
+	public void openScriptFile() {
+		String userDirLocation = System.getProperty("user.dir");
+		File userDir = new File(userDirLocation);
+		fileChooser = new JFileChooser(userDir);
+
+		int result = fileChooser.showOpenDialog(haTestScriptEditor.getGui());
+		if (result == JFileChooser.APPROVE_OPTION) {
+			try {
+				file = fileChooser.getSelectedFile();
+				FileReader fr = new FileReader(file);
+				haTestScriptEditor.getTextarea().read(fr, file);
+				fr.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		try {
+
+			if (e.getSource() == outputTestEditor.getImportScriptJMenuItem()) {
+
+				haTestScriptEditor.setVisible();
+			}
+
+			if (e.getSource() == haTestScriptEditor.getOpenButton()) {
+				openScriptFile();
+			}
+			if (e.getSource() == haTestScriptEditor.getRunScriptButton()) {
+				loadScript();
+			}
+
+			if (e.getSource() == haTestScriptEditor.getSaveButton()) {
+				saveScriptFile();
+			}
+
 			if (e.getSource() == outputTestEditor.getPlayButton()
 					|| e instanceof TaskDoneEvent) {
 				outputTestEditor.getjProgressBar().setEnabled(true);
@@ -227,6 +465,11 @@ public class GUIController implements ActionListener, ItemListener, IController 
 		outputTestEditor.setexitJMenuItemActionListener(this);
 		outputTestEditor.setinforJMenuItemActionListener(this);
 		outputTestEditor.setImportScriptJMenuItemActionListener(this);
+
+		// scriptEditor
+		haTestScriptEditor.getOpenButton().addActionListener(this);
+		haTestScriptEditor.getSaveButton().addActionListener(this);
+		haTestScriptEditor.getRunScriptButton().addActionListener(this);
 	}
 
 	public HATestEditor getOutputTestEditor() {
@@ -273,6 +516,10 @@ public class GUIController implements ActionListener, ItemListener, IController 
 
 	public int getCurrentStep() {
 		return currentStep;
+	}
+
+	public int getMaxSteps() {
+		return maxSteps;
 	}
 
 }

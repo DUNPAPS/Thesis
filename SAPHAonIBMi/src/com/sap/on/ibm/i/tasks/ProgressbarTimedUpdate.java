@@ -1,7 +1,5 @@
 package com.sap.on.ibm.i.tasks;
 
-import javax.swing.plaf.SliderUI;
-
 import com.sap.on.ibm.i.controller.IController;
 
 public class ProgressbarTimedUpdate {
@@ -14,6 +12,7 @@ public class ProgressbarTimedUpdate {
 		this.myController = myController;
 	}
 
+	@SuppressWarnings("deprecation")
 	void Stop()
 	{
 		if (UpdateThread != null)
@@ -37,13 +36,10 @@ public class ProgressbarTimedUpdate {
 						myController.updateProgressbar();
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					
 				}
-				
-				// TODO Auto-generated method stub
 				
 			}
 		}, "progressbar updater.....");
