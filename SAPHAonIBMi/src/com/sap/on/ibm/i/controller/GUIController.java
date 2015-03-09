@@ -3,20 +3,15 @@ package com.sap.on.ibm.i.controller;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
 
@@ -37,7 +32,7 @@ import com.sap.on.ibm.i.view.HATestScriptEditor;
  * @author Duncan
  *
  */
-public class GUIController implements ActionListener, ItemListener, IController {
+public class GUIController implements ActionListener,IController {
 	private HATestEditor outputTestEditor;
 	private Levels levels;
 	private boolean stopSAPCheckBox;
@@ -50,6 +45,7 @@ public class GUIController implements ActionListener, ItemListener, IController 
 	private HATestScriptEditor haTestScriptEditor;
 	private long DELAY = 200;
 	private JFileChooser fileChooser;
+	private String threadName;
 
 	public GUIController() {
 		this.outputTestEditor = new HATestEditor();
@@ -67,14 +63,9 @@ public class GUIController implements ActionListener, ItemListener, IController 
 	}
 
 	@Override
-	public void itemStateChanged(ItemEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void sendDoneEvent(ActionEvent e) {
 		actionPerformed(e);
+		outputTestEditor.getPlayButton().setEnabled(true);
 	}
 
 	private void stopSAP() {
@@ -180,59 +171,57 @@ public class GUIController implements ActionListener, ItemListener, IController 
 			throws ClassNotFoundException, IOException {
 		ScriptModel scriptModel = new ScriptModel();
 		try {
-			  
-				int totalLines = haTestScriptEditor.getTextarea()
-						.getLineCount();
-				for (int i = 0; i < totalLines; i++) {
-					int start = haTestScriptEditor.getTextarea()
-							.getLineStartOffset(i);
-					int end;
-					end = haTestScriptEditor.getTextarea().getLineEndOffset(i);
-					String line = guiscript.substring(start, end);
-					if (!line.equals("") && line.contains(":")) {
-						String[] split = guiscript.split(":");
-						String firstSubString = split[0];
-						String secondSubString = split[1];
+			int totalLines = haTestScriptEditor.getTextarea().getLineCount();
+			String text = haTestScriptEditor.getTextarea().getText();
+			for (int i = 0; i < totalLines; i++) {
+				int start = haTestScriptEditor.getTextarea()
+						.getLineStartOffset(i);
+				int end = haTestScriptEditor.getTextarea().getLineEndOffset(i);
+				String line = text.substring(start, end);
+				if (!line.equals("") && line.contains(":")) {
+					String[] split = line.split(":");
+					String firstSubString = split[0];
+					String secondSubString = split[1];
 
-						if (firstSubString.trim().equals("SAP_SID")) {
-							scriptModel.setSid(secondSubString);
-						}
-
-						if (firstSubString.trim().equals("SAP_User")) {
-							scriptModel.setSid(secondSubString);
-						}
-
-						if (firstSubString.trim().equals("SAP_Password")) {
-							scriptModel.setPassword(secondSubString);
-						}
-
-						if (firstSubString.trim().equals("SAP_Global_Kernel")) {
-							scriptModel.setGlobal_Kernel(secondSubString);
-						}
-
-						if (firstSubString.trim().equals("SAP_NightlyMake")) {
-							scriptModel.setNightlyMake(secondSubString);
-						}
-
-						if (firstSubString.trim().equals("Step0")) {
-							scriptModel.setStopSAP(secondSubString);
-						}
-
-						if (firstSubString.trim().equals("Step1")) {
-							scriptModel.setApplyKernel(secondSubString);
-						}
-
-						if (firstSubString.trim().equals("Step2")) {
-							scriptModel.setStartSAP(secondSubString);
-						}
-
-						if (firstSubString.trim().equals("Step3")) {
-							scriptModel.setRunHATest(secondSubString);
-						}
-
+					if (firstSubString.trim().equals("SAP_SID")) {
+						scriptModel.setSid(secondSubString);
 					}
+
+					if (firstSubString.trim().equals("SAP_User")) {
+						scriptModel.setSid(secondSubString);
+					}
+
+					if (firstSubString.trim().equals("SAP_Password")) {
+						scriptModel.setPassword(secondSubString);
+					}
+
+					if (firstSubString.trim().equals("SAP_Global_Kernel")) {
+						scriptModel.setGlobal_Kernel(secondSubString);
+					}
+
+					if (firstSubString.trim().equals("SAP_NightlyMake")) {
+						scriptModel.setNightlyMake(secondSubString);
+					}
+
+					if (firstSubString.trim().equals("Step0".trim())) {
+						scriptModel.setStopSAP(secondSubString);
+					}
+
+					if (firstSubString.trim().equals("Step1")) {
+						scriptModel.setApplyKernel(secondSubString);
+					}
+
+					if (firstSubString.trim().equals("Step2")) {
+						scriptModel.setStartSAP(secondSubString);
+					}
+
+					if (firstSubString.trim().equals("Step3")) {
+						scriptModel.setRunHATest(secondSubString);
+					}
+
 				}
-			 
+			}
+
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
@@ -241,14 +230,7 @@ public class GUIController implements ActionListener, ItemListener, IController 
 
 	public void loadScript() {
 
-		if (haTestScriptEditor.getTextarea().equals("")) {
-			Cursor defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
-			haTestScriptEditor.setCursor(defaultCursor);
-
-			JOptionPane.showMessageDialog(new JFrame(),
-					"There is no script to run", "Error",
-					JOptionPane.ERROR_MESSAGE);
-		} else {
+		if (!haTestScriptEditor.getTextarea().getText().isEmpty()) {
 
 			Cursor waitCursor = new Cursor(Cursor.WAIT_CURSOR);
 			try {
@@ -257,11 +239,12 @@ public class GUIController implements ActionListener, ItemListener, IController 
 							.getPredefinedCursor(Cursor.WAIT_CURSOR));
 					waitCursor.wait(900);
 				}
-				
+
 				String script = haTestScriptEditor.getTextarea().getText();
 				ScriptModel readScriptToModel = readScriptToModel(script);
 
-				if (readScriptToModel.getStopSAP().trim().equals("StopSAP")) {
+				if (readScriptToModel.getStopSAP().trim()
+						.equals("StopSAP".trim())) {
 					getOutputTestEditor().getStop_SAP_Checkbox().setSelected(
 							true);
 				}
@@ -285,12 +268,12 @@ public class GUIController implements ActionListener, ItemListener, IController 
 				}
 				if (!readScriptToModel.getGlobal_Kernel().equals("")) {
 					getOutputTestEditor().getSap_Nigtly_MakeField().setText(
-							readScriptToModel.getGlobal_Kernel());
+							readScriptToModel.getGlobal_Kernel().trim());
 				}
 
 				if (!readScriptToModel.getNightlyMake().equals("")) {
-					getOutputTestEditor().getSap_Nigtly_MakeField().setText(
-							readScriptToModel.getGlobal_Kernel());
+					getOutputTestEditor().getSap_global_KernelField().setText(
+							readScriptToModel.getNightlyMake().trim());
 				}
 
 			} catch (ClassNotFoundException | IOException
@@ -307,6 +290,13 @@ public class GUIController implements ActionListener, ItemListener, IController 
 			Cursor defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
 			haTestScriptEditor.setCursor(defaultCursor);
 			haTestScriptEditor.setInVisible();
+		} else {
+			Cursor defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+			haTestScriptEditor.setCursor(defaultCursor);
+
+			JOptionPane.showMessageDialog(new JFrame(),
+					"There is no script to run", "Error",
+					JOptionPane.ERROR_MESSAGE);
 		}
 
 	}
@@ -400,63 +390,8 @@ public class GUIController implements ActionListener, ItemListener, IController 
 		}
 	}
 
-	@Override
-	public void progress(PropertyChangeEvent evt, String Taskname) {
-		SwingWorker worker = (SwingWorker) evt.getSource();
-		Object stateValue = evt.getNewValue();
-		String propertyName = evt.getPropertyName();
-		if (stateValue.equals(SwingWorker.StateValue.STARTED)) {
-			// _progressJDialog.setVisible(true);
-			outputTestEditor.getStatusBarJLabel().setText(
-					"In " + evt.getPropertyName().toString());
-		}
-
-		else if (propertyName.equals("progress")) {
-			int progress = (Integer) evt.getNewValue();
-			outputTestEditor.getjProgressBar().setString(
-					Taskname + " " + progress + "%");
-			outputTestEditor.getStatusBarJLabel().setText(
-					"In " + evt.getPropertyName().toString());
-			outputTestEditor.getjProgressBar().setValue(+progress);
-			outputTestEditor.getjProgressBar().setStringPainted(true);
-			outputTestEditor.getPlayButton().setEnabled(false);
-		}
-
-		else if (stateValue.equals(SwingWorker.StateValue.PENDING)) {
-			outputTestEditor.getStatusBarJLabel().setText(
-					evt.getPropertyName().toString() + " ....");
-		} else if (stateValue.equals(SwingWorker.StateValue.DONE)) {
-			try {
-				// if (isCancelled()) {
-				// getOutputTestEditor().getStatusBarJLabel().setText(
-				// "Process canceled");
-				// } else {
-				getLogger().logMessages(Levels.INFO, " " + worker.get(), null);
-				getOutputTestEditor().getStatusBarJLabel().setText(
-						worker.get().toString());
-				getOutputTestEditor().getPlayButton().setEnabled(true);
-				// }
-				// _progressJDialog.dispose();
-				// if (_progressJDialog.isCancelled()) {
-				// _swingWorker.cancel(true);
-				// } else {
-				// _progressJDialog.setProgress((Integer) evt.getNewValue());
-				// }
-
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				e.printStackTrace();
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
-		}
-
-	}
-
 	private void addListener() {
+		// MainEditor
 		outputTestEditor.setclearLogViewButtonActionListener(this);
 		outputTestEditor.setcopyActionListener(this);
 		outputTestEditor.setstop_SAP_CheckboxActionListener(this);
@@ -500,18 +435,16 @@ public class GUIController implements ActionListener, ItemListener, IController 
 
 	@Override
 	public void updateProgressbar() {
-		while (currentStep < 30) {
-			try {
-				outputTestEditor.getjProgressBar().setValue(++this.currentStep);
-				outputTestEditor.getjProgressBar().setStringPainted(true);
-				outputTestEditor.getPlayButton().setEnabled(false);
-				Thread.sleep(DELAY);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
+		try {
+			outputTestEditor.getjProgressBar().setValue(++this.currentStep);
+			outputTestEditor.getjProgressBar().setStringPainted(true);
+			outputTestEditor.getPlayButton().setEnabled(false);
+			outputTestEditor.getStatusBarJLabel().setText(
+					"Task: " + this.threadName);
+			Thread.sleep(DELAY);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
-
 	}
 
 	public int getCurrentStep() {
@@ -520,6 +453,12 @@ public class GUIController implements ActionListener, ItemListener, IController 
 
 	public int getMaxSteps() {
 		return maxSteps;
+	}
+
+	@Override
+	public void setThreadName(String name) {
+		this.threadName = name;
+
 	}
 
 }

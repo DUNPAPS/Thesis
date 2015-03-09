@@ -23,7 +23,7 @@ public class ProgressbarTimedUpdate {
 		
 	}
 	
-	void Start(int maxWaitTimeSEC)
+	void start(int maxWaitTimeSEC)
 	{
 		UpdateThread = new Thread(new Runnable() {
 			

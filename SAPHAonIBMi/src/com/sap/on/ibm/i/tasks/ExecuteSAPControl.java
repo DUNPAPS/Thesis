@@ -3,11 +3,8 @@ package com.sap.on.ibm.i.tasks;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import javax.swing.SwingWorker;
 
 import com.sap.on.ibm.i.controller.IController;
 import com.sap.on.ibm.i.logger.Levels;
@@ -22,11 +19,11 @@ public class ExecuteSAPControl {
 	private String host;
 	private String version;
 	private String format;
-	protected String SAP_CONTROL = "C:\\Users\\IBM_ADMIN\\git\\Thesis\\SAPHAonIBMi\\sapcontrol.exe";
-//	protected String SAP_CONTROL = "sapcontrol.exe";
+	protected String SAP_CONTROL = "sapcontrol.exe";
 	private Logging logger;
 	private IController myController;
 	protected Map<String, String> myMap = new ConcurrentHashMap<String, String>();
+	private int MAX_WAIT_TIME_SEC = 30;
 
 	public ExecuteSAPControl(IController myController) {
 		this.myController = myController;
@@ -111,34 +108,27 @@ public class ExecuteSAPControl {
 		Thread t2 = new Thread(new Runnable() {
 			public void run() {
 				String line;
-				ProgressbarTimedUpdate PGU = new ProgressbarTimedUpdate(myController);
+				ProgressbarTimedUpdate progressbar = new ProgressbarTimedUpdate(
+						myController);
 
 				try {
 
-					int maxWaitTimeSEC = 30;
-					
 					SAP_CONTROL = " " + getCommand();
 					getLogger().logMessages(Levels.INFO,
 							"Command:    " + SAP_CONTROL, null);
 					getLogger().logMessages(Levels.INFO, "Executig command...",
 							null);
-					
-					
-					PGU.Start(maxWaitTimeSEC);
-					
+
+					progressbar.start(MAX_WAIT_TIME_SEC);
+
 					Process p = Runtime.getRuntime().exec(SAP_CONTROL);
 					BufferedReader stdInput = new BufferedReader(
 							new InputStreamReader(p.getInputStream()));
-					
-			
-					
+
 					// error
 					BufferedReader stdError = new BufferedReader(
 							new InputStreamReader(p.getErrorStream()));
-					
-					
-					
-					
+
 					while ((line = stdInput.readLine()) != null) {
 
 						if (!line.equals("") || line.contains("INFO")) {
@@ -169,10 +159,10 @@ public class ExecuteSAPControl {
 				try {
 					getLogger().logMessages(Levels.INFO, " " + " Finished ...",
 							null);
-					ActionEvent e = new TaskDoneEvent(this, 1234,
+					ActionEvent e = new TaskDoneEvent(this, 0,
 							"SAP CONTROL DONE.....");
 					myController.sendDoneEvent(e);
-					PGU.Stop();
+					progressbar.Stop();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -180,6 +170,7 @@ public class ExecuteSAPControl {
 
 		}, "Execute SAP Control  .....");
 		t2.start();
+		myController.setThreadName(t2.getName());
 	}
 
 }

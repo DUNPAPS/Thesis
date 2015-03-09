@@ -20,6 +20,7 @@ public class ApplyKernel {
 	private ActionEvent event;
 	private User user;
 	private IController myController;
+	private int MAX_WAIT_TIME_SEC = 30;
 
 	public ApplyKernel(IController myController) {
 		this.user = new User();
@@ -30,6 +31,18 @@ public class ApplyKernel {
 
 	public void setCommand(String commandName, String command) {
 		myMap.put(commandName, command);
+	}
+
+	public void setLogger(Logging logger) {
+		this.logger = logger;
+	}
+
+	public Logging getLogger() {
+		return logger;
+	}
+
+	public User getUser() {
+		return user;
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -46,15 +59,15 @@ public class ApplyKernel {
 		Thread t2 = new Thread(new Runnable() {
 			public void run() {
 				String line;
-				myController.setProgressbarMax(1000);
-				myController.updateProgressbar();//update progressbar
+				ProgressbarTimedUpdate progressbar = new ProgressbarTimedUpdate(
+						myController);
 				Iterator<String> commands = myMap.keySet().iterator();
 
-				while (commands.hasNext()) {
+				try {
+					while (commands.hasNext()) {
 
-					String command = commands.next();
-					String nextCommand = myMap.get(command);
-					try {
+						String command = commands.next();
+						String nextCommand = myMap.get(command);
 
 						PLINK_EXE += " " + getUser().getUserData();
 						PLINK_EXE += " " + nextCommand;
@@ -63,6 +76,7 @@ public class ApplyKernel {
 						getLogger().logMessages(Levels.INFO,
 								"Executig command...", null);
 
+						progressbar.start(MAX_WAIT_TIME_SEC);
 						Process p = Runtime.getRuntime().exec(PLINK_EXE);
 						BufferedReader stdInput = new BufferedReader(
 								new InputStreamReader(p.getInputStream()));
@@ -70,9 +84,7 @@ public class ApplyKernel {
 						// error
 						BufferedReader stdError = new BufferedReader(
 								new InputStreamReader(p.getErrorStream()));
-						
-						
-						
+
 						while ((line = stdInput.readLine()) != null) {
 
 							if (!line.equals("") || line.contains("INFO")) {
@@ -96,44 +108,34 @@ public class ApplyKernel {
 						}
 						p.waitFor();
 
-					} catch (Exception e) {
-						try {
-							getLogger().logMessages(Levels.ERROR, null,
-									new Exception(e));
-						} catch (Exception e1) {
-							e1.printStackTrace();
-						}
 					}
+				} catch (Exception e) {
 					try {
-						getLogger().logMessages(Levels.INFO,
-								" " + " Finished ...", null);
-						ActionEvent e = new TaskDoneEvent(this, 1234,
-								"ApplyKernelDONE");
-						myController.sendDoneEvent(e);
-					} catch (Exception e) {
-						e.printStackTrace();
+						getLogger().logMessages(Levels.ERROR, null,
+								new Exception(e));
+					} catch (Exception e1) {
+						e1.printStackTrace();
 					}
 				}
-
+				try {
+					getLogger().logMessages(Levels.INFO, " " + " Finished ...",
+							null);
+					ActionEvent e = new TaskDoneEvent(this, 0,
+							"ApplyKernelDONE");
+					myController.sendDoneEvent(e);
+					progressbar.Stop();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 
 		}, "Execute Apply Kernel .....");
 		t2.start();
-	}
-
-	public void setLogger(Logging logger) {
-		this.logger = logger;
-	}
-
-	public Logging getLogger() {
-		return logger;
-	}
-
-	public User getUser() {
-		return user;
+		myController.setThreadName(t2.getName());
 	}
 
 }
+
 /*
  * // --------------------- // Backup Orignal Kernel // --------------------- cd
  * /FSIASP/sapmnt/DCN/exe/uc; rm -R as400_pase_64.backup cp -R as400_pase_64

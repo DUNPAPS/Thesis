@@ -3,8 +3,6 @@ package com.sap.on.ibm.i.controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -15,8 +13,8 @@ import com.sap.on.ibm.i.tasks.ApplyKernel;
 import com.sap.on.ibm.i.tasks.ExecuteSAPControl;
 import com.sap.on.ibm.i.view.ProgressBar;
 
-public class CommandLineController extends Observable implements
-		PropertyChangeListener, ItemListener, Runnable, IController, Observer {
+public class CommandLineController extends Observable implements ItemListener,
+		Runnable, IController, Observer {
 	private User user;
 	private Logging logger;
 	private ProgressBar progressbar;
@@ -31,11 +29,6 @@ public class CommandLineController extends Observable implements
 		this.progressbar = new ProgressBar();
 		this.ActionEventQueue = new LinkedBlockingQueue<ActionEvent>();
 		addObserver(this);
-	}
-
-	@Override
-	public void progress(PropertyChangeEvent evt, String Taskname) {
-
 	}
 
 	@Override
@@ -56,11 +49,6 @@ public class CommandLineController extends Observable implements
 	public void itemStateChanged(ItemEvent e) {
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
-		// progress(evt);
 	}
 
 	private void stopSAP() {
@@ -158,15 +146,9 @@ public class CommandLineController extends Observable implements
 	@Override
 	public void updateProgressbar() {
 		progressbar.update(currentStep++, maxSteps);
-		/*
-		for (this.currentStep = 0; this.currentStep < this.maxSteps; this.currentStep++) {
-			try {
-				progressbar.update(this.currentStep, this.maxSteps);
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-			*/
+	}
+
+	@Override
+	public void setThreadName(String name) {
 	}
 }

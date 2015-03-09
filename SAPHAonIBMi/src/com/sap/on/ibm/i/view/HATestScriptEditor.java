@@ -1,38 +1,20 @@
 package com.sap.on.ibm.i.view;
 
 import java.awt.BorderLayout;
-import java.awt.Cursor;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.text.BadLocationException;
 
-import com.sap.on.ibm.i.controller.IController;
-
-@SuppressWarnings("serial")
 public class HATestScriptEditor extends JFrame {
-
-	private JFileChooser fileChooser;
+	private static final long serialVersionUID = 1L;
 	private JTextArea textarea = new JTextArea(10, 40);
-	private File file;
 	private JToolBar toolbar;
 	private JButton openButton;
 	private JButton saveButton;
@@ -52,7 +34,6 @@ public class HATestScriptEditor extends JFrame {
 	public JPanel initComponents() {
 		JPanel gui = new JPanel(new BorderLayout());
 		gui.setBorder(new EmptyBorder(2, 3, 2, 3));
- 
 
 		toolbar = new JToolBar();
 		gui.add(toolbar, BorderLayout.PAGE_START);
@@ -76,7 +57,29 @@ public class HATestScriptEditor extends JFrame {
 		return gui;
 	}
 
-	
+	public JToolBar getToolbar() {
+		return toolbar;
+	}
+
+	public JButton getOpenButton() {
+		return openButton;
+	}
+
+	public JButton getSaveButton() {
+		return saveButton;
+	}
+
+	public JButton getRunScriptButton() {
+		return runScriptButton;
+	}
+
+	public JPanel getGui() {
+		return gui;
+	}
+
+	public JTextArea getTextarea() {
+		return textarea;
+	}
 
 	public void setVisible() {
 		Runnable r = new Runnable() {
@@ -102,30 +105,6 @@ public class HATestScriptEditor extends JFrame {
 			}
 		};
 		SwingUtilities.invokeLater(r);
-	}
-
-	public JToolBar getToolbar() {
-		return toolbar;
-	}
-
-	public JButton getOpenButton() {
-		return openButton;
-	}
-
-	public JButton getSaveButton() {
-		return saveButton;
-	}
-
-	public JButton getRunScriptButton() {
-		return runScriptButton;
-	}
-
-	public JPanel getGui() {
-		return gui;
-	}
-
-	public JTextArea getTextarea() {
-		return textarea;
 	}
 
 }
