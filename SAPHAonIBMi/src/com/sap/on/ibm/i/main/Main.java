@@ -7,6 +7,7 @@ import com.sap.on.ibm.i.controller.CommandLineController;
 import com.sap.on.ibm.i.controller.GUIController;
 import com.sap.on.ibm.i.logger.Logging;
 import com.sap.on.ibm.io.ScriptReader;
+
 /**
  * @author Duncan
  *
@@ -28,7 +29,7 @@ public class Main {
 
 		else if (mode.equals("-script")) {
 			CommandLineController controller = new CommandLineController();
-			logger.setLogger(controller.getClass().getName());
+			logger.setLogger("");
 			controller.setLogger(logger);
 			controller.run();
 
@@ -40,16 +41,15 @@ public class Main {
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (ClassNotFoundException e) {
-					e.printStackTrace();   
+					e.printStackTrace();
 				}
 			}
-		}
-		else if (mode.equals("-gui")) {
+		} else if (mode.equals("-gui")) {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
 					GUIController controller = new GUIController();
-					logger.setLogger(controller.getClass().getName());
+					logger.setLogger("");
 					controller.setLogger(logger);
 					controller.showMainView();
 				}

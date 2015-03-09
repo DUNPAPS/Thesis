@@ -53,7 +53,7 @@ public class GUIController implements ActionListener,IController {
 	}
 
 	public void showMainView() {
-		PatternLayout layout = new PatternLayout("%m%n");
+		PatternLayout layout = new PatternLayout("%-5p [%t]: %m%n");
 		Appender appender = new Appender(this);
 		appender.setLayout(layout);
 		Logger.getRootLogger().addAppender(appender);
@@ -459,6 +459,12 @@ public class GUIController implements ActionListener,IController {
 	public void setThreadName(String name) {
 		this.threadName = name;
 
+	}
+
+	@Override
+	public void doneProgressBar() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

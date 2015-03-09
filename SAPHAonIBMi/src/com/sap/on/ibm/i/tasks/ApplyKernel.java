@@ -56,8 +56,11 @@ public class ApplyKernel {
 	}
 
 	public void execute() {
+
 		Thread t2 = new Thread(new Runnable() {
+
 			public void run() {
+
 				String line;
 				ProgressbarTimedUpdate progressbar = new ProgressbarTimedUpdate(
 						myController);
@@ -129,7 +132,7 @@ public class ApplyKernel {
 				}
 			}
 
-		}, "Execute Apply Kernel .....");
+		}, "Execute Apply Kernel");
 		t2.start();
 		myController.setThreadName(t2.getName());
 	}

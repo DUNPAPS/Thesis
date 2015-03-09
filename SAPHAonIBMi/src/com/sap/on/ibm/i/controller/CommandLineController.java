@@ -7,6 +7,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import com.sap.on.ibm.i.logger.Levels;
 import com.sap.on.ibm.i.logger.Logging;
 import com.sap.on.ibm.i.model.User;
 import com.sap.on.ibm.i.tasks.ApplyKernel;
@@ -33,7 +34,6 @@ public class CommandLineController extends Observable implements ItemListener,
 
 	@Override
 	public void sendDoneEvent(ActionEvent e) {
-		// TODO Auto-generated method stub
 		ActionEventQueue.add(e);
 	}
 
@@ -121,14 +121,22 @@ public class CommandLineController extends Observable implements ItemListener,
 	}
 
 	public Logging getLogger() {
+//		Logger.getRootLogger().addAppender(new ConsoleAppender(
+//	               new PatternLayout("%m%n")));
 		return logger;
 	}
 
 	@Override
 	public void run() {
 		try {
+
+			//new command
+			getLogger().logMessages(Levels.INFO, "SAPControl", null);
 			stopSAP();
 			ActionEventQueue.take();
+
+			//new command
+			getLogger().logMessages(Levels.INFO, "ApplyKernel", null);
 			applyKernel();
 			ActionEventQueue.take();
 		} catch (Exception e1) {
@@ -150,5 +158,10 @@ public class CommandLineController extends Observable implements ItemListener,
 
 	@Override
 	public void setThreadName(String name) {
+	}
+
+	@Override
+	public void doneProgressBar() {
+		progressbar.finish();
 	}
 }

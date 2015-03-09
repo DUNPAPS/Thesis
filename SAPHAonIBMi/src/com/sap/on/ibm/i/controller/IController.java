@@ -13,4 +13,6 @@ public interface IController  {
 
 	public void setThreadName(String name);
 
+	public void doneProgressBar();
+
 }

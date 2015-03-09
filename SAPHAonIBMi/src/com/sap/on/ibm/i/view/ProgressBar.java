@@ -38,6 +38,7 @@ public class ProgressBar {
 		}
 		System.out.printf(format, percent, progress, workchars[done
 				% workchars.length]);
+		
 		if (done == total) {
 			System.out.flush();
 			System.out.println();
@@ -45,6 +46,12 @@ public class ProgressBar {
 		}
 	}
 
+	public void finish()
+	{
+		System.out.flush();
+		System.out.println();	
+	}
+	
 	private void init() {
 		this.progress = new StringBuilder(60);
 	}

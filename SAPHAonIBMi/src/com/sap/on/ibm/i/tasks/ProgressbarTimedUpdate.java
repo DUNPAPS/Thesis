@@ -6,20 +6,17 @@ public class ProgressbarTimedUpdate {
 
 	private Thread UpdateThread;
 	private IController myController;
+	private boolean postStop = false;
 	
 	ProgressbarTimedUpdate(IController myController)
 	{
 		this.myController = myController;
 	}
 
-	@SuppressWarnings("deprecation")
 	void Stop()
 	{
-		if (UpdateThread != null)
-		{
-			UpdateThread.stop();
-			
-		}
+		myController.doneProgressBar();
+		postStop = true;
 		
 	}
 	
@@ -30,7 +27,7 @@ public class ProgressbarTimedUpdate {
 			@Override
 			public void run() {
 				myController.setProgressbarMax(maxWaitTimeSEC*10);
-				for (int i=0; i < maxWaitTimeSEC; i++)
+				for (int i=0; i < maxWaitTimeSEC * 10 && !postStop; i++)
 				{
 					try {
 						myController.updateProgressbar();
@@ -43,6 +40,7 @@ public class ProgressbarTimedUpdate {
 				
 			}
 		}, "progressbar updater.....");
+		postStop = false;
 		UpdateThread.start();	
 		
 	}

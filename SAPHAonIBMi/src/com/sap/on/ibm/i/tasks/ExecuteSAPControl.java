@@ -19,7 +19,7 @@ public class ExecuteSAPControl {
 	private String host;
 	private String version;
 	private String format;
-	protected String SAP_CONTROL = "sapcontrol.exe";
+	protected String SAP_CONTROL = "C:\\Users\\IBM_ADMIN\\git\\Thesis\\SAPHAonIBMi\\sapcontrol.exe";
 	private Logging logger;
 	private IController myController;
 	protected Map<String, String> myMap = new ConcurrentHashMap<String, String>();
@@ -113,15 +113,14 @@ public class ExecuteSAPControl {
 
 				try {
 
-					SAP_CONTROL = " " + getCommand();
 					getLogger().logMessages(Levels.INFO,
-							"Command:    " + SAP_CONTROL, null);
+							"Command:    " + getCommand(), null);
 					getLogger().logMessages(Levels.INFO, "Executig command...",
 							null);
 
 					progressbar.start(MAX_WAIT_TIME_SEC);
 
-					Process p = Runtime.getRuntime().exec(SAP_CONTROL);
+					Process p = Runtime.getRuntime().exec(getCommand());
 					BufferedReader stdInput = new BufferedReader(
 							new InputStreamReader(p.getInputStream()));
 
@@ -168,7 +167,7 @@ public class ExecuteSAPControl {
 				}
 			}
 
-		}, "Execute SAP Control  .....");
+		}, "Execute SAP Control");
 		t2.start();
 		myController.setThreadName(t2.getName());
 	}
