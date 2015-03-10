@@ -24,9 +24,13 @@ public class ExecuteSAPControl {
 	private IController myController;
 	protected Map<String, String> myMap = new ConcurrentHashMap<String, String>();
 	private int MAX_WAIT_TIME_SEC = 30;
+	private Process process;
+	private ProgressbarTimedUpdate progressbar;
 
 	public ExecuteSAPControl(IController myController) {
 		this.myController = myController;
+		progressbar = new ProgressbarTimedUpdate(this.myController);
+
 	}
 
 	public void setFunction(String function) {
@@ -106,10 +110,9 @@ public class ExecuteSAPControl {
 	public void execute() {
 
 		Thread t2 = new Thread(new Runnable() {
+
 			public void run() {
 				String line;
-				ProgressbarTimedUpdate progressbar = new ProgressbarTimedUpdate(
-						myController);
 
 				try {
 
@@ -120,13 +123,13 @@ public class ExecuteSAPControl {
 
 					progressbar.start(MAX_WAIT_TIME_SEC);
 
-					Process p = Runtime.getRuntime().exec(getCommand());
+					process = Runtime.getRuntime().exec(getCommand());
 					BufferedReader stdInput = new BufferedReader(
-							new InputStreamReader(p.getInputStream()));
+							new InputStreamReader(process.getInputStream()));
 
 					// error
 					BufferedReader stdError = new BufferedReader(
-							new InputStreamReader(p.getErrorStream()));
+							new InputStreamReader(process.getErrorStream()));
 
 					while ((line = stdInput.readLine()) != null) {
 
@@ -146,7 +149,7 @@ public class ExecuteSAPControl {
 									new Exception(line));
 						}
 					}
-					p.waitFor();
+					process.waitFor();
 				} catch (Exception e) {
 					try {
 						getLogger().logMessages(Levels.ERROR, null,
@@ -172,4 +175,10 @@ public class ExecuteSAPControl {
 		myController.setThreadName(t2.getName());
 	}
 
+	public void stopProcess() {
+		if (process != null) {
+			process.destroy();
+			progressbar.Stop();
+		}
+	}
 }

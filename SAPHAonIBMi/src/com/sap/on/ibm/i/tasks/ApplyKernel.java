@@ -21,12 +21,15 @@ public class ApplyKernel {
 	private User user;
 	private IController myController;
 	private int MAX_WAIT_TIME_SEC = 30;
+	private Process process;
+	private ProgressbarTimedUpdate progressbar;
 
 	public ApplyKernel(IController myController) {
 		this.user = new User();
 		this.user.setUser("qsecofr@as0013");
 		this.user.setPassword("bigboss");
 		this.myController = myController;
+		progressbar = new ProgressbarTimedUpdate(this.myController);
 	}
 
 	public void setCommand(String commandName, String command) {
@@ -62,8 +65,6 @@ public class ApplyKernel {
 			public void run() {
 
 				String line;
-				ProgressbarTimedUpdate progressbar = new ProgressbarTimedUpdate(
-						myController);
 				Iterator<String> commands = myMap.keySet().iterator();
 
 				try {
@@ -80,13 +81,13 @@ public class ApplyKernel {
 								"Executig command...", null);
 
 						progressbar.start(MAX_WAIT_TIME_SEC);
-						Process p = Runtime.getRuntime().exec(PLINK_EXE);
+						process = Runtime.getRuntime().exec(PLINK_EXE);
 						BufferedReader stdInput = new BufferedReader(
-								new InputStreamReader(p.getInputStream()));
+								new InputStreamReader(process.getInputStream()));
 
 						// error
 						BufferedReader stdError = new BufferedReader(
-								new InputStreamReader(p.getErrorStream()));
+								new InputStreamReader(process.getErrorStream()));
 
 						while ((line = stdInput.readLine()) != null) {
 
@@ -109,7 +110,7 @@ public class ApplyKernel {
 										new Exception(line));
 							}
 						}
-						p.waitFor();
+						process.waitFor();
 
 					}
 				} catch (Exception e) {
@@ -127,6 +128,7 @@ public class ApplyKernel {
 							"ApplyKernelDONE");
 					myController.sendDoneEvent(e);
 					progressbar.Stop();
+//					myController.doneProgressBar();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -137,6 +139,13 @@ public class ApplyKernel {
 		myController.setThreadName(t2.getName());
 	}
 
+	public void stopProcess() {
+		if (process != null) {
+			process.destroy();
+			progressbar.Stop();
+		}
+	}
+	
 }
 
 /*

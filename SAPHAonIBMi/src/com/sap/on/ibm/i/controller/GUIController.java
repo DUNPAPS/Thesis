@@ -32,8 +32,8 @@ import com.sap.on.ibm.i.view.HATestScriptEditor;
  * @author Duncan
  *
  */
-public class GUIController implements ActionListener,IController {
-	private HATestEditor outputTestEditor;
+public class GUIController implements ActionListener, IController {
+	private HATestEditor haTestEditor;
 	private Levels levels;
 	private boolean stopSAPCheckBox;
 	private boolean applyKernelCheckBox;
@@ -46,10 +46,12 @@ public class GUIController implements ActionListener,IController {
 	private long DELAY = 200;
 	private JFileChooser fileChooser;
 	private String threadName;
+	private ExecuteSAPControl sapControl;
+	private ApplyKernel applylKernel;
 
 	public GUIController() {
-		this.outputTestEditor = new HATestEditor();
-		haTestScriptEditor = new HATestScriptEditor();
+		this.haTestEditor = new HATestEditor();
+		this.haTestScriptEditor = new HATestScriptEditor();
 	}
 
 	public void showMainView() {
@@ -57,7 +59,7 @@ public class GUIController implements ActionListener,IController {
 		Appender appender = new Appender(this);
 		appender.setLayout(layout);
 		Logger.getRootLogger().addAppender(appender);
-		this.outputTestEditor.setVisible(true);
+		this.haTestEditor.setVisible(true);
 		this.addListener();
 
 	}
@@ -65,25 +67,25 @@ public class GUIController implements ActionListener,IController {
 	@Override
 	public void sendDoneEvent(ActionEvent e) {
 		actionPerformed(e);
-		outputTestEditor.getPlayButton().setEnabled(true);
+		this.haTestEditor.getPlayButton().setEnabled(true);
 	}
 
 	private void stopSAP() {
-		ExecuteSAPControl sapControl = new ExecuteSAPControl(this);
-		sapControl.setLogger(getLogger());
-		sapControl.setFunction("GetProcessList");
-		sapControl.setInstance("00");
-		sapControl.setHost("as0013");
-		sapControl.execute();
+		this.sapControl = new ExecuteSAPControl(this);
+		this.sapControl.setLogger(getLogger());
+		this.sapControl.setFunction("GetProcessList");
+		this.sapControl.setInstance("00");
+		this.sapControl.setHost("as0013");
+		this.sapControl.execute();
 
 	}
 
 	private void applyKernel() {
 
-		ApplyKernel applylKernel = new ApplyKernel(this);
-		applylKernel.setLogger(getLogger());
-		applylKernel.setCommand("STEP0", "cd /FSIASP/sapmnt/DCN/exe/uc");
-		applylKernel.execute();
+		this.applylKernel = new ApplyKernel(this);
+		this.applylKernel.setLogger(getLogger());
+		this.applylKernel.setCommand("STEP0", "cd /FSIASP/sapmnt/DCN/exe/uc");
+		this.applylKernel.execute();
 		// applylKernel.setCommand("STEP0",
 		// "cd /FSIASP/sapmnt/DCN/exe/uc; rm -R as400_pase_64.backup");
 		// applylKernel.setCommand("STEP1",
@@ -188,7 +190,7 @@ public class GUIController implements ActionListener,IController {
 					}
 
 					if (firstSubString.trim().equals("SAP_User")) {
-						scriptModel.setSid(secondSubString);
+						scriptModel.setUser(secondSubString);
 					}
 
 					if (firstSubString.trim().equals("SAP_Password")) {
@@ -259,13 +261,27 @@ public class GUIController implements ActionListener,IController {
 				}
 				if (readScriptToModel.getSid().trim().equals("SAP_SID")) {
 					getOutputTestEditor().getSap_SID_Field().setText("");
-					getOutputTestEditor().getSap_SID_Field().setText("bigboss");
+					getOutputTestEditor().getSap_SID_Field().setText(
+							readScriptToModel.getSid());
 				}
 				if (!readScriptToModel.getPassword().trim().equals(" ")) {
 					getOutputTestEditor().getSap_PASSWORD_Field().setText(" ");
 					getOutputTestEditor().getSap_PASSWORD_Field().setText(
-							"qsecofer");
+							readScriptToModel.getPassword());
 				}
+
+				if (!readScriptToModel.getUser().trim().equals(" ")) {
+					getOutputTestEditor().getSap_USER_Field().setText(" ");
+					getOutputTestEditor().getSap_USER_Field().setText(
+							readScriptToModel.getUser());
+				}
+
+				if (!readScriptToModel.getSid().trim().equals(" ")) {
+					getOutputTestEditor().getSap_SID_Field().setText(" ");
+					getOutputTestEditor().getSap_SID_Field().setText(
+							readScriptToModel.getSid());
+				}
+
 				if (!readScriptToModel.getGlobal_Kernel().equals("")) {
 					getOutputTestEditor().getSap_Nigtly_MakeField().setText(
 							readScriptToModel.getGlobal_Kernel().trim());
@@ -281,15 +297,14 @@ public class GUIController implements ActionListener,IController {
 				e.printStackTrace();
 			}
 
-			logger.getLogger().info(
-					"Script" + " " + "[ " + file + " ]" + " "
-							+ "Successfully loaded....");
-
 			haTestScriptEditor.setCursor(waitCursor);
 
 			Cursor defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
 			haTestScriptEditor.setCursor(defaultCursor);
 			haTestScriptEditor.setInVisible();
+
+			JOptionPane.showMessageDialog(new JFrame(), "Script" + " " + "[ "
+					+ file + " ]" + " " + "Successfully loaded");
 		} else {
 			Cursor defaultCursor = new Cursor(Cursor.DEFAULT_CURSOR);
 			haTestScriptEditor.setCursor(defaultCursor);
@@ -323,9 +338,23 @@ public class GUIController implements ActionListener,IController {
 	public void actionPerformed(ActionEvent e) {
 		try {
 
-			if (e.getSource() == outputTestEditor.getImportScriptJMenuItem()) {
+			if (e.getSource() == haTestEditor.getImportScriptJMenuItem()) {
 
 				haTestScriptEditor.setVisible();
+			}
+			if (e.getSource() == haTestEditor.getStopButton()) {
+
+				this.sapControl.stopProcess();
+				this.applylKernel.stopProcess();
+				haTestEditor.getStart_SAP_CheckBox().setSelected(false);
+				haTestEditor.getApplyKernelCheckbox().setSelected(false);
+				haTestEditor.getStop_SAP_Checkbox().setSelected(false);
+				haTestEditor.getStartHATestSAPCheckBox().setSelected(false);
+			}
+
+			if (e.getSource() == haTestEditor.getClearLogViewButton()) {
+
+				haTestEditor.getJtextArea().setText("");
 			}
 
 			if (e.getSource() == haTestScriptEditor.getOpenButton()) {
@@ -338,16 +367,20 @@ public class GUIController implements ActionListener,IController {
 			if (e.getSource() == haTestScriptEditor.getSaveButton()) {
 				saveScriptFile();
 			}
+			if (e.getSource() == haTestEditor.getExitJMenuItem()) {
 
-			if (e.getSource() == outputTestEditor.getPlayButton()
+				System.exit(0);
+
+			}
+			if (e.getSource() == haTestEditor.getPlayButton()
 					|| e instanceof TaskDoneEvent) {
-				outputTestEditor.getjProgressBar().setEnabled(true);
-				outputTestEditor.getPlayButton().setEnabled(false);
-				String user = outputTestEditor.getUSER();
-				String password = outputTestEditor.getPassword();
-				stopSAPCheckBox = outputTestEditor.getStop_SAP_Checkbox()
+				haTestEditor.getjProgressBar().setEnabled(true);
+				haTestEditor.getPlayButton().setEnabled(false);
+				String user = haTestEditor.getUSER();
+				String password = haTestEditor.getPassword();
+				stopSAPCheckBox = haTestEditor.getStop_SAP_Checkbox()
 						.isSelected();
-				applyKernelCheckBox = outputTestEditor.getApplyKernelCheckbox()
+				applyKernelCheckBox = haTestEditor.getApplyKernelCheckbox()
 						.isSelected();
 
 				if (user.equals("") || password.equals("")
@@ -359,31 +392,30 @@ public class GUIController implements ActionListener,IController {
 					JOptionPane.showMessageDialog(null,
 							"Invalid username and password", "Try again",
 							JOptionPane.ERROR_MESSAGE);
-					outputTestEditor.getSap_SID_Field().setText("");
-					outputTestEditor.getSap_USER_Field().setText("");
-					outputTestEditor.getSap_USER_Field().setText("");
+					haTestEditor.getSap_SID_Field().setText("");
+					haTestEditor.getSap_USER_Field().setText("");
+					haTestEditor.getSap_USER_Field().setText("");
 				}
 
 				if (stopSAPCheckBox) {
 					allChecked = true;
 					stopSAP();
-					outputTestEditor.getStop_SAP_Checkbox().setSelected(false);
+					haTestEditor.getStop_SAP_Checkbox().setSelected(false);
 				} else if (applyKernelCheckBox) {
 					allChecked = true;
 					applyKernel();
-					outputTestEditor.getApplyKernelCheckbox()
-							.setSelected(false);
+					haTestEditor.getApplyKernelCheckbox().setSelected(false);
 
 				} else if (!allChecked) {
 					JOptionPane.showMessageDialog(null,
 							" Select a Task to run..", " Run Tasks ",
 							JOptionPane.ERROR_MESSAGE);
-					outputTestEditor.getPlayButton().setEnabled(true);
+					haTestEditor.getPlayButton().setEnabled(true);
 				} else {
 					allChecked = false;
 
 				}
-				outputTestEditor.getjProgressBar().setString(" ");
+				haTestEditor.getjProgressBar().setString(" ");
 			}
 		} catch (Exception e1) {
 			e1.printStackTrace();
@@ -392,14 +424,16 @@ public class GUIController implements ActionListener,IController {
 
 	private void addListener() {
 		// MainEditor
-		outputTestEditor.setclearLogViewButtonActionListener(this);
-		outputTestEditor.setcopyActionListener(this);
-		outputTestEditor.setstop_SAP_CheckboxActionListener(this);
-		outputTestEditor.setplayButtonActionListener(this);
-		outputTestEditor.setstopButtonActionListener(this);
-		outputTestEditor.setexitJMenuItemActionListener(this);
-		outputTestEditor.setinforJMenuItemActionListener(this);
-		outputTestEditor.setImportScriptJMenuItemActionListener(this);
+		haTestEditor.getClearLogViewButton().addActionListener(this);
+		haTestEditor.getStopButton().addActionListener(this);
+		haTestEditor.getCopy().addActionListener(this);
+		haTestEditor.getStop_SAP_Checkbox().addActionListener(this);
+		haTestEditor.getPlayButton().addActionListener(this);
+		haTestEditor.getStopButton().addActionListener(this);
+		haTestEditor.getExitJMenuItem().addActionListener(this);
+		haTestEditor.getInforJMenuItem().addActionListener(this);
+		haTestEditor.getImportScriptJMenuItem().addActionListener(this);
+		haTestEditor.getClearLogViewButton().addActionListener(this);
 
 		// scriptEditor
 		haTestScriptEditor.getOpenButton().addActionListener(this);
@@ -408,7 +442,7 @@ public class GUIController implements ActionListener,IController {
 	}
 
 	public HATestEditor getOutputTestEditor() {
-		return outputTestEditor;
+		return haTestEditor;
 	}
 
 	public void setLogger(Logging logger) {
@@ -436,10 +470,10 @@ public class GUIController implements ActionListener,IController {
 	@Override
 	public void updateProgressbar() {
 		try {
-			outputTestEditor.getjProgressBar().setValue(++this.currentStep);
-			outputTestEditor.getjProgressBar().setStringPainted(true);
-			outputTestEditor.getPlayButton().setEnabled(false);
-			outputTestEditor.getStatusBarJLabel().setText(
+			haTestEditor.getjProgressBar().setVisible(true);
+			haTestEditor.getjProgressBar().setValue(++this.currentStep);
+			haTestEditor.getjProgressBar().setStringPainted(true);
+			haTestEditor.getStatusBarJLabel().setText(
 					"Task: " + this.threadName);
 			Thread.sleep(DELAY);
 		} catch (InterruptedException e) {
@@ -463,8 +497,8 @@ public class GUIController implements ActionListener,IController {
 
 	@Override
 	public void doneProgressBar() {
-		// TODO Auto-generated method stub
-		
+		haTestEditor.getjProgressBar().setVisible(false);
+		haTestEditor.getStatusBarJLabel().setText("Done");
 	}
 
 }

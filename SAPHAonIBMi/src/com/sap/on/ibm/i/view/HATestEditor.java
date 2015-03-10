@@ -28,6 +28,7 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
@@ -36,8 +37,8 @@ import javax.swing.border.EtchedBorder;
 public class HATestEditor extends JFrame {
 	private JCheckBox stop_SAP_Checkbox;
 	private JCheckBox applyKernelCheckbox;
-	private JCheckBox startSAPCheckBox;
-	private JCheckBox runHATestCheckBox;
+	private JCheckBox startHATestSAPCheckBox;
+	private JCheckBox start_SAP_CheckBox;
 	private JMenuBar menuBar;
 	private JMenu file;
 	private JMenuItem exitJMenuItem;
@@ -127,13 +128,13 @@ public class HATestEditor extends JFrame {
 		applyKernelCheckbox.setFont(new Font("Arial", Font.PLAIN, 12));
 		tasksPanel.add(applyKernelCheckbox);
 
-		runHATestCheckBox = new JCheckBox("Start SAP");
-		runHATestCheckBox.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		tasksPanel.add(runHATestCheckBox);
+		start_SAP_CheckBox = new JCheckBox("Start SAP");
+		start_SAP_CheckBox.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		tasksPanel.add(start_SAP_CheckBox);
 
-		startSAPCheckBox = new JCheckBox("RunHATest");
-		startSAPCheckBox.setFont(new Font("Arial", Font.PLAIN, 12));
-		tasksPanel.add(startSAPCheckBox);
+		startHATestSAPCheckBox = new JCheckBox("RunHATest");
+		startHATestSAPCheckBox.setFont(new Font("Arial", Font.PLAIN, 12));
+		tasksPanel.add(startHATestSAPCheckBox);
 
 		// Settings
 		JPanel panUpper = new JPanel(new BorderLayout());
@@ -144,8 +145,6 @@ public class HATestEditor extends JFrame {
 		sapPasswordLabel.setFont(new Font("Arial", Font.PLAIN, 12));
 
 		sap_PASSWORD_Field = new JPasswordField();
-		// sap_PASSWORD_Field.setText("sapofr12");
-		sap_PASSWORD_Field.setText("qsecofer");
 		sap_PASSWORD_Field.setHorizontalAlignment(SwingConstants.LEFT);
 		sap_PASSWORD_Field.setFont(new Font("Arial", Font.PLAIN, 12));
 		sap_PASSWORD_Field.setEchoChar('*');
@@ -156,8 +155,6 @@ public class HATestEditor extends JFrame {
 		Sap_SID_label.setFont(new Font("Arial", Font.PLAIN, 12));
 
 		sap_USER_Field = new JTextField();
-		// sap_USER_Field.setText("dcnadm");
-		sap_USER_Field.setText("bigboss");
 		sap_USER_Field.setHorizontalAlignment(SwingConstants.LEFT);
 		sap_USER_Field.setFont(new Font("Arial", Font.PLAIN, 12));
 		sap_USER_Field.setColumns(10);
@@ -174,7 +171,6 @@ public class HATestEditor extends JFrame {
 		sap_SID_label.setFont(new Font("Arial", Font.PLAIN, 12));
 
 		sap_SID_Field = new JTextField();
-		sap_SID_Field.setText("DCN");
 		sap_SID_Field.setHorizontalAlignment(SwingConstants.LEFT);
 		sap_SID_Field.setFont(new Font("Arial", Font.PLAIN, 12));
 		sap_SID_Field.setColumns(10);
@@ -380,20 +376,24 @@ public class HATestEditor extends JFrame {
 
 		JCheckBox chckbxInf = new JCheckBox("Info");
 		chckbxInf.setFont(new Font("Arial", Font.PLAIN, 12));
+		chckbxInf.setEnabled(false);
 		toolBar.add(chckbxInf);
 
 		JCheckBox chckbxError = new JCheckBox("Error");
 		chckbxError.setFont(new Font("Arial", Font.PLAIN, 12));
+		chckbxError.setEnabled(false);
 		toolBar.add(chckbxError);
 
 		JCheckBox chckbxDebug = new JCheckBox("Debug");
 		chckbxDebug.setFont(new Font("Arial", Font.PLAIN, 12));
+		chckbxDebug.setEnabled(false);
 		toolBar.add(chckbxDebug);
 
 		ImageIcon copyicon = new ImageIcon("icons/page_copy.png");
 		copy = new JButton();
 		copy.setIcon(copyicon);
 		copy.setPreferredSize(new Dimension(toolBar.getWidth(), 16));
+		copy.setEnabled(false);
 		toolBar.add(copy);
 
 		clearLogViewButton = new JButton("Clear Log Viewer");
@@ -459,44 +459,8 @@ public class HATestEditor extends JFrame {
 		return password;
 	}
 
-	public void setclearLogViewButtonActionListener(ActionListener l) {
-		this.clearLogViewButton.addActionListener(l);
-	}
-
-	public void setcopyActionListener(ActionListener l) {
-		this.copy.addActionListener(l);
-	}
-
-	public void setplayButtonActionListener(ActionListener l) {
-		this.playButton.addActionListener(l);
-	}
-
 	public void removePlayButtonActionListener(ActionListener l) {
 		this.playButton.removeActionListener(l);
-	}
-
-	public void setstopButtonActionListener(ActionListener l) {
-		this.stopButton.addActionListener(l);
-	}
-
-	public void setexitJMenuItemActionListener(ActionListener l) {
-		this.exitJMenuItem.addActionListener(l);
-	}
-
-	public void setinforJMenuItemActionListener(ActionListener l) {
-		this.inforJMenuItem.addActionListener(l);
-	}
-
-	public void setstop_SAP_CheckboxActionListener(ActionListener l) {
-		this.stop_SAP_Checkbox.addActionListener(l);
-	}
-
-	public void setapplyKernelCheckboxActionListener(ActionListener l) {
-		this.applyKernelCheckbox.addActionListener(l);
-	}
-
-	public void setstartSAPCheckBoxActionListener(ActionListener l) {
-		this.startSAPCheckBox.addActionListener(l);
 	}
 
 	public JCheckBox getStop_SAP_Checkbox() {
@@ -508,7 +472,7 @@ public class HATestEditor extends JFrame {
 	}
 
 	public JCheckBox getStartSAPCheckBox() {
-		return startSAPCheckBox;
+		return startHATestSAPCheckBox;
 	}
 
 	public JMenu getFile() {
@@ -555,10 +519,6 @@ public class HATestEditor extends JFrame {
 		return importScriptJMenuItem;
 	}
 
-	public void setImportScriptJMenuItemActionListener(ActionListener l) {
-		this.importScriptJMenuItem.addActionListener(l);
-	}
-
 	public JTextField getSap_SID_Field() {
 		return sap_SID_Field;
 	}
@@ -581,5 +541,26 @@ public class HATestEditor extends JFrame {
 
 	public JTextField getSap_global_KernelField() {
 		return sap_global_KernelField;
+	}
+
+	public JCheckBox getStart_SAP_CheckBox() {
+		return start_SAP_CheckBox;
+	}
+
+	public JCheckBox getStartHATestSAPCheckBox() {
+		return startHATestSAPCheckBox;
+	}
+
+	public void setInVisible() {
+		Runnable r = new Runnable() {
+
+			@Override
+			public void run() {
+				setVisible(false);
+				setLocationRelativeTo(null);
+
+			}
+		};
+		SwingUtilities.invokeLater(r);
 	}
 }

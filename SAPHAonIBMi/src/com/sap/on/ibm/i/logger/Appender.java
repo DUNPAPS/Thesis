@@ -67,8 +67,7 @@ public class Appender extends AppenderSkeleton {
 						try {
 							styledDocument.insertString(
 									styledDocument.getLength(),
-									message
-											+ System.getProperty("line.separator"),
+									message,
 									(MutableAttributeSet) attributes.get(e
 											.getLevel()));
 						} catch (BadLocationException ex) {
