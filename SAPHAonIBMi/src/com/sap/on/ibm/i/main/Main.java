@@ -2,10 +2,13 @@ package com.sap.on.ibm.i.main;
 
 import java.io.File;
 import java.io.IOException;
+
 import javax.swing.SwingUtilities;
+
 import com.sap.on.ibm.i.controller.CommandLineController;
 import com.sap.on.ibm.i.controller.GUIController;
 import com.sap.on.ibm.i.logger.Logging;
+import com.sap.on.ibm.i.model.ScriptModel;
 import com.sap.on.ibm.io.ScriptReader;
 
 /**
@@ -28,16 +31,18 @@ public class Main {
 		}
 
 		else if (mode.equals("-script")) {
-			CommandLineController controller = new CommandLineController();
-			logger.setLogger("");
-			controller.setLogger(logger);
-			controller.run();
+			
 
 			if (0 < args.length) {
 				inFile = new File(args[1]);
 				try {
+					CommandLineController controller = new CommandLineController();
+					logger.setLogger("");
+					controller.setLogger(logger);
 					ScriptReader reader = new ScriptReader(inFile);
-					reader.read();
+					ScriptModel scriptModel = reader.read();
+					controller.setScriptModel(scriptModel);
+					controller.run();
 				} catch (IOException e) {
 					e.printStackTrace();
 				} catch (ClassNotFoundException e) {

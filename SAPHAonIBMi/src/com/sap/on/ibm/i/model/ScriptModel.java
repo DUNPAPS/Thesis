@@ -66,5 +66,13 @@ public class ScriptModel {
 		this.runHATest = runHATest;
 	}
 	
-	
+	public String getUserData() {
+
+		String userData = " -pw " + getPassword();
+
+		userData += " " + getUser();
+
+		return userData;
+
+	}
 }

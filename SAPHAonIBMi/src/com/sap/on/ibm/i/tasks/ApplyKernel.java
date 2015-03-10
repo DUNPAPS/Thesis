@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.sap.on.ibm.i.controller.IController;
 import com.sap.on.ibm.i.logger.Levels;
 import com.sap.on.ibm.i.logger.Logging;
+import com.sap.on.ibm.i.model.ScriptModel;
 import com.sap.on.ibm.i.model.User;
 
 public class ApplyKernel {
@@ -23,6 +24,7 @@ public class ApplyKernel {
 	private int MAX_WAIT_TIME_SEC = 30;
 	private Process process;
 	private ProgressbarTimedUpdate progressbar;
+	private ScriptModel scriptModel;
 
 	public ApplyKernel(IController myController) {
 		this.user = new User();
@@ -40,12 +42,13 @@ public class ApplyKernel {
 		this.logger = logger;
 	}
 
-	public Logging getLogger() {
-		return logger;
+	public void setScriptModel(ScriptModel scriptModel) {
+		this.scriptModel = scriptModel;
+
 	}
 
-	public User getUser() {
-		return user;
+	public Logging getLogger() {
+		return logger;
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -72,8 +75,7 @@ public class ApplyKernel {
 
 						String command = commands.next();
 						String nextCommand = myMap.get(command);
-
-						PLINK_EXE += " " + getUser().getUserData();
+						PLINK_EXE += " " + scriptModel.getUserData();
 						PLINK_EXE += " " + nextCommand;
 						getLogger().logMessages(Levels.INFO,
 								"Command:    " + PLINK_EXE, null);
@@ -81,6 +83,7 @@ public class ApplyKernel {
 								"Executig command...", null);
 
 						progressbar.start(MAX_WAIT_TIME_SEC);
+
 						process = Runtime.getRuntime().exec(PLINK_EXE);
 						BufferedReader stdInput = new BufferedReader(
 								new InputStreamReader(process.getInputStream()));
@@ -122,13 +125,12 @@ public class ApplyKernel {
 					}
 				}
 				try {
-					getLogger().logMessages(Levels.INFO, " " + " Finished ...",
+					getLogger().logMessages(Levels.INFO, " " + " Finished",
 							null);
 					ActionEvent e = new TaskDoneEvent(this, 0,
 							"ApplyKernelDONE");
 					myController.sendDoneEvent(e);
 					progressbar.Stop();
-//					myController.doneProgressBar();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -145,7 +147,7 @@ public class ApplyKernel {
 			progressbar.Stop();
 		}
 	}
-	
+
 }
 
 /*

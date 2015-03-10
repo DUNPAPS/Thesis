@@ -9,24 +9,21 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import com.sap.on.ibm.i.logger.Levels;
 import com.sap.on.ibm.i.logger.Logging;
-import com.sap.on.ibm.i.model.User;
+import com.sap.on.ibm.i.model.ScriptModel;
 import com.sap.on.ibm.i.tasks.ApplyKernel;
 import com.sap.on.ibm.i.tasks.ExecuteSAPControl;
 import com.sap.on.ibm.i.view.ProgressBar;
 
 public class CommandLineController extends Observable implements ItemListener,
 		Runnable, IController, Observer {
-	private User user;
 	private Logging logger;
 	private ProgressBar progressbar;
 	private int currentStep = 0;
 	private int maxSteps = 0;
 	private LinkedBlockingQueue<ActionEvent> ActionEventQueue;
+	private ScriptModel scriptModel;
 
 	public CommandLineController() {
-		this.user = new User();
-		this.user.setUser("qsecofr@as0013");
-		this.user.setPassword("bigboss");
 		this.progressbar = new ProgressBar();
 		this.ActionEventQueue = new LinkedBlockingQueue<ActionEvent>();
 		addObserver(this);
@@ -67,6 +64,7 @@ public class CommandLineController extends Observable implements ItemListener,
 	private void applyKernel() {
 		ApplyKernel applylKernel = new ApplyKernel(this);
 		applylKernel.setLogger(getLogger());
+		applylKernel.setScriptModel(this.scriptModel);
 		applylKernel.setCommand("STEP0", "cd /FSIASP/sapmnt/DCN/exe/uc");
 		// applylKernel.setCommand("STEP0",
 		// "cd /FSIASP/sapmnt/DCN/exe/uc; rm -R as400_pase_64.backup");
@@ -121,8 +119,6 @@ public class CommandLineController extends Observable implements ItemListener,
 	}
 
 	public Logging getLogger() {
-//		Logger.getRootLogger().addAppender(new ConsoleAppender(
-//	               new PatternLayout("%m%n")));
 		return logger;
 	}
 
@@ -130,12 +126,14 @@ public class CommandLineController extends Observable implements ItemListener,
 	public void run() {
 		try {
 
-			//new command
+			// new command
+			System.out.println();
+			System.out.printf(" ");
 			getLogger().logMessages(Levels.INFO, "SAPControl", null);
 			stopSAP();
 			ActionEventQueue.take();
 
-			//new command
+			// new command
 			getLogger().logMessages(Levels.INFO, "ApplyKernel", null);
 			applyKernel();
 			ActionEventQueue.take();
@@ -164,4 +162,9 @@ public class CommandLineController extends Observable implements ItemListener,
 	public void doneProgressBar() {
 		progressbar.finish();
 	}
+
+	public void setScriptModel(ScriptModel scriptModel) {
+		this.scriptModel = scriptModel;
+	}
+
 }

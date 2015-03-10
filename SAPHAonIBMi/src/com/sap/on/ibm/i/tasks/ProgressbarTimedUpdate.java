@@ -15,8 +15,8 @@ public class ProgressbarTimedUpdate {
 
 	void Stop()
 	{
-		myController.doneProgressBar();
 		postStop = true;
+		myController.doneProgressBar();
 		
 	}
 	

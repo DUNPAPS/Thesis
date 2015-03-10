@@ -1,8 +1,5 @@
 package com.sap.on.ibm.i.logger;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;

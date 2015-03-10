@@ -1,6 +1,5 @@
 package com.sap.on.ibm.i.view;
 
-
 /**
  * Ascii progress meter. On completion this will reset itself, so it can be
  * reused <br />
@@ -38,7 +37,7 @@ public class ProgressBar {
 		}
 		System.out.printf(format, percent, progress, workchars[done
 				% workchars.length]);
-		
+		System.out.printf("");
 		if (done == total) {
 			System.out.flush();
 			System.out.println();
@@ -46,12 +45,11 @@ public class ProgressBar {
 		}
 	}
 
-	public void finish()
-	{
-		System.out.flush();
-		System.out.println();	
+	public void finish() {
+		System.out.println();
+		System.out.printf("");
 	}
-	
+
 	private void init() {
 		this.progress = new StringBuilder(60);
 	}

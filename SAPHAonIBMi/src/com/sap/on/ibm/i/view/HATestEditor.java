@@ -28,7 +28,6 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
@@ -549,18 +548,5 @@ public class HATestEditor extends JFrame {
 
 	public JCheckBox getStartHATestSAPCheckBox() {
 		return startHATestSAPCheckBox;
-	}
-
-	public void setInVisible() {
-		Runnable r = new Runnable() {
-
-			@Override
-			public void run() {
-				setVisible(false);
-				setLocationRelativeTo(null);
-
-			}
-		};
-		SwingUtilities.invokeLater(r);
 	}
 }
