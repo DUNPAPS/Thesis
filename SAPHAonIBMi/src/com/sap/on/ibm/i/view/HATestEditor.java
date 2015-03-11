@@ -401,7 +401,7 @@ public class HATestEditor extends JFrame {
 				16));
 		toolBar.add(clearLogViewButton);
 
-		ImageIcon playicon = new ImageIcon("icons/control_play_blue.png");
+		ImageIcon playicon = new ImageIcon("control_play_blue.png");
 		playButton = new JButton("Play");
 		playButton.setIcon(playicon);
 		playButton.setFont(new Font("Arial", Font.PLAIN, 12));

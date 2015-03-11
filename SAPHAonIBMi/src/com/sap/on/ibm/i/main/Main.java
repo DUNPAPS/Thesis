@@ -44,9 +44,13 @@ public class Main {
 					controller.setScriptModel(scriptModel);
 					controller.run();
 				} catch (IOException e) {
-					e.printStackTrace();
+					new IllegalArgumentException(
+							"Incorrect number of command line arguments: "
+									+ args.length);
 				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
+					new IllegalArgumentException(
+							"Incorrect number of command line arguments: "
+									+ args.length);
 				}
 			}
 		} else if (mode.equals("-gui")) {

@@ -2,6 +2,7 @@ package com.sap.on.ibm.i.tasks;
 
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Iterator;
 import java.util.Map;
@@ -11,7 +12,7 @@ import com.sap.on.ibm.i.controller.IController;
 import com.sap.on.ibm.i.logger.Levels;
 import com.sap.on.ibm.i.logger.Logging;
 import com.sap.on.ibm.i.model.ScriptModel;
-import com.sap.on.ibm.i.model.User;
+import com.sap.on.ibm.i.view.ProgressbarTimedUpdate;
 
 public class ApplyKernel {
 	protected String PLINK_EXE = "plink.exe";
@@ -19,23 +20,24 @@ public class ApplyKernel {
 	private Logging logger;
 	@SuppressWarnings("unused")
 	private ActionEvent event;
-	private User user;
 	private IController myController;
 	private int MAX_WAIT_TIME_SEC = 30;
 	private Process process;
 	private ProgressbarTimedUpdate progressbar;
 	private ScriptModel scriptModel;
+	private Integer exitValue;
 
 	public ApplyKernel(IController myController) {
-		this.user = new User();
-		this.user.setUser("qsecofr@as0013");
-		this.user.setPassword("bigboss");
 		this.myController = myController;
 		progressbar = new ProgressbarTimedUpdate(this.myController);
 	}
 
 	public void setCommand(String commandName, String command) {
 		myMap.put(commandName, command);
+	}
+
+	public Integer getExitValue() {
+		return exitValue;
 	}
 
 	public void setLogger(Logging logger) {
@@ -65,6 +67,9 @@ public class ApplyKernel {
 
 		Thread t2 = new Thread(new Runnable() {
 
+			private BufferedReader stdError;
+			private BufferedReader stdInput;
+
 			public void run() {
 
 				String line;
@@ -75,30 +80,34 @@ public class ApplyKernel {
 
 						String command = commands.next();
 						String nextCommand = myMap.get(command);
+						scriptModel.setUser("qsecofr@as0013");
+						scriptModel.setPassword("bigboss");
 						PLINK_EXE += " " + scriptModel.getUserData();
 						PLINK_EXE += " " + nextCommand;
+
+						System.out.println("command: " + PLINK_EXE);
+						System.out.println(" ");
+
 						getLogger().logMessages(Levels.INFO,
-								"Command:    " + PLINK_EXE, null);
-						getLogger().logMessages(Levels.INFO,
-								"Executig command...", null);
+								"Executig command", null);
 
 						progressbar.start(MAX_WAIT_TIME_SEC);
 
 						process = Runtime.getRuntime().exec(PLINK_EXE);
-						BufferedReader stdInput = new BufferedReader(
-								new InputStreamReader(process.getInputStream()));
+						stdInput = new BufferedReader(new InputStreamReader(
+								process.getInputStream()));
 
 						// error
-						BufferedReader stdError = new BufferedReader(
-								new InputStreamReader(process.getErrorStream()));
+						stdError = new BufferedReader(new InputStreamReader(
+								process.getErrorStream()));
 
 						while ((line = stdInput.readLine()) != null) {
 
 							if (!line.equals("") || line.contains("INFO")) {
 								getLogger()
 										.logMessages(Levels.INFO, line, null);
-							}
-							if (!line.equals("") && line.contains("FAIL")) {
+							} else if (!line.equals("")
+									&& line.contains("FAIL")) {
 								getLogger().logMessages(Levels.ERROR, null,
 										new Exception(line));
 							} else {
@@ -114,28 +123,32 @@ public class ApplyKernel {
 							}
 						}
 						process.waitFor();
-
+						int returnCode = process.exitValue();
+						if (returnCode == 1) {
+							throw new IOException("Return " + returnCode);
+						}
+						if (returnCode == 0) {
+							getLogger().logMessages(Levels.INFO,
+									" " + " Finished", null);
+							ActionEvent e = new TaskEvent(this, 0,
+									"SAP CONTROL DONE");
+							myController.sendDoneEvent(e);
+						}
 					}
 				} catch (Exception e) {
 					try {
 						getLogger().logMessages(Levels.ERROR, null,
 								new Exception(e));
-					} catch (Exception e1) {
-						e1.printStackTrace();
+						process.destroy();
+						stdError.close();
+						stdInput.close();
+						System.exit(1);
+					} catch (Exception ex) {
+						System.out.println(ex.getMessage());
+
 					}
 				}
-				try {
-					getLogger().logMessages(Levels.INFO, " " + " Finished",
-							null);
-					ActionEvent e = new TaskDoneEvent(this, 0,
-							"ApplyKernelDONE");
-					myController.sendDoneEvent(e);
-					progressbar.Stop();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 			}
-
 		}, "Execute Apply Kernel");
 		t2.start();
 		myController.setThreadName(t2.getName());
@@ -146,6 +159,10 @@ public class ApplyKernel {
 			process.destroy();
 			progressbar.Stop();
 		}
+	}
+
+	public void setExitValue(Integer exitValue) {
+		this.exitValue = exitValue;
 	}
 
 }

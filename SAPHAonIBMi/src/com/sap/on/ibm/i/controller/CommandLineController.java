@@ -1,8 +1,6 @@
 package com.sap.on.ibm.i.controller;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -11,14 +9,16 @@ import com.sap.on.ibm.i.logger.Levels;
 import com.sap.on.ibm.i.logger.Logging;
 import com.sap.on.ibm.i.model.ScriptModel;
 import com.sap.on.ibm.i.tasks.ApplyKernel;
-import com.sap.on.ibm.i.tasks.ExecuteSAPControl;
+import com.sap.on.ibm.i.tasks.SAPControl;
 import com.sap.on.ibm.i.view.ProgressBar;
 
-public class CommandLineController extends Observable implements ItemListener,
+public class CommandLineController extends Observable implements
 		Runnable, IController, Observer {
 	private Logging logger;
 	private ProgressBar progressbar;
+	@SuppressWarnings("unused")
 	private int currentStep = 0;
+	@SuppressWarnings("unused")
 	private int maxSteps = 0;
 	private LinkedBlockingQueue<ActionEvent> ActionEventQueue;
 	private ScriptModel scriptModel;
@@ -42,14 +42,8 @@ public class CommandLineController extends Observable implements ItemListener,
 		notifyObservers();
 	}
 
-	@Override
-	public void itemStateChanged(ItemEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
 	private void stopSAP() {
-		ExecuteSAPControl sapControl = new ExecuteSAPControl(this);
+		SAPControl sapControl = new SAPControl(this);
 		sapControl.setLogger(getLogger());
 		sapControl.setFunction("GetProcessList");
 		sapControl.setInstance("00");
@@ -72,7 +66,15 @@ public class CommandLineController extends Observable implements ItemListener,
 		// "cd /FSIASP/sapmnt/DCN/exe/uc; cp -R as400_pase_64 as400_pase_64.backup");
 		try {
 			applylKernel.execute();
+			// if (applylKernel.getExitValue()==1) {
+			// System.out.println("exe");
+			// getLogger().logMessages(Levels.ERROR, null, new
+			// RuntimeException("error"));
+			// throw new RuntimeException("Return 1 ");
+			// }
+
 		} catch (Exception e) {
+			Thread.currentThread().interrupt();
 			e.printStackTrace();
 		}
 
@@ -110,7 +112,7 @@ public class CommandLineController extends Observable implements ItemListener,
 	public void update(final Observable observableSource,
 			final Object arr_done_all) {
 
-		updateProgressbar();
+		 updateProgressbar();
 
 	}
 
@@ -127,7 +129,7 @@ public class CommandLineController extends Observable implements ItemListener,
 		try {
 
 			// new command
-			System.out.println();
+			System.out.println("");
 			System.out.printf(" ");
 			getLogger().logMessages(Levels.INFO, "SAPControl", null);
 			stopSAP();
@@ -151,7 +153,7 @@ public class CommandLineController extends Observable implements ItemListener,
 
 	@Override
 	public void updateProgressbar() {
-		progressbar.update(currentStep++, maxSteps);
+//		progressbar.update(currentStep++, maxSteps);
 	}
 
 	@Override

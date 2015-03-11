@@ -23,8 +23,8 @@ import com.sap.on.ibm.i.logger.Levels;
 import com.sap.on.ibm.i.logger.Logging;
 import com.sap.on.ibm.i.model.ScriptModel;
 import com.sap.on.ibm.i.tasks.ApplyKernel;
-import com.sap.on.ibm.i.tasks.ExecuteSAPControl;
-import com.sap.on.ibm.i.tasks.TaskDoneEvent;
+import com.sap.on.ibm.i.tasks.SAPControl;
+import com.sap.on.ibm.i.tasks.TaskEvent;
 import com.sap.on.ibm.i.view.HATestEditor;
 import com.sap.on.ibm.i.view.HATestScriptEditor;
 
@@ -46,8 +46,9 @@ public class GUIController implements ActionListener, IController {
 	private long DELAY = 200;
 	private JFileChooser fileChooser;
 	private String threadName;
-	private ExecuteSAPControl sapControl;
+	private SAPControl sapControl;
 	private ApplyKernel applylKernel;
+	private ScriptModel readScriptToModel;
 
 	public GUIController() {
 		this.haTestEditor = new HATestEditor();
@@ -71,7 +72,7 @@ public class GUIController implements ActionListener, IController {
 	}
 
 	private void stopSAP() {
-		this.sapControl = new ExecuteSAPControl(this);
+		this.sapControl = new SAPControl(this);
 		this.sapControl.setLogger(getLogger());
 		this.sapControl.setFunction("GetProcessList");
 		this.sapControl.setInstance("00");
@@ -84,6 +85,7 @@ public class GUIController implements ActionListener, IController {
 
 		this.applylKernel = new ApplyKernel(this);
 		this.applylKernel.setLogger(getLogger());
+		this.applylKernel.setScriptModel(readScriptToModel);
 		this.applylKernel.setCommand("STEP0", "cd /FSIASP/sapmnt/DCN/exe/uc");
 		this.applylKernel.execute();
 		// applylKernel.setCommand("STEP0",
@@ -243,7 +245,7 @@ public class GUIController implements ActionListener, IController {
 				}
 
 				String script = haTestScriptEditor.getTextarea().getText();
-				ScriptModel readScriptToModel = readScriptToModel(script);
+				readScriptToModel = readScriptToModel(script);
 
 				if (readScriptToModel.getStopSAP().trim()
 						.equals("StopSAP".trim())) {
@@ -317,6 +319,7 @@ public class GUIController implements ActionListener, IController {
 	}
 
 	public void openScriptFile() {
+
 		String userDirLocation = System.getProperty("user.dir");
 		File userDir = new File(userDirLocation);
 		fileChooser = new JFileChooser(userDir);
@@ -344,12 +347,21 @@ public class GUIController implements ActionListener, IController {
 			}
 			if (e.getSource() == haTestEditor.getStopButton()) {
 
-				this.sapControl.stopProcess();
-				this.applylKernel.stopProcess();
-				haTestEditor.getStart_SAP_CheckBox().setSelected(false);
-				haTestEditor.getApplyKernelCheckbox().setSelected(false);
-				haTestEditor.getStop_SAP_Checkbox().setSelected(false);
-				haTestEditor.getStartHATestSAPCheckBox().setSelected(false);
+				if (this.sapControl != null) {
+					this.sapControl.stopProcess();
+				}
+				if (this.applylKernel != null) {
+					this.applylKernel.stopProcess();
+				}
+				if (haTestEditor != null) {
+					haTestEditor.getStart_SAP_CheckBox().setSelected(false);
+					haTestEditor.getApplyKernelCheckbox().setSelected(false);
+					haTestEditor.getStop_SAP_Checkbox().setSelected(false);
+					haTestEditor.getStartHATestSAPCheckBox().setSelected(false);
+					haTestEditor.getStopButton().setEnabled(true);
+					haTestEditor.getPlayButton().setEnabled(true);
+				}
+
 			}
 
 			if (e.getSource() == haTestEditor.getClearLogViewButton()) {
@@ -373,9 +385,10 @@ public class GUIController implements ActionListener, IController {
 
 			}
 			if (e.getSource() == haTestEditor.getPlayButton()
-					|| e instanceof TaskDoneEvent) {
+					|| e instanceof TaskEvent) {
 				haTestEditor.getjProgressBar().setEnabled(true);
 				haTestEditor.getPlayButton().setEnabled(false);
+				haTestEditor.getStopButton().setEnabled(true);
 				String user = haTestEditor.getUSER();
 				String password = haTestEditor.getPassword();
 				stopSAPCheckBox = haTestEditor.getStop_SAP_Checkbox()
@@ -395,6 +408,7 @@ public class GUIController implements ActionListener, IController {
 					haTestEditor.getSap_SID_Field().setText("");
 					haTestEditor.getSap_USER_Field().setText("");
 					haTestEditor.getSap_USER_Field().setText("");
+					haTestEditor.getPlayButton().setEnabled(true);
 				}
 
 				if (stopSAPCheckBox) {

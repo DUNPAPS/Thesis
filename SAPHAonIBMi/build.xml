@@ -18,9 +18,6 @@
 	<!--version number -->
 	<property name="version" value="1.0" />
 
-
-
-
 	<target name="init">
 		<echo>=== INIT ===</echo>
 		<!-- Create the time stamp -->
@@ -63,10 +60,10 @@
 				<attribute name="Title" value="${ant.project.name}" />
 				<attribute name="Built-By" value="Duncan, Muasya" />
 				<attribute name="Version" value="${version}.${build.number}" />
-				<attribute name="Main-Class" value="com.sap.on.ibm.i.editor.OutputTestEditor" />
+				<attribute name="Main-Class" value="com.sap.on.ibm.i.main.Main" />
 			</manifest>
 		</jar>
- 
+
 	</target>
 
 	<target name="clean" description="clean up">

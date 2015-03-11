@@ -22,7 +22,7 @@ public class ScriptWriter {
      * 
      * @see ObjectOutputStream
      */
-    public ScriptWriter(final OutputStream outstream) throws IOException {
+    public void ScriptWriter(final OutputStream outstream) throws IOException {
         this.out = new ObjectOutputStream(outstream);
     }
 
