@@ -1,6 +1,0 @@
-07-02-2015 22:00:24 com.sap.on.ibm.i.tasks.ExecuteSAPControl 56 INFO :---------------------------------------------------------------------------
-07-02-2015 22:00:24 com.sap.on.ibm.i.tasks.ExecuteSAPControl 57 INFO :  ExecuteSAPControl 
-07-02-2015 22:00:24 com.sap.on.ibm.i.tasks.ExecuteSAPControl 58 INFO :---------------------------------------------------------------------------
-07-02-2015 22:00:24 com.sap.on.ibm.i.tasks.ExecuteSAPControl 92 INFO :Start sap_ctrl command
-07-02-2015 22:00:24 com.sap.on.ibm.i.tasks.ExecuteSAPControl 93 INFO :Command:   sapcontrol.exe -nr 00 -host as0013 -function GetProcessList
-07-02-2015 22:00:43 com.sap.on.ibm.i.tasks.ExecuteSAPControl 114 INFO :End sap_ctrl
