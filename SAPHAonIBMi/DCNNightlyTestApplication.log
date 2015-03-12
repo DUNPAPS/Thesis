@@ -1,0 +1,218 @@
+2015-03-12 00:31:07.074 INFO  [main] : SAPControl
+
+2015-03-12 00:31:07.094 ERROR [Execute SAP Control] : java.io.IOException: Cannot run program "sapcontrol.exe": CreateProcess error=2, The system cannot find the file specified
+
+2015-03-12 10:44:35 [main] INFO    - SAPControl
+
+2015-03-12 10:44:35 [Execute SAP Control] ERROR   - java.io.IOException: Cannot run program "sapcontrol.exe": CreateProcess error=2, The system cannot find the file specified
+
+2015-03-12 10:44:58 [main] INFO    - SAPControl
+
+2015-03-12 10:44:59 [Execute SAP Control] ERROR   - Could not open the ICU common library.
+
+2015-03-12 10:44:59 [Execute SAP Control] ERROR   -    The following files must be in the path described by
+
+2015-03-12 10:44:59 [Execute SAP Control] ERROR   -    the environment variable "PATH":
+
+2015-03-12 10:44:59 [Execute SAP Control] ERROR   -    icuuc50.dll, icudt50.dll, icuin50.dll [D:/depot/bas/740_COR/src/flat/nlsui0.c 1535] pid = 7880
+
+2015-03-12 10:44:59 [Execute SAP Control] ERROR   - PATH is currently set to C:/Program Files/Java/jre1.8.0_31/bin/server;C:/Program Files/Java/jre1.8.0_31/bin;C:/Program Files/Java/jre1.8.0_31/lib/amd64;C:\ProgramData\Oracle\Java\javapath;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\IBM\Infoprint Select;C:\Program Files\ThinkPad\Bluetooth Software\;C:\Program Files\ThinkPad\Bluetooth Software\syswow64;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files (x86)\Lenovo\Access Connections\;C:\Program Files (x86)\Intel\OpenCL SDK\2.0\bin\x86;C:\Program Files (x86)\Intel\OpenCL SDK\2.0\bin\x64;C:\Program Files (x86)\IBM\Personal Communications\;C:\Program Files (x86)\IBM\Trace Facility\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Users\IBM_ADMIN\Desktop\Thesis;  [D:/depot/bas/740_COR/src/flat/nlsui0.c 1538] pid = 7880
+
+2015-03-12 10:45:35 [main] INFO    - SAPControl
+
+2015-03-12 10:45:40 [Execute SAP Control] INFO    - 
+
+2015-03-12 10:45:40 [Execute SAP Control] INFO    - 12.03.2015 10:45:40
+
+2015-03-12 10:45:40 [Execute SAP Control] INFO    - GetProcessList
+
+2015-03-12 10:45:40 [Execute SAP Control] INFO    - FAIL: NIEHOST_UNKNOWN, NiRawConnect failed in plugin_fopen()
+
+2015-03-12 10:45:40 [Execute SAP Control] ERROR   - java.lang.RuntimeException
+
+2015-03-12 10:52:12 [main] INFO    - SAPControl
+
+2015-03-12 10:52:17 [Execute SAP Control] INFO    - 
+
+2015-03-12 10:52:17 [Execute SAP Control] INFO    - 12.03.2015 10:52:17
+
+2015-03-12 10:52:17 [Execute SAP Control] INFO    - GetProcessList
+
+2015-03-12 10:52:17 [Execute SAP Control] INFO    - FAIL: NIEHOST_UNKNOWN, NiRawConnect failed in plugin_fopen()
+
+2015-03-12 10:52:17 [Execute SAP Control] ERROR   - java.lang.RuntimeException
+
+2015-03-12 10:59:51 [main] INFO    - SAPControl
+
+2015-03-12 10:59:56 [Execute SAP Control] INFO    - 
+
+2015-03-12 10:59:56 [Execute SAP Control] INFO    - 12.03.2015 10:59:56
+
+2015-03-12 10:59:56 [Execute SAP Control] INFO    - GetProcessList
+
+2015-03-12 10:59:56 [Execute SAP Control] INFO    - FAIL: NIEHOST_UNKNOWN, NiRawConnect failed in plugin_fopen()
+
+2015-03-12 10:59:56 [Execute SAP Control] ERROR   - java.lang.RuntimeException
+
+2015-03-12 11:02:45 [main] INFO    - SAPControl
+
+2015-03-12 11:02:50 [Execute SAP Control] INFO    - 
+
+2015-03-12 11:02:50 [Execute SAP Control] INFO    - 12.03.2015 11:02:50
+
+2015-03-12 11:02:50 [Execute SAP Control] INFO    - GetProcessList
+
+2015-03-12 11:02:50 [Execute SAP Control] INFO    - FAIL: NIEHOST_UNKNOWN, NiRawConnect failed in plugin_fopen()
+
+2015-03-12 11:02:50 [Execute SAP Control] ERROR   - java.lang.RuntimeException
+
+2015-03-12 11:05:35 [main] INFO    - SAPControl
+
+2015-03-12 11:05:35 [Execute SAP Control] INFO    - 
+
+2015-03-12 11:05:35 [Execute SAP Control] INFO    - 12.03.2015 11:05:35
+
+2015-03-12 11:05:35 [Execute SAP Control] INFO    - GetProcessList
+
+2015-03-12 11:05:35 [Execute SAP Control] INFO    - OK
+
+2015-03-12 11:05:35 [Execute SAP Control] INFO    - name, description, dispstatus, textstatus, starttime, elapsedtime, pid
+
+2015-03-12 11:05:35 [Execute SAP Control] INFO    - disp+work, Dispatcher, GRAY, Stopped, , , 508385
+
+2015-03-12 11:05:35 [Execute SAP Control] INFO    - igswd_mt, IGS Watchdog, GRAY, Stopped, , , 508386
+
+2015-03-12 11:06:07 [main] INFO    - SAPControl
+
+2015-03-12 11:06:08 [Execute SAP Control] INFO    - 
+
+2015-03-12 11:06:08 [Execute SAP Control] INFO    - 12.03.2015 11:06:08
+
+2015-03-12 11:06:08 [Execute SAP Control] INFO    - GetProcessList
+
+2015-03-12 11:06:08 [Execute SAP Control] INFO    - OK
+
+2015-03-12 11:06:08 [Execute SAP Control] INFO    - name, description, dispstatus, textstatus, starttime, elapsedtime, pid
+
+2015-03-12 11:06:08 [Execute SAP Control] INFO    - disp+work, Dispatcher, GRAY, Stopped, , , 508385
+
+2015-03-12 11:06:08 [Execute SAP Control] INFO    - igswd_mt, IGS Watchdog, GRAY, Stopped, , , 508386
+
+2015-03-12 11:12:00 [main] INFO    - SAPControl
+
+2015-03-12 11:12:05 [Execute SAP Control] INFO    - 
+
+2015-03-12 11:12:05 [Execute SAP Control] INFO    - 12.03.2015 11:12:05
+
+2015-03-12 11:12:05 [Execute SAP Control] INFO    - GetProcessList
+
+2015-03-12 11:12:05 [Execute SAP Control] INFO    - FAIL: NIEHOST_UNKNOWN, NiRawConnect failed in plugin_fopen()
+
+2015-03-12 11:14:09 [main] INFO    - SAPControl
+
+2015-03-12 11:14:14 [Execute SAP Control] INFO    - 
+
+2015-03-12 11:14:14 [Execute SAP Control] INFO    - 12.03.2015 11:14:14
+
+2015-03-12 11:14:14 [Execute SAP Control] INFO    - GetProcessList
+
+2015-03-12 11:14:14 [Execute SAP Control] INFO    - FAIL: NIEHOST_UNKNOWN, NiRawConnect failed in plugin_fopen()
+
+2015-03-12 11:14:23 [Execute SAP Control] ERROR   - java.lang.RuntimeException
+
+2015-03-12 11:14:40 [main] INFO    - SAPControl
+
+2015-03-12 11:14:41 [Execute SAP Control] INFO    - 
+
+2015-03-12 11:14:41 [Execute SAP Control] INFO    - 12.03.2015 11:14:41
+
+2015-03-12 11:14:41 [Execute SAP Control] INFO    - GetProcessList
+
+2015-03-12 11:14:41 [Execute SAP Control] INFO    - FAIL: NIECONN_REFUSED (WSAECONNREFUSED: Connection refused), NiRawConnect failed in plugin_fopen()
+
+2015-03-12 11:15:05 [Execute SAP Control] ERROR   - java.lang.RuntimeException
+
+2015-03-12 11:41:17 [main] INFO    - SAPControl
+
+2015-03-12 11:41:17 [Execute SAP Control] INFO    - 
+
+2015-03-12 11:41:17 [Execute SAP Control] INFO    - 12.03.2015 11:41:17
+
+2015-03-12 11:41:17 [Execute SAP Control] INFO    - GetProcessList
+
+2015-03-12 11:41:17 [Execute SAP Control] INFO    - OK
+
+2015-03-12 11:41:17 [Execute SAP Control] INFO    - name, description, dispstatus, textstatus, starttime, elapsedtime, pid
+
+2015-03-12 11:41:17 [Execute SAP Control] INFO    - disp+work, Dispatcher, GRAY, Stopped, , , 508385
+
+2015-03-12 11:41:17 [Execute SAP Control] INFO    - igswd_mt, IGS Watchdog, GRAY, Stopped, , , 508386
+
+2015-03-12 11:41:17 [Execute SAP Control] INFO    -   EXITCODE: 4 GetProcessList succeeded, all processes stopped
+
+2015-03-12 11:41:17 [main] INFO    - ApplyKernel
+
+2015-03-12 11:41:17 [Execute Apply Kernel] INFO    - Executig command
+
+2015-03-12 11:41:21 [Execute Apply Kernel] ERROR   - Unable to open connection:
+
+2015-03-12 11:41:21 [Execute Apply Kernel] ERROR   - Host does not exist
+
+2015-03-12 11:41:21 [Execute Apply Kernel] ERROR   - java.lang.RuntimeException: Last webmethod call failed, invalid parameter. EXITCODE: 1
+
+2015-03-12 11:43:33 [main] INFO    - SAPControl
+
+2015-03-12 11:43:33 [Execute SAP Control] INFO    - 
+
+2015-03-12 11:43:33 [Execute SAP Control] INFO    - 12.03.2015 11:43:33
+
+2015-03-12 11:43:33 [Execute SAP Control] INFO    - GetProcessList
+
+2015-03-12 11:43:33 [Execute SAP Control] INFO    - OK
+
+2015-03-12 11:43:33 [Execute SAP Control] INFO    - name, description, dispstatus, textstatus, starttime, elapsedtime, pid
+
+2015-03-12 11:43:33 [Execute SAP Control] INFO    - disp+work, Dispatcher, GRAY, Stopped, , , 508385
+
+2015-03-12 11:43:33 [Execute SAP Control] INFO    - igswd_mt, IGS Watchdog, GRAY, Stopped, , , 508386
+
+2015-03-12 11:43:33 [Execute SAP Control] INFO    -   EXITCODE: 4 GetProcessList succeeded, all processes stopped
+
+2015-03-12 11:43:33 [main] INFO    - ApplyKernel
+
+2015-03-12 11:43:33 [Execute Apply Kernel] INFO    - Executig command
+
+2015-03-12 11:43:35 [Execute Apply Kernel] ERROR   - Unable to open connection:
+
+2015-03-12 11:43:35 [Execute Apply Kernel] ERROR   - Host does not exist
+
+2015-03-12 11:43:35 [Execute Apply Kernel] ERROR   - java.lang.RuntimeException: Last webmethod call failed, invalid parameter. EXITCODE: 1
+
+2015-03-12 12:00:50 [main] INFO    - SAPControl
+
+2015-03-12 12:00:50 [Execute SAP Control] INFO    - 
+
+2015-03-12 12:00:50 [Execute SAP Control] INFO    - 12.03.2015 12:00:50
+
+2015-03-12 12:00:50 [Execute SAP Control] INFO    - GetProcessList
+
+2015-03-12 12:00:50 [Execute SAP Control] INFO    - OK
+
+2015-03-12 12:00:50 [Execute SAP Control] INFO    - name, description, dispstatus, textstatus, starttime, elapsedtime, pid
+
+2015-03-12 12:00:50 [Execute SAP Control] INFO    - disp+work, Dispatcher, GRAY, Stopped, , , 508385
+
+2015-03-12 12:00:50 [Execute SAP Control] INFO    - igswd_mt, IGS Watchdog, GRAY, Stopped, , , 508386
+
+2015-03-12 12:00:50 [Execute SAP Control] INFO    -   EXITCODE: 4 GetProcessList succeeded, all processes stopped
+
+2015-03-12 12:00:50 [main] INFO    - ApplyKernel
+
+2015-03-12 12:00:50 [Execute Apply Kernel] INFO    - Executig COMMAND
+
+2015-03-12 12:00:53 [Execute Apply Kernel] ERROR   - Unable to open connection:
+
+2015-03-12 12:00:53 [Execute Apply Kernel] ERROR   - Host does not exist
+
+2015-03-12 12:00:53 [Execute Apply Kernel] ERROR   - java.lang.RuntimeException: Last webmethod call failed, invalid parameter. EXITCODE: 1
+

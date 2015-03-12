@@ -2,7 +2,6 @@ package com.sap.on.ibm.i.tasks;
 
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Iterator;
 import java.util.Map;
@@ -25,7 +24,7 @@ public class ApplyKernel {
 	private Process process;
 	private ProgressbarTimedUpdate progressbar;
 	private ScriptModel scriptModel;
-	private Integer exitValue;
+	private Integer exitCode;
 
 	public ApplyKernel(IController myController) {
 		this.myController = myController;
@@ -34,10 +33,6 @@ public class ApplyKernel {
 
 	public void setCommand(String commandName, String command) {
 		myMap.put(commandName, command);
-	}
-
-	public Integer getExitValue() {
-		return exitValue;
 	}
 
 	public void setLogger(Logging logger) {
@@ -85,13 +80,14 @@ public class ApplyKernel {
 						PLINK_EXE += " " + scriptModel.getUserData();
 						PLINK_EXE += " " + nextCommand;
 
-						System.out.println("command: " + PLINK_EXE);
+						System.out.println("COMMAND: " + PLINK_EXE);
 						System.out.println(" ");
-
 						getLogger().logMessages(Levels.INFO,
-								"Executig command", null);
+								"Executig COMMAND", null);
 
 						progressbar.start(MAX_WAIT_TIME_SEC);
+
+						System.out.println(" ");
 
 						process = Runtime.getRuntime().exec(PLINK_EXE);
 						stdInput = new BufferedReader(new InputStreamReader(
@@ -123,13 +119,59 @@ public class ApplyKernel {
 							}
 						}
 						process.waitFor();
-						int returnCode = process.exitValue();
-						if (returnCode == 1) {
-							throw new IOException("Return " + returnCode);
-						}
-						if (returnCode == 0) {
+						exitCode = process.exitValue();
+
+						if (exitCode == 0) {
+							getLogger()
+									.logMessages(
+											Levels.INFO,
+											" "
+													+ " EXITCODE: "
+													+ exitCode
+													+ " Last webmethod call successful",
+											null);
 							getLogger().logMessages(Levels.INFO,
 									" " + " Finished", null);
+							ActionEvent e = new TaskEvent(this, 0,
+									"SAP CONTROL DONE");
+							myController.sendDoneEvent(e);
+						}
+						if (exitCode == 1) {
+							throw new RuntimeException(
+									" EXITCODE: "
+											+ exitCode
+											+ "Last webmethod call failed, invalid parameter.");
+						}
+						if (exitCode == 2) {
+							throw new RuntimeException(
+									" EXITCODE: "
+											+ exitCode
+											+ "StartWait, StopWait, WaitforStarted, WaitforStopped, RestartServiceWait timed out.");
+						}
+
+						if (exitCode == 3) {
+							getLogger()
+									.logMessages(
+											Levels.INFO,
+											" "
+													+ " EXITCODE: "
+													+ exitCode
+													+ " GetProcessList succeeded, all processes running correctly",
+											null);
+							ActionEvent e = new TaskEvent(this, 0,
+									"SAP CONTROL DONE");
+							myController.sendDoneEvent(e);
+						}
+
+						if (exitCode == 4) {
+							getLogger()
+									.logMessages(
+											Levels.INFO,
+											" "
+													+ " EXITCODE: "
+													+ exitCode
+													+ " GetProcessList succeeded, all processes stopped",
+											null);
 							ActionEvent e = new TaskEvent(this, 0,
 									"SAP CONTROL DONE");
 							myController.sendDoneEvent(e);
@@ -142,10 +184,10 @@ public class ApplyKernel {
 						process.destroy();
 						stdError.close();
 						stdInput.close();
+						System.out.println("Exit Value: " + exitCode);
 						System.exit(1);
 					} catch (Exception ex) {
 						System.out.println(ex.getMessage());
-
 					}
 				}
 			}
@@ -159,10 +201,6 @@ public class ApplyKernel {
 			process.destroy();
 			progressbar.Stop();
 		}
-	}
-
-	public void setExitValue(Integer exitValue) {
-		this.exitValue = exitValue;
 	}
 
 }

@@ -12,8 +12,8 @@ import com.sap.on.ibm.i.tasks.ApplyKernel;
 import com.sap.on.ibm.i.tasks.SAPControl;
 import com.sap.on.ibm.i.view.ProgressBar;
 
-public class CommandLineController extends Observable implements
-		Runnable, IController, Observer {
+public class CommandLineController extends Observable implements Runnable,
+		IController, Observer {
 	private Logging logger;
 	private ProgressBar progressbar;
 	@SuppressWarnings("unused")
@@ -60,41 +60,12 @@ public class CommandLineController extends Observable implements
 		applylKernel.setLogger(getLogger());
 		applylKernel.setScriptModel(this.scriptModel);
 		applylKernel.setCommand("STEP0", "cd /FSIASP/sapmnt/DCN/exe/uc");
-		// applylKernel.setCommand("STEP0",
-		// "cd /FSIASP/sapmnt/DCN/exe/uc; rm -R as400_pase_64.backup");
-		// applylKernel.setCommand("STEP1",
-		// "cd /FSIASP/sapmnt/DCN/exe/uc; cp -R as400_pase_64 as400_pase_64.backup");
 		try {
 			applylKernel.execute();
-			// if (applylKernel.getExitValue()==1) {
-			// System.out.println("exe");
-			// getLogger().logMessages(Levels.ERROR, null, new
-			// RuntimeException("error"));
-			// throw new RuntimeException("Return 1 ");
-			// }
-
 		} catch (Exception e) {
 			Thread.currentThread().interrupt();
 			e.printStackTrace();
 		}
-
-		// LastNightSAPKernel lastNightSAPKernel = new LastNightSAPKernel(this);
-		// lastNightSAPKernel.setCommand("STEP0",
-		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXEDB_DB4.SAR .");
-		// lastNightSAPKernel.setCommand("STEP1",
-		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXE.SAR  .");
-		// lastNightSAPKernel.exe();
-		// getKernelBuildl.setCommand("STEP2",
-		// "cd /FSIASP/sapmnt/DCN/exe/uc; ");
-		// getKernelBuildl.setCommand("STEP3", "cd /FSIASP/sapmnt/DCN/exe/uc");
-		// getKernelBuildl.exe();
-
-		// LastNightSAPKernel lastNightSAPKernel = new LastNightSAPKernel(this);
-		// lastNightSAPKernel.setCommand("STEP0",
-		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXEDB_DB4.SAR .");
-		// lastNightSAPKernel.setCommand("STEP1",
-		// "cd /FSIASP/sapmnt/DCN/exe/uc/as400_pase_64; cp /bas/742_COR/gen/dbgU/as400_pase_64/_out/SAPEXE.SAR  .");
-		// lastNightSAPKernel.exe();
 	}
 
 	/**
@@ -112,7 +83,7 @@ public class CommandLineController extends Observable implements
 	public void update(final Observable observableSource,
 			final Object arr_done_all) {
 
-		 updateProgressbar();
+		updateProgressbar();
 
 	}
 
@@ -153,7 +124,6 @@ public class CommandLineController extends Observable implements
 
 	@Override
 	public void updateProgressbar() {
-//		progressbar.update(currentStep++, maxSteps);
 	}
 
 	@Override

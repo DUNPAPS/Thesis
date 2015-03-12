@@ -2,7 +2,6 @@ package com.sap.on.ibm.i.tasks;
 
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,6 +27,9 @@ public class SAPControl {
 	private int MAX_WAIT_TIME_SEC = 30;
 	private Process process;
 	private ProgressbarTimedUpdate progressbar;
+	private BufferedReader stdInput;
+	private BufferedReader stdError;
+	private int exitCode;
 
 	public SAPControl(IController myController) {
 		this.myController = myController;
@@ -109,9 +111,6 @@ public class SAPControl {
 
 		Thread t2 = new Thread(new Runnable() {
 
-			private BufferedReader stdInput;
-			private BufferedReader stdError;
-
 			public void run() {
 				String line;
 
@@ -119,9 +118,9 @@ public class SAPControl {
 
 					progressbar.start(MAX_WAIT_TIME_SEC);
 
-					System.out.println("command: " + getCommand());
+					System.out.println("COMMAND: " + getCommand());
 					System.out.println(" ");
-					System.out.println("Execute command...");
+					System.out.println("Execute COMMAND...");
 					System.out.println(" ");
 
 					process = Runtime.getRuntime().exec(getCommand());
@@ -151,17 +150,61 @@ public class SAPControl {
 						}
 					}
 					process.waitFor();
-					int returnCode = process.exitValue();
-					if (returnCode == 1) {
-						throw new IOException("Return " + returnCode);
-					}
-					if (returnCode == 0) {
+					exitCode = process.exitValue();
+
+					if (exitCode == 0) {
+						getLogger().logMessages(
+								Levels.INFO,
+								" " + " EXITCODE: " + exitCode
+										+ " Last webmethod call successful",
+								null);
 						getLogger().logMessages(Levels.INFO, " " + " Finished",
 								null);
 						ActionEvent e = new TaskEvent(this, 0,
 								"SAP CONTROL DONE");
 						myController.sendDoneEvent(e);
 					}
+					if (exitCode == 1) {
+						throw new RuntimeException(
+								" EXITCODE: "
+										+ exitCode
+										+ "Last webmethod call failed, invalid parameter.");
+					}
+					if (exitCode == 2) {
+						throw new RuntimeException(
+								" EXITCODE: "
+										+ exitCode
+										+ "StartWait, StopWait, WaitforStarted, WaitforStopped, RestartServiceWait timed out.");
+					}
+
+					if (exitCode == 3) {
+						getLogger()
+								.logMessages(
+										Levels.INFO,
+										" "
+												+ " EXITCODE: "
+												+ exitCode
+												+ " GetProcessList succeeded, all processes running correctly",
+										null);
+						ActionEvent e = new TaskEvent(this, 0,
+								"SAP CONTROL DONE");
+						myController.sendDoneEvent(e);
+					}
+
+					if (exitCode == 4) {
+						getLogger()
+								.logMessages(
+										Levels.INFO,
+										" "
+												+ " EXITCODE: "
+												+ exitCode
+												+ " GetProcessList succeeded, all processes stopped",
+										null);
+						ActionEvent e = new TaskEvent(this, 0,
+								"SAP CONTROL DONE");
+						myController.sendDoneEvent(e);
+					}
+
 				} catch (Exception e) {
 					try {
 						getLogger().logMessages(Levels.ERROR, null,
@@ -169,6 +212,7 @@ public class SAPControl {
 						process.destroy();
 						stdError.close();
 						stdInput.close();
+						System.out.println("Exit Value: " + exitCode);
 						System.exit(1);
 					} catch (Exception ex) {
 						System.out.println(ex.getMessage());
